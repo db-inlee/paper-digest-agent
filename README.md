@@ -62,32 +62,98 @@
 
 ## 파이프라인 구조
 
+### Orchestrator 전체 흐름
+
 ```
-[Orchestrator]
-      │
-      ├── [1. Skim Pipeline]
-      │       │
-      │       ├── Fetch (HuggingFace)
-      │       ├── Gatekeeper (필터링)
-      │       └── Skim Summary 저장
-      │
-      ├── [2. Deep Pipeline] (병렬 처리)
-      │       │
-      │       ├── Parse (GROBID/PyMuPDF)
-      │       ├── Extraction (구조화 추출)
-      │       ├── Delta (차별점 분석)
-      │       ├── Scoring (점수 평가)
-      │       ├── Verification (검증)
-      │       └── Correction (필요시 수정)
-      │
-      ├── [3. Code Pipeline] (GitHub 있는 논문)
-      │       │
-      │       └── GitHub Method Analysis
-      │
-      └── [4. Daily Report]
-              │
-              └── 통합 마크다운 리포트 생성
+┌─────────────────────────────────────────────────────────────────────────┐
+│                           ORCHESTRATOR                                   │
+│                     (비-LLM, 파이프라인 조율)                              │
+└─────────────────────────────────────────────────────────────────────────┘
+                                    │
+        ┌───────────────────────────┼───────────────────────────┐
+        ▼                           ▼                           ▼
+┌───────────────┐           ┌───────────────┐           ┌───────────────┐
+│ 1. SKIM       │           │ 2. DEEP       │           │ 3. CODE       │
+│   Pipeline    │──────────▶│   Pipeline    │──────────▶│   Pipeline    │
+│               │           │   (병렬)       │           │   (선택)       │
+└───────────────┘           └───────────────┘           └───────────────┘
+        │                           │                           │
+        ▼                           ▼                           ▼
+┌───────────────┐           ┌───────────────┐           ┌───────────────┐
+│ papers/       │           │ reports/      │           │ reports/      │
+│  skim.json    │           │  {slug}/      │           │  {slug}/      │
+│               │           │   *.json      │           │   github.json │
+└───────────────┘           └───────────────┘           └───────────────┘
+                                    │
+                                    ▼
+                            ┌───────────────┐
+                            │ 4. DAILY      │
+                            │   Report      │
+                            └───────────────┘
+                                    │
+                                    ▼
+                            ┌───────────────┐
+                            │ reports/daily │
+                            │  YYYY-MM-DD.md│
+                            └───────────────┘
 ```
+
+### 각 파이프라인 상세
+
+**1. Skim Pipeline** - 빠른 스크리닝
+```
+HFPapersServer ──▶ Fetcher ──▶ Gatekeeper ──▶ SkimAgent (LLM)
+     │                              │               │
+     ▼                              ▼               ▼
+  API 호출             키워드/upvote 필터      관심도 점수 (1-5)
+                                               카테고리 분류
+```
+
+**2. Deep Pipeline** - 심층 분석 (병렬 처리)
+```
+┌─────────┐    ┌────────────┐    ┌───────────┐    ┌──────────┐
+│  Parse  │───▶│ Extraction │───▶│   Delta   │───▶│ Scoring  │
+│ (PDF)   │    │   (LLM)    │    │   (LLM)   │    │  (LLM)   │
+└─────────┘    └────────────┘    └───────────┘    └──────────┘
+     │               │                 │                │
+     ▼               ▼                 ▼                ▼
+  섹션/표        핵심 방법론        기존 대비 차이      실용성/구현성
+  참고문헌       실험 결과         What's New?         신뢰도 점수
+                                       │
+                                       ▼
+                              ┌──────────────┐    ┌────────────┐
+                              │ Verification │───▶│ Correction │
+                              │    (LLM)     │    │   (LLM)    │
+                              └──────────────┘    └────────────┘
+                                     │                  │
+                                     ▼                  ▼
+                               과장 여부 검증      필요시 수정
+```
+
+**3. Code Pipeline** - GitHub 코드 분석 (선택)
+```
+GitHub URL ──▶ GitHubMethodAgent (LLM) ──▶ 방법론-코드 매핑
+                       │
+                       ▼
+              핵심 파일/함수 식별
+              구현 패턴 분석
+```
+
+### 에이전트 구성
+
+| 에이전트 | 역할 | LLM 사용 | 모델 |
+|----------|------|:--------:|------|
+| `Orchestrator` | 전체 파이프라인 조율 | ❌ | - |
+| `Fetcher` | HuggingFace에서 논문 수집 | ❌ | - |
+| `Gatekeeper` | 키워드/upvote 기반 필터링 | ❌ | - |
+| `SkimAgent` | 빠른 스크리닝, 관심도 점수 | ✅ | gpt-4o-mini |
+| `ExtractionAgent` | 논문 구조화 정보 추출 | ✅ | gpt-4o |
+| `DeltaAgent` | 기존 연구 대비 차별점 분석 | ✅ | gpt-4o |
+| `ScoringAgent` | 실용성/구현성/신뢰도 평가 | ✅ | gpt-4o-mini |
+| `VerificationAgent` | 과장 표현 검증 | ✅ | gpt-4o-mini |
+| `CorrectionAgent` | 검증 실패 시 수정 | ✅ | gpt-4o-mini |
+| `GitHubMethodAgent` | GitHub 코드-방법론 매핑 | ✅ | gpt-4o |
+| `DailyReportAgent` | 일일 통합 리포트 생성 | ❌ | - |
 
 ## 설치 방법
 
