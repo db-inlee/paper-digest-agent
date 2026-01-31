@@ -1,12 +1,12 @@
 # Paper Digest Agent
 
-> 매일 arXiv/HuggingFace에서 LLM/Agent 관련 논문을 자동 수집하고, 트렌드를 파악하여 핵심 분석 리포트를 생성하는 에이전트
+> 매일 HuggingFace에서 LLM/Agent 관련 논문을 자동 수집하고, 트렌드를 파악하여 핵심 분석 리포트를 생성하는 에이전트
 
 ## 프로젝트 소개
 
 **Paper Digest Agent**는 LangGraph 기반의 자동화된 연구 논문 분석 파이프라인입니다.
 
-- **자동 논문 수집**: 매일 arXiv/HuggingFace에서 LLM/Agent 관련 최신 논문을 수집합니다
+- **자동 논문 수집**: 매일 HuggingFace Daily Papers에서 LLM/Agent 관련 최신 논문을 수집합니다
 - **LLM 기반 평가**: 실용성, 구현 가능성, 신뢰도를 기준으로 논문을 평가합니다
 - **트렌드 감지**: 최근 연구 흐름과 핵심 변화점을 파악합니다
 - **GitHub 코드 분석**: 논문의 공식 구현 코드를 분석하여 방법론과 매핑합니다
@@ -30,12 +30,35 @@
 
 | 기능 | 설명 |
 |------|------|
-| 📚 논문 수집 (Skim) | arXiv/HuggingFace Papers에서 논문 수집 및 빠른 스크리닝 |
+| 📚 논문 수집 (Skim) | HuggingFace Daily Papers에서 논문 수집 및 빠른 스크리닝 |
 | 🎯 심층 분석 (Deep) | 실용성, 구현 가능성, 신뢰도 점수 산출 + Delta 분석 |
 | 🔍 PDF 분석 | GROBID/PyMuPDF를 활용한 구조화된 PDF 파싱 |
 | 💻 GitHub 분석 | 공식 코드 저장소 분석 및 방법론 매핑 |
 | ✅ 검증 | 추출된 정보와 논문 주장의 일치 여부 검증 |
 | 📝 Daily Report | 일일 통합 리포트 자동 생성 |
+
+## MCP 서버 구성
+
+이 프로젝트는 [MCP (Model Context Protocol)](https://modelcontextprotocol.io/) 패턴을 활용하여 외부 서비스와의 통신을 모듈화합니다.
+
+| MCP 서버 | 역할 | 설명 |
+|----------|------|------|
+| `HFPapersServer` | 논문 수집 | HuggingFace Daily Papers API에서 최신 논문 메타데이터 수집 |
+| `GrobidServer` | PDF 구조화 파싱 | GROBID를 통해 PDF를 TEI-XML로 변환, 섹션/테이블/참고문헌 추출 |
+| `PyMuPDFParser` | PDF 텍스트 추출 | GROBID 미사용 시 폴백, PyMuPDF로 기본 텍스트 추출 |
+
+```
+[Fetcher] ──→ HFPapersServer ──→ HuggingFace API
+                                      │
+                                      ▼
+                              논문 메타데이터 (title, abstract, arxiv_id, upvotes)
+                                      │
+                                      ▼
+[Parser] ───→ GrobidServer ────→ GROBID Docker
+              (또는 PyMuPDFParser)     │
+                                      ▼
+                              구조화된 PDF (sections, tables, figures)
+```
 
 ## 파이프라인 구조
 
@@ -44,7 +67,7 @@
       │
       ├── [1. Skim Pipeline]
       │       │
-      │       ├── Fetch (arXiv/HuggingFace)
+      │       ├── Fetch (HuggingFace)
       │       ├── Gatekeeper (필터링)
       │       └── Skim Summary 저장
       │
@@ -79,7 +102,7 @@
 ```bash
 # 저장소 클론
 git clone <repo-url>
-cd research-to-code
+cd paper-digest-agent
 
 # 의존성 설치
 pip install -e .
@@ -140,7 +163,7 @@ python -m rtc.pipeline.skim --date 2026-01-31
 |------|------|--------|
 | `OPENAI_API_KEY` | OpenAI API 키 | (필수) |
 | `LANGSMITH_API_KEY` | LangSmith API 키 | (선택) |
-| `LANGSMITH_PROJECT` | LangSmith 프로젝트명 | `research-to-code` |
+| `LANGSMITH_PROJECT` | LangSmith 프로젝트명 | `paper-digest-agent` |
 | `GROBID_URL` | GROBID 서비스 URL | `http://localhost:8070` |
 | `HF_TOKEN` | HuggingFace 토큰 | (선택) |
 
@@ -225,7 +248,7 @@ max_deep_papers_per_day: int = 3  # 기본값: 3편
 ## 프로젝트 구조
 
 ```
-research-to-code/
+paper-digest-agent/
 ├── src/rtc/
 │   ├── config.py              # 설정 관리
 │   ├── schemas/               # Pydantic 데이터 모델
@@ -248,7 +271,6 @@ research-to-code/
 │   │   ├── deep.py            # 심층 분석 파이프라인
 │   │   └── code.py            # 코드 분석 파이프라인
 │   ├── mcp/servers/           # MCP 서버
-│   │   ├── arxiv_server.py    # arXiv API
 │   │   ├── hf_papers_server.py # HuggingFace Papers
 │   │   ├── grobid_server.py   # GROBID API
 │   │   └── pymupdf_parser.py  # PyMuPDF 파서
