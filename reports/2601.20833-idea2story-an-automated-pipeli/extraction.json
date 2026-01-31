@@ -1,0 +1,104 @@
+{
+  "arxiv_id": "2601.20833",
+  "title": "Idea2Story: An Automated Pipeline for Transforming Research Concepts into Complete Scientific Narratives",
+  "problem_definition": {
+    "statement": "기존의 자율 연구 에이전트의 비효율성과 신뢰성 문제를 해결하기 위해, Idea2Story는 오프라인 지식 구축과 온라인 연구 생성을 명확히 분리하여 과학적 발견을 구조화된 지식 그래프를 통해 지원합니다.",
+    "baseline_methods": [],
+    "structural_limitation": "현재 시스템은 런타임 중심의 실행에 의존하여, 에이전트가 새로운 연구 시도마다 중복된 논문을 반복적으로 검색, 읽기, 요약, 추론해야 하므로 상당한 계산 비용과 실행 시간이 소요됩니다.",
+    "evidence": [
+      {
+        "page": null,
+        "section": "Introduction",
+        "quote": "Most current systems rely on runtime-centric execution, where agents repeatedly retrieve, read, summarize, and reason over large collections of highly overlapping papers for each new research attempt, resulting in substantial computational cost and prolonged execution time.",
+        "type": "quote"
+      }
+    ]
+  },
+  "baselines": [],
+  "method_components": [
+    {
+      "name": "Offline Knowledge Construction",
+      "description": "기존 과학 문헌에서 재사용 가능한 방법론적 구조를 추출하고 이를 구조화된 지식 그래프로 조직화합니다.",
+      "inputs": [
+        "기존 과학 문헌"
+      ],
+      "outputs": [
+        "구조화된 지식 그래프"
+      ],
+      "implementation_hint": null,
+      "evidence": [
+        {
+          "page": null,
+          "section": "Offline Knowledge Construction",
+          "quote": "The offline knowledge construction stage aims to distill reusable methodological structure from existing scientific literature and to organize it in a form that can be efficiently accessed during online research generation.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "name": "Online Research Generation",
+      "description": "사용자가 제공한 연구 아이디어를 기반으로 지식 그래프에서 연구 패턴을 검색하고 구성하여 구체적인 연구 방향으로 발전시킵니다.",
+      "inputs": [
+        "사용자 제공 연구 아이디어"
+      ],
+      "outputs": [
+        "구체적인 연구 방향"
+      ],
+      "implementation_hint": null,
+      "evidence": [
+        {
+          "page": null,
+          "section": "Online Research Generation",
+          "quote": "In the online stage, Idea2Story grounds user-provided research ideas through retrieval and composition over the pre-built knowledge graph.",
+          "type": "quote"
+        }
+      ]
+    }
+  ],
+  "benchmark": null,
+  "claims": [
+    {
+      "claim_id": "claim_1",
+      "text": "Idea2Story는 과학적 발견을 구조화된 지식 그래프를 통해 지원하는 프레임워크입니다.",
+      "claim_type": "method",
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "page": null,
+          "section": "Conclusion",
+          "quote": "We presented Idea2Story, a pre-computation-driven framework for autonomous scientific discovery that shifts literature understanding from runtime reasoning to offline knowledge structuring.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "claim_id": "claim_2",
+      "text": "Idea2Story는 기존의 런타임 중심 연구 에이전트의 비효율성과 신뢰성 문제를 해결합니다.",
+      "claim_type": "result",
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "page": null,
+          "section": "Conclusion",
+          "quote": "By explicitly extracting reusable method units and organizing them into a continuously updated knowledge graph, Idea2Story enables research agents to reason over stable research patterns rather than repeatedly processing raw papers.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "claim_id": "claim_3",
+      "text": "Idea2Story는 명확한 문제 재구성, 강력한 방법론적 구조, 높은 개념적 참신성을 가진 연구 패턴을 생성합니다.",
+      "claim_type": "comparison",
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "page": null,
+          "section": "Conclusion",
+          "quote": "Our qualitative analyses and comparative studies show that this design leads to research patterns with clearer problem reformulation, stronger methodological structure, and higher conceptual novelty than direct LLM generation.",
+          "type": "quote"
+        }
+      ]
+    }
+  ],
+  "extraction_mode": "full"
+}

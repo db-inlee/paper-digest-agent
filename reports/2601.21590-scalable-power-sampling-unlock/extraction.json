@@ -1,0 +1,155 @@
+{
+  "arxiv_id": "2601.21590",
+  "title": "Scalable Power Sampling: Unlocking Efficient, Training-Free Reasoning for LLMs via Distribution Sharpening",
+  "problem_definition": {
+    "statement": "기존의 강화 학습(RL) 기반의 사후 훈련 없이도 대형 언어 모델(LLM)의 추론 능력을 향상시키기 위한 효율적이고 훈련이 필요 없는 샘플링 방법을 제안합니다.",
+    "baseline_methods": [
+      "Group Relative Policy Optimisation (GRPO)"
+    ],
+    "structural_limitation": "기존의 RL은 새로운 추론 능력을 도입하는 것이 아니라 분포를 날카롭게 하는 형태로 작용한다는 증거가 증가하고 있습니다.",
+    "evidence": [
+      {
+        "page": null,
+        "section": "Introduction",
+        "quote": "A growing body of evidence suggests that RL may not introduce fundamentally new reasoning capabilities, but instead acts as a form of distribution sharpening.",
+        "type": "quote"
+      }
+    ]
+  },
+  "baselines": [
+    {
+      "name": "Group Relative Policy Optimisation (GRPO)",
+      "description": "강화 학습을 통해 자동 검증기와의 최적화를 수행하는 방법",
+      "limitation": "분포를 날카롭게 하는 것 외에 새로운 추론 능력을 도입하지 않음",
+      "evidence": [
+        {
+          "page": null,
+          "section": "Introduction",
+          "quote": "A growing body of evidence suggests that RL may not introduce fundamentally new reasoning capabilities, but instead acts as a form of distribution sharpening.",
+          "type": "quote"
+        }
+      ]
+    }
+  ],
+  "method_components": [
+    {
+      "name": "Power Distribution Approximation",
+      "description": "저온 분포를 적절히 스케일링하여 파워 분포를 근사하는 방법",
+      "inputs": [
+        "기본 언어 모델의 조건부 확률 분포",
+        "입력 프롬프트 q",
+        "부분적으로 생성된 토큰 시퀀스"
+      ],
+      "outputs": [
+        "샤프닝된 분포에 따른 토큰 확률"
+      ],
+      "implementation_hint": "표준 자귀적 절차를 사용하여 파워 분포 샘플링을 근사",
+      "evidence": [
+        {
+          "page": null,
+          "section": "Approximate Sampling from p(pow) α",
+          "quote": "This observation allows us to move beyond a binary distinction between the two and instead characterise their relationship explicitly.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "name": "Jackknife Estimator",
+      "description": "바이어스를 줄이기 위한 잭나이프 보정 기법",
+      "inputs": [
+        "몬테카를로 추정치"
+      ],
+      "outputs": [
+        "바이어스가 줄어든 파워 분포 추정치"
+      ],
+      "implementation_hint": "잭나이프 보정은 원래의 몬테카를로 근사치와 leave-one-out 변형을 결합하여 수행",
+      "evidence": [
+        {
+          "page": null,
+          "section": "Bias Analysis and Correction",
+          "quote": "The jackknife is a classical bias-reduction technique that constructs corrected estimators by systematically recombining leave-one-out versions of an original estimator.",
+          "type": "quote"
+        }
+      ]
+    }
+  ],
+  "benchmark": {
+    "dataset": "MATH500, HumanEval, GPQA",
+    "metrics": [
+      "pass@1 accuracy"
+    ],
+    "baseline_results": {
+      "GRPO(MATH)": "0.492 on MATH500"
+    },
+    "proposed_results": {
+      "Proposed Method": "Matches or surpasses GRPO performance"
+    },
+    "evidence": [
+      {
+        "page": null,
+        "section": "Experiments & Results",
+        "quote": "Table 1 summarises pass@1 accuracies on MATH500, HumanEval, and GPQA across the four models.",
+        "type": "quote"
+      }
+    ]
+  },
+  "claims": [
+    {
+      "claim_id": "claim_1",
+      "text": "파워 분포는 저온 분포의 스케일링된 버전으로 표현될 수 있다.",
+      "claim_type": "method",
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "page": null,
+          "section": "Approximate Sampling from p(pow) α",
+          "quote": "We prove that the power distribution can be expressed as a scaled version of the low-temperature distribution.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "claim_id": "claim_2",
+      "text": "제안된 방법은 MCMC 기반의 파워 샘플링과 동일한 파워 분포를 목표로 하지만, 자귀적 근사를 사용하여 추론 지연을 10배 이상 줄인다.",
+      "claim_type": "result",
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "page": null,
+          "section": "Conclusions and Future Work",
+          "quote": "It achieves this with over 10× lower latency than MCMC, providing a scalable alternative to post-training pipelines.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "claim_id": "claim_3",
+      "text": "파워 기반 샘플링은 RL 사후 훈련된 모델에서도 성능을 향상시킬 수 있다.",
+      "claim_type": "comparison",
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "page": null,
+          "section": "Power Sampling Post-Trained LLMs",
+          "quote": "Power sampling on top of the GRPO-trained model yields gains over standard decoding.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "claim_id": "claim_4",
+      "text": "제안된 방법은 훈련이나 외부 검증기 없이도 RL 기반 사후 훈련의 이점을 회복할 수 있다.",
+      "claim_type": "limitation",
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "page": null,
+          "section": "Large-Scale Evaluation",
+          "quote": "We assess whether training-and verifier-free autoregressive sampling can recover RL-based post-training gains without MCMC's inference overhead.",
+          "type": "quote"
+        }
+      ]
+    }
+  ],
+  "extraction_mode": "full"
+}

@@ -1,0 +1,39 @@
+{
+  "arxiv_id": "2601.20833",
+  "total_claims": 3,
+  "verified_count": 3,
+  "unverified_count": 0,
+  "contradicted_count": 0,
+  "overall_reliability": "high",
+  "results": [
+    {
+      "claim_id": "claim_1",
+      "claim_text": "Idea2Story는 과학적 발견을 구조화된 지식 그래프를 통해 지원하는 프레임워크입니다.",
+      "status": "verified",
+      "confidence": 1.0,
+      "evidence_found": "논문 본문에서 Idea2Story가 구조화된 지식 그래프를 통해 과학적 발견을 지원한다고 명시되어 있음.",
+      "notes": "논문에서 명확히 설명됨.",
+      "correction_hint": null
+    },
+    {
+      "claim_id": "claim_2",
+      "claim_text": "Idea2Story는 기존의 런타임 중심 연구 에이전트의 비효율성과 신뢰성 문제를 해결합니다.",
+      "status": "verified",
+      "confidence": 1.0,
+      "evidence_found": "논문에서 기존 런타임 중심 연구 에이전트의 비효율성과 신뢰성 문제를 해결한다고 명시됨.",
+      "notes": "논문에서 제안된 접근법의 장점으로 언급됨.",
+      "correction_hint": null
+    },
+    {
+      "claim_id": "claim_3",
+      "claim_text": "Idea2Story는 명확한 문제 재구성, 강력한 방법론적 구조, 높은 개념적 참신성을 가진 연구 패턴을 생성합니다.",
+      "status": "verified",
+      "confidence": 1.0,
+      "evidence_found": "논문에서 Idea2Story가 생성하는 연구 패턴의 특성으로 명확한 문제 재구성, 강력한 방법론적 구조, 높은 개념적 참신성을 언급함.",
+      "notes": "논문에서 실험 결과로 제시됨.",
+      "correction_hint": null
+    }
+  ],
+  "summary": "모든 클레임이 논문에서 지지되며, 제안된 접근법이 기존의 한계를 해결하는 데 기여함을 확인했습니다.",
+  "corrections_needed": []
+}

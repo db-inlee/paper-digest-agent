@@ -1,0 +1,399 @@
+date: '2026-01-31'
+total_collected: 27
+total_skimmed: 23
+papers:
+- arxiv_id: '2601.20833'
+  title: 'Idea2Story: An Automated Pipeline for Transforming Research Concepts into
+    Complete Scientific Narratives'
+  one_liner: Idea2Story는 연구 개념을 완전한 과학적 서사로 변환하는 자동화된 파이프라인을 제안하여 LLM의 문헌 이해를 오프라인
+    지식 구축으로 전환합니다.
+  tags:
+  - LLM
+  - scientific discovery
+  - knowledge graph
+  - automation
+  interest_score: 4
+  interest_reason: 기존 LLM의 한계를 극복하는 새로운 접근 방식을 제시하여 연구 효율성을 높입니다.
+  baseline_mentioned: null
+  category: agent
+  has_code: true
+  link: https://arxiv.org/abs/2601.20833
+  github_url: https://github.com/AgentAlphaAGI/Idea2Paper
+  github_stars: 199
+- arxiv_id: '2601.20354'
+  title: 'Everything in Its Place: Benchmarking Spatial Intelligence of Text-to-Image
+    Models'
+  one_liner: SpatialGenEval은 텍스트-이미지 모델의 공간 지능을 평가하기 위한 새로운 벤치마크로, 복잡한 공간 관계를 다룹니다.
+  tags:
+  - text-to-image
+  - benchmark
+  - spatial reasoning
+  - evaluation
+  interest_score: 4
+  interest_reason: 공간 지능 평가의 중요성을 강조하며, 새로운 데이터셋을 통해 성능 향상을 보여줍니다.
+  baseline_mentioned: null
+  category: evaluation
+  has_code: true
+  link: https://arxiv.org/abs/2601.20354
+  github_url: https://github.com/AMAP-ML/SpatialGenEval
+  github_stars: 97
+- arxiv_id: '2601.21204'
+  title: Scaling Embeddings Outperforms Scaling Experts in Language Models
+  one_liner: Embedding scaling이 Mixture-of-Experts보다 우수한 성능을 발휘하며, LongCat-Flash-Lite
+    모델을 통해 이를 입증합니다.
+  tags:
+  - scaling
+  - language models
+  - embedding
+  - MoE
+  interest_score: 4
+  interest_reason: 새로운 스케일링 접근 방식이 기존 방법보다 더 나은 성능을 보여줍니다.
+  baseline_mentioned: MoE
+  category: training
+  has_code: false
+  link: https://arxiv.org/abs/2601.21204
+  github_url: null
+  github_stars: null
+- arxiv_id: '2601.22153'
+  title: 'DynamicVLA: A Vision-Language-Action Model for Dynamic Object Manipulation'
+  one_liner: DynamicVLA는 동적 객체 조작을 위한 비전-언어-행동 모델로, 시간적 추론과 적응을 통합합니다.
+  tags:
+  - dynamic manipulation
+  - VLA
+  - temporal reasoning
+  - benchmark
+  interest_score: 4
+  interest_reason: 동적 조작 문제를 해결하기 위한 새로운 프레임워크를 제안하여 실질적인 기여를 합니다.
+  baseline_mentioned: null
+  category: agent
+  has_code: true
+  link: https://arxiv.org/abs/2601.22153
+  github_url: https://github.com/hzxie/DynamicVLA
+  github_stars: 57
+- arxiv_id: '2601.21821'
+  title: 'MMFineReason: Closing the Multimodal Reasoning Gap via Open Data-Centric
+    Methods'
+  one_liner: MMFineReason은 고품질 멀티모달 추론 데이터셋을 통해 VLM의 추론 능력을 향상시킵니다.
+  tags:
+  - multimodal reasoning
+  - dataset
+  - VLM
+  - fine-tuning
+  interest_score: 5
+  interest_reason: 대규모 데이터셋을 통해 VLM의 성능을 획기적으로 개선하는 중요한 기여를 합니다.
+  baseline_mentioned: Qwen3-VL-8B-Thinking
+  category: training
+  has_code: true
+  link: https://arxiv.org/abs/2601.21821
+  github_url: null
+  github_stars: null
+- arxiv_id: '2601.21639'
+  title: 'OCRVerse: Towards Holistic OCR in End-to-End Vision-Language Models'
+  one_liner: OCRVerse는 텍스트 중심과 비전 중심 OCR을 통합한 최초의 전체론적 OCR 방법을 제안합니다.
+  tags:
+  - OCR
+  - vision-language
+  - data engineering
+  - multimodal
+  interest_score: 3
+  interest_reason: 비전 중심 OCR의 필요성을 강조하며, 다양한 도메인을 아우르는 접근 방식을 제시합니다.
+  baseline_mentioned: null
+  category: other
+  has_code: true
+  link: https://arxiv.org/abs/2601.21639
+  github_url: https://github.com/DocTron-hub/OCRVerse
+  github_stars: 17
+- arxiv_id: '2601.21420'
+  title: 'ConceptMoE: Adaptive Token-to-Concept Compression for Implicit Compute Allocation'
+  one_liner: ConceptMoE는 동적으로 토큰을 개념 표현으로 압축하여 계산 자원을 효율적으로 할당합니다.
+  tags:
+  - MoE
+  - token compression
+  - compute allocation
+  - language models
+  interest_score: 4
+  interest_reason: 효율적인 계산 자원 할당을 통해 성능을 향상시키는 혁신적인 접근 방식을 제안합니다.
+  baseline_mentioned: standard MoE
+  category: training
+  has_code: true
+  link: https://arxiv.org/abs/2601.21420
+  github_url: https://github.com/ZihaoHuang-notabot/ConceptMoE
+  github_stars: 6
+- arxiv_id: '2601.21337'
+  title: Qwen3-ASR Technical Report
+  one_liner: Qwen3-ASR는 강력한 음성 인식 모델을 소개하며, 실시간 성능을 최적화합니다.
+  tags:
+  - ASR
+  - speech recognition
+  - language identification
+  - efficiency
+  interest_score: 3
+  interest_reason: 음성 인식 분야에서의 성능 향상을 보여주며, 실용적인 응용 가능성을 제시합니다.
+  baseline_mentioned: null
+  category: other
+  has_code: true
+  link: https://arxiv.org/abs/2601.21337
+  github_url: null
+  github_stars: null
+- arxiv_id: '2601.22154'
+  title: Exploring Reasoning Reward Model for Agents
+  one_liner: Agent-RRM은 에이전트의 추론 품질을 평가하기 위한 구조화된 피드백을 제공하는 새로운 보상 모델입니다.
+  tags:
+  - reinforcement learning
+  - agent
+  - reward model
+  - evaluation
+  interest_score: 4
+  interest_reason: 에이전트의 성능을 향상시키기 위한 새로운 보상 체계를 제안하여 중요한 기여를 합니다.
+  baseline_mentioned: null
+  category: agent
+  has_code: true
+  link: https://arxiv.org/abs/2601.22154
+  github_url: https://github.com/kxfan2002/Reagent
+  github_stars: 16
+- arxiv_id: '2601.20730'
+  title: 'AgentLongBench: A Controllable Long Benchmark For Long-Contexts Agents via
+    Environment Rollouts'
+  one_liner: AgentLongBench는 에이전트의 긴 맥락을 평가하기 위한 새로운 벤치마크를 제안합니다.
+  tags:
+  - benchmark
+  - long-context
+  - agent
+  - evaluation
+  interest_score: 3
+  interest_reason: 에이전트의 동적 정보 합성을 평가하는 새로운 방법론을 제시합니다.
+  baseline_mentioned: null
+  category: evaluation
+  has_code: false
+  link: https://arxiv.org/abs/2601.20730
+  github_url: null
+  github_stars: null
+- arxiv_id: '2601.17883'
+  title: 'EEG Foundation Models: Progresses, Benchmarking, and Open Problems'
+  one_liner: EEG 기초 모델의 설계 선택을 통합한 체계적 프레임워크를 제시하고, 12개의 오픈 소스 모델을 평가하여 일반화 성능을 분석한다.
+  tags:
+  - EEG
+  - foundation models
+  - benchmarking
+  - BCI
+  - neural representations
+  interest_score: 4
+  interest_reason: EEG 분야에서 기초 모델의 비교 및 평가를 통해 중요한 통찰을 제공한다.
+  baseline_mentioned: null
+  category: other
+  has_code: true
+  link: https://arxiv.org/abs/2601.17883
+  github_url: https://github.com/Dingkun0817/EEG-FM-Benchmark
+  github_stars: 45
+- arxiv_id: '2601.21754'
+  title: Language-based Trial and Error Falls Behind in the Era of Experience
+  one_liner: SCOUT 프레임워크를 통해 LLM의 탐색 비용을 줄이고, 비언어적 환경에서의 성능을 향상시킨다.
+  tags:
+  - LLM
+  - exploration
+  - reinforcement learning
+  - fine-tuning
+  - agent
+  interest_score: 4
+  interest_reason: 비언어적 환경에서 LLM의 성능을 개선하는 혁신적인 접근을 제시한다.
+  baseline_mentioned: Gemini-2.5-Pro
+  category: agent
+  has_code: true
+  link: https://arxiv.org/abs/2601.21754
+  github_url: https://github.com/Harry-mic/SCOUT
+  github_stars: 8
+- arxiv_id: '2601.21571'
+  title: Shaping capabilities with token-level data filtering
+  one_liner: 사전 훈련 데이터 필터링을 통해 언어 모델의 원치 않는 능력을 효과적으로 줄이는 방법을 제안한다.
+  tags:
+  - data filtering
+  - pretraining
+  - language models
+  - capability shaping
+  - training
+  interest_score: 4
+  interest_reason: 사전 훈련 단계에서 능력을 조정하는 새로운 방법론을 제시하여 중요성을 가진다.
+  baseline_mentioned: null
+  category: training
+  has_code: true
+  link: https://arxiv.org/abs/2601.21571
+  github_url: https://github.com/neilrathi/token-filtering
+  github_stars: 26
+- arxiv_id: '2601.21590'
+  title: 'Scalable Power Sampling: Unlocking Efficient, Training-Free Reasoning for
+    LLMs via Distribution Sharpening'
+  one_liner: MCMC 없이도 LLM의 추론 성능을 향상시키는 새로운 샘플링 방법을 제안한다.
+  tags:
+  - LLM
+  - reasoning
+  - sampling
+  - reinforcement learning
+  - training-free
+  interest_score: 4
+  interest_reason: 효율적인 추론을 위한 새로운 접근 방식을 제시하여 실용성을 높인다.
+  baseline_mentioned: one-shot GRPO
+  category: reasoning
+  has_code: false
+  link: https://arxiv.org/abs/2601.21590
+  github_url: null
+  github_stars: null
+- arxiv_id: '2601.22083'
+  title: Latent Adversarial Regularization for Offline Preference Optimization
+  one_liner: 언어 모델의 선호 최적화를 위한 잠재 공간 정규화를 제안하여 성능을 향상시킨다.
+  tags:
+  - preference optimization
+  - latent space
+  - GAN
+  - language models
+  - training
+  interest_score: 4
+  interest_reason: 잠재 공간에서의 정규화를 통해 언어 모델의 성능을 개선하는 혁신적인 방법을 제시한다.
+  baseline_mentioned: null
+  category: training
+  has_code: true
+  link: https://arxiv.org/abs/2601.22083
+  github_url: https://github.com/enyijiang/GANPO
+  github_stars: 1
+- arxiv_id: '2601.21051'
+  title: Llama-3.1-FoundationAI-SecurityLLM-Reasoning-8B Technical Report
+  one_liner: 사이버 보안에 특화된 첫 번째 오픈 소스 추론 모델을 제시하고, 다양한 벤치마크에서 경쟁력 있는 성능을 보여준다.
+  tags:
+  - cybersecurity
+  - reasoning
+  - open-source
+  - LLM
+  - evaluation
+  interest_score: 4
+  interest_reason: 특정 도메인에서의 강력한 성능을 보여주는 중요한 기여를 한다.
+  baseline_mentioned: null
+  category: evaluation
+  has_code: true
+  link: https://arxiv.org/abs/2601.21051
+  github_url: null
+  github_stars: null
+- arxiv_id: '2601.18129'
+  title: 'Typhoon-S: Minimal Open Post-Training for Sovereign Large Language Models'
+  one_liner: 자원 제한 환경에서 LLM을 효과적으로 조정하기 위한 최소한의 오픈 포스트 훈련 방법을 제안한다.
+  tags:
+  - LLM
+  - sovereign
+  - post-training
+  - fine-tuning
+  - agent
+  interest_score: 3
+  interest_reason: 자원 제한 환경에서의 LLM 조정 방법을 제시하여 유용성을 높인다.
+  baseline_mentioned: null
+  category: agent
+  has_code: true
+  link: https://arxiv.org/abs/2601.18129
+  github_url: https://github.com/scb-10x/typhoon-s
+  github_stars: 7
+- arxiv_id: '2601.22069'
+  title: 'VTC-R1: Vision-Text Compression for Efficient Long-Context Reasoning'
+  one_liner: 비전-텍스트 압축을 통해 긴 맥락 추론의 효율성을 개선하는 새로운 패러다임을 제안한다.
+  tags:
+  - long-context
+  - reasoning
+  - vision-text
+  - compression
+  - LLM
+  interest_score: 4
+  interest_reason: 효율적인 추론을 위한 혁신적인 접근 방식을 제시하여 중요성을 가진다.
+  baseline_mentioned: null
+  category: reasoning
+  has_code: true
+  link: https://arxiv.org/abs/2601.22069
+  github_url: https://github.com/w-yibo/VTC-R1
+  github_stars: 14
+- arxiv_id: '2601.21181'
+  title: 'MAD: Modality-Adaptive Decoding for Mitigating Cross-Modal Hallucinations
+    in Multimodal Large Language Models'
+  one_liner: 다중 모달 언어 모델의 교차 모달 환각을 줄이기 위한 모달리티 적응 디코딩 방법을 제안한다.
+  tags:
+  - multimodal
+  - LLM
+  - hallucinations
+  - decoding
+  - training-free
+  interest_score: 4
+  interest_reason: 모달리티 간의 상호작용을 개선하는 중요한 방법론을 제시한다.
+  baseline_mentioned: null
+  category: reasoning
+  has_code: true
+  link: https://arxiv.org/abs/2601.21181
+  github_url: null
+  github_stars: null
+- arxiv_id: '2601.22158'
+  title: One-step Latent-free Image Generation with Pixel Mean Flows
+  one_liner: 픽셀 평균 흐름을 이용한 이미지 생성을 위한 새로운 접근 방식을 제안한다.
+  tags:
+  - image generation
+  - diffusion
+  - latent-free
+  - flow-based
+  - generative models
+  interest_score: 3
+  interest_reason: 이미지 생성 분야에서의 새로운 접근 방식을 제시하여 유용성을 높인다.
+  baseline_mentioned: null
+  category: other
+  has_code: false
+  link: https://arxiv.org/abs/2601.22158
+  github_url: null
+  github_stars: null
+- arxiv_id: '2601.21598'
+  title: 'Beyond Imitation: Reinforcement Learning for Active Latent Planning'
+  one_liner: 이 논문은 강화 학습을 활용하여 잠재 계획을 최적화하는 Active Latent Planning 방법을 제안하며, 기존의 언어
+    토큰 대신 연속 잠재 토큰을 사용하여 효율적인 사고 과정을 구현합니다.
+  tags:
+  - Reinforcement Learning
+  - Latent Planning
+  - Chain-of-Thought
+  - Linguistic Tokens
+  interest_score: 4
+  interest_reason: 잠재 계획을 통한 사고 과정의 효율성을 높이는 새로운 접근법을 제시하여 중요한 기여를 합니다.
+  baseline_mentioned: LLaMA-1B
+  category: reasoning
+  has_code: false
+  link: https://arxiv.org/abs/2601.21598
+  github_url: null
+  github_stars: null
+- arxiv_id: '2601.21343'
+  title: 'Self-Improving Pretraining: using post-trained models to pretrain better
+    models'
+  one_liner: 이 연구는 포스트 훈련된 모델을 활용하여 더 나은 모델을 사전 훈련하는 새로운 방법을 제안하며, 안전성과 사실성을 개선하는
+    데 중점을 둡니다.
+  tags:
+  - Pretraining
+  - Reinforcement Learning
+  - Safety
+  - Factuality
+  interest_score: 5
+  interest_reason: 모델의 핵심 행동을 사전 훈련 단계에서 개선하여 안전하고 사실적인 출력을 보장하는 혁신적인 접근법입니다.
+  baseline_mentioned: standard pretraining
+  category: training
+  has_code: false
+  link: https://arxiv.org/abs/2601.21343
+  github_url: null
+  github_stars: null
+- arxiv_id: '2601.20975'
+  title: 'DeepSearchQA: Bridging the Comprehensiveness Gap for Deep Research Agents'
+  one_liner: DeepSearchQA는 복잡한 정보 탐색 작업을 평가하기 위한 900개의 프롬프트 벤치마크를 소개하며, 에이전트의 정보 수집
+    및 계획 능력을 테스트합니다.
+  tags:
+  - Benchmark
+  - Information Retrieval
+  - Multi-step Tasks
+  - Agent Evaluation
+  interest_score: 4
+  interest_reason: 에이전트의 성능 한계를 드러내고, 정보 검색의 복잡성을 평가하는 새로운 기준을 제시합니다.
+  baseline_mentioned: state-of-the-art agent architectures
+  category: evaluation
+  has_code: false
+  link: https://arxiv.org/abs/2601.20975
+  github_url: null
+  github_stars: null
+deep_candidates:
+- '2601.20833'
+- '2601.21181'
+- '2601.21590'
+skimmed_at: '2026-01-31T23:33:20.011882'

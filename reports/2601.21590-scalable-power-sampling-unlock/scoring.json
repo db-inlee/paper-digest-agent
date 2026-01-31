@@ -1,0 +1,10 @@
+{
+  "arxiv_id": "2601.21590",
+  "practicality": 4,
+  "codeability": 3,
+  "signal": 4,
+  "recommendation": "worth_reading",
+  "reasoning": "제안된 방법은 기존의 강화 학습 기반 접근법 없이도 대형 언어 모델의 추론 능력을 향상시킬 수 있는 가능성을 보여준다. 특히, Power Distribution Approximation과 Jackknife Estimator를 활용한 접근은 실용적인 문제 해결에 기여할 수 있을 것으로 판단된다.",
+  "key_strength": "효율적이고 훈련이 필요 없는 샘플링 방법을 제안하여 대형 언어 모델의 성능을 개선할 수 있는 가능성을 보여준다.",
+  "main_concern": "구현의 복잡성이 다소 존재할 수 있으며, 실제 적용 시 성능이 어떻게 나타날지에 대한 불확실성이 있다."
+}

@@ -1,0 +1,34 @@
+{
+  "arxiv_id": "2601.21181",
+  "one_line_takeaway": "이 논문은 VCD-Extended와 AVCD의 균일한 왜곡 적용의 한계를 작업별 모달리티 요구사항을 동적으로 조정하는 Modality-Adaptive Decoding(MAD)을 통해 개선한다",
+  "core_deltas": [
+    {
+      "axis": "디코딩 전략",
+      "old_approach": "VCD-Extended와 AVCD는 모든 모달리티에 균일한 왜곡을 적용",
+      "new_approach": "Modality-Adaptive Decoding(MAD)은 작업별 모달리티 요구사항을 동적으로 결정하여 대조적 디코딩을 조정",
+      "why_better": "작업별로 모달리티 요구사항을 반영하여 크로스 모달 환각을 완화할 수 있음",
+      "evidence": {
+        "page": null,
+        "section": null,
+        "quote": "Modality-Adaptive Decoding (MAD): 작업별 모달리티 요구사항을 동적으로 결정하고 대조적 디코딩을 조정하여 크로스 모달 환각을 완화하는 방법입니다.",
+        "type": "quote"
+      }
+    }
+  ],
+  "tradeoffs": [
+    {
+      "aspect": "복잡성",
+      "benefit": "작업별 모달리티 요구사항을 반영하여 정확도를 향상",
+      "cost": "모달리티 요구사항을 동적으로 결정하는 과정에서 계산 복잡도가 증가",
+      "when_acceptable": "정확도가 중요한 작업에서 계산 자원이 충분할 때",
+      "evidence": {
+        "page": null,
+        "section": null,
+        "quote": null,
+        "type": "quote"
+      }
+    }
+  ],
+  "when_to_use": "작업별 모달리티 요구사항이 중요한 멀티모달 환경에서 크로스 모달 환각을 완화하고자 할 때",
+  "when_not_to_use": "계산 자원이 제한적이거나 모달리티 요구사항이 덜 중요한 경우"
+}

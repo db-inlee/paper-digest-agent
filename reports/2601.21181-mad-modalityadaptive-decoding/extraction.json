@@ -1,0 +1,146 @@
+{
+  "arxiv_id": "2601.21181",
+  "title": "MAD: Modality-Adaptive Decoding for Mitigating Cross-Modal Hallucinations in Multimodal Large Language Models",
+  "problem_definition": {
+    "statement": "크로스 모달 환각(cross-modal hallucinations)을 해결하기 위한 문제를 다룹니다. 이는 한 모달리티가 다른 모달리티의 콘텐츠 생성에 부적절하게 영향을 미치는 문제입니다.",
+    "baseline_methods": [
+      "Contrastive Decoding",
+      "Audio-Visual Contrastive Decoding (AVCD)"
+    ],
+    "structural_limitation": "기존의 멀티모달 CD 방법은 단일 모달리티 시나리오에 맞춰 설계되어, 시각적 손상에서 주로 발생하는 환각을 가정합니다. AVCD는 여러 모달리티에 대해 대조적 디코딩을 확장하지만, 주어진 작업에 실제로 관련된 모달리티를 고려하지 않고 모든 모달리티에 균일한 왜곡을 적용합니다.",
+    "evidence": [
+      {
+        "page": null,
+        "section": "Introduction",
+        "quote": "cross-modal hallucinations reveal a deeper failure of modality separation-where information inappropriately influences and corrupts the understanding of another.",
+        "type": "quote"
+      },
+      {
+        "page": null,
+        "section": "Introduction",
+        "quote": "This uniform, non-adaptive approach is insufficient for tackling cross-modal interference.",
+        "type": "quote"
+      }
+    ]
+  },
+  "baselines": [
+    {
+      "name": "VCD-Extended",
+      "description": "Visual Contrastive Decoding의 원리를 멀티모달 설정에 적용하여 모든 가능한 모달리티 왜곡에 대해 대조합니다.",
+      "limitation": "모든 모달리티에 균일한 왜곡을 적용하여 작업별 모달리티 요구사항을 고려하지 않습니다.",
+      "evidence": [
+        {
+          "page": null,
+          "section": "Baselines",
+          "quote": "VCD-Extended applies the Visual Contrastive Decoding principle to the multimodal setting by contrasting against all possible modality distortions.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "name": "AVCD",
+      "description": "오디오-비주얼 설정으로 대조적 디코딩을 확장하지만, 쿼리별 적응 없이 균일한 왜곡을 적용합니다.",
+      "limitation": "쿼리별 적응 없이 균일한 왜곡을 적용하여 작업별 모달리티 요구사항을 고려하지 않습니다.",
+      "evidence": [
+        {
+          "page": null,
+          "section": "Baselines",
+          "quote": "AVCD extends contrastive decoding to audio-visual settings but applies uniform distortion without query-specific adaptation.",
+          "type": "quote"
+        }
+      ]
+    }
+  ],
+  "method_components": [
+    {
+      "name": "Modality-Adaptive Decoding (MAD)",
+      "description": "작업별 모달리티 요구사항을 동적으로 결정하고 대조적 디코딩을 조정하여 크로스 모달 환각을 완화하는 방법입니다.",
+      "inputs": [
+        "비디오 시퀀스",
+        "오디오 웨이브폼",
+        "텍스트 질문"
+      ],
+      "outputs": [
+        "디코딩된 출력 시퀀스"
+      ],
+      "implementation_hint": null,
+      "evidence": [
+        {
+          "page": null,
+          "section": "Method",
+          "quote": "MAD is the first approach to explicitly determine the modality requirements of each task and dynamically adapt the contrastive decoding strategy to mitigate cross-modal hallucinations.",
+          "type": "quote"
+        }
+      ]
+    }
+  ],
+  "benchmark": {
+    "dataset": "CMM, AVHBench",
+    "metrics": [
+      "accuracy"
+    ],
+    "baseline_results": {
+      "VideoLLaMA2-AV + VCD Extended": "76.4%",
+      "VideoLLaMA2-AV + AVCD": "75.8%",
+      "Qwen2.5-Omni-7B + VCD Extended": "72.8%",
+      "Qwen2.5-Omni-7B + AVCD": "73.3%"
+    },
+    "proposed_results": {
+      "VideoLLaMA2-AV + MAD": "81.3%",
+      "Qwen2.5-Omni-7B + MAD": "81.4%"
+    },
+    "evidence": [
+      {
+        "page": null,
+        "section": "Main Results",
+        "quote": "MAD consistently outperforms existing decoding methods, demonstrating its effectiveness in mitigating cross-modal hallucinations.",
+        "type": "quote"
+      }
+    ]
+  },
+  "claims": [
+    {
+      "claim_id": "C1",
+      "text": "MAD는 크로스 모달 환각을 완화하는 데 효과적입니다.",
+      "claim_type": "result",
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "page": null,
+          "section": "Main Results",
+          "quote": "MAD consistently outperforms existing decoding methods, demonstrating its effectiveness in mitigating cross-modal hallucinations.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "claim_id": "C2",
+      "text": "MAD는 작업별 모달리티 요구사항을 동적으로 결정합니다.",
+      "claim_type": "method",
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "page": null,
+          "section": "Method",
+          "quote": "MAD is the first approach to explicitly determine the modality requirements of each task and dynamically adapt the contrastive decoding strategy to mitigate cross-modal hallucinations.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "claim_id": "C3",
+      "text": "기존의 대조적 디코딩 방법은 작업별 모달리티 요구사항을 고려하지 않습니다.",
+      "claim_type": "limitation",
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "page": null,
+          "section": "Introduction",
+          "quote": "This uniform, non-adaptive approach is insufficient for tackling cross-modal interference.",
+          "type": "quote"
+        }
+      ]
+    }
+  ],
+  "extraction_mode": "full"
+}

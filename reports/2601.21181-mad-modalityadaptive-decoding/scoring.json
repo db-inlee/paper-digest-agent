@@ -1,0 +1,10 @@
+{
+  "arxiv_id": "2601.21181",
+  "practicality": 4,
+  "codeability": 3,
+  "signal": 4,
+  "recommendation": "worth_reading",
+  "reasoning": "이 논문은 크로스 모달 환각 문제를 해결하기 위한 새로운 접근 방식을 제안하며, 실용적인 문제 해결 가능성이 높다. Modality-Adaptive Decoding(MAD)을 통해 작업별 모달리티 요구사항을 동적으로 조정하는 방법은 실제 응용에서 유용할 것으로 보인다.",
+  "key_strength": "모달리티 요구사항을 동적으로 조정하여 크로스 모달 환각 문제를 개선하는 새로운 디코딩 전략을 제안한다.",
+  "main_concern": "제안된 방법의 실제 적용 가능성과 다양한 상황에서의 성능 검증이 필요할 수 있다."
+}

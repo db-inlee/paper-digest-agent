@@ -1,0 +1,46 @@
+{
+  "arxiv_id": "2601.21590",
+  "one_line_takeaway": "이 논문은 Group Relative Policy Optimisation(GRPO)의 분포 날카로움 한계를 Power Distribution Approximation과 Jackknife Estimator를 통해 개선한다.",
+  "core_deltas": [
+    {
+      "axis": "샘플링 전략",
+      "old_approach": "강화 학습을 통한 자동 검증기와의 최적화",
+      "new_approach": "Power Distribution Approximation을 통한 저온 분포의 파워 분포 근사",
+      "why_better": "훈련 없이도 대형 언어 모델의 추론 능력을 향상시킬 수 있는 효율적인 방법을 제공함",
+      "evidence": {
+        "page": null,
+        "section": null,
+        "quote": "Power Distribution Approximation: 저온 분포를 적절히 스케일링하여 파워 분포를 근사하는 방법",
+        "type": "quote"
+      }
+    },
+    {
+      "axis": "바이어스 보정",
+      "old_approach": "해당 없음",
+      "new_approach": "Jackknife Estimator를 통한 바이어스 감소",
+      "why_better": "추론 결과의 신뢰성을 높이기 위해 바이어스를 줄이는 기법을 도입함",
+      "evidence": {
+        "page": null,
+        "section": null,
+        "quote": "Jackknife Estimator: 바이어스를 줄이기 위한 잭나이프 보정 기법",
+        "type": "quote"
+      }
+    }
+  ],
+  "tradeoffs": [
+    {
+      "aspect": "복잡성",
+      "benefit": "훈련 없이도 효율적인 추론 능력 향상",
+      "cost": "추가적인 계산 복잡성 증가",
+      "when_acceptable": "추론 능력 향상이 필요한 경우",
+      "evidence": {
+        "page": null,
+        "section": null,
+        "quote": null,
+        "type": "quote"
+      }
+    }
+  ],
+  "when_to_use": "훈련 없이 대형 언어 모델의 추론 능력을 향상시키고자 할 때",
+  "when_not_to_use": "계산 복잡성이 중요한 제약 조건일 때"
+}

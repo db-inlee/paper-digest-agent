@@ -1,0 +1,43 @@
+{
+  "arxiv_id": "2601.21181",
+  "total_claims": 7,
+  "verified_count": 4,
+  "unverified_count": 0,
+  "contradicted_count": 3,
+  "overall_reliability": "low",
+  "results": [
+    {
+      "claim_id": "C1",
+      "claim_text": "MAD는 크로스 모달 환각을 완화하는 데 효과적입니다.",
+      "status": "verified",
+      "confidence": 1.0,
+      "evidence_found": "MAD는 CMM과 AVHBench 벤치마크에서 크로스 모달 환각을 효과적으로 완화한다고 주장함.",
+      "notes": "실험 결과에서 MAD의 효과가 명시됨.",
+      "correction_hint": null
+    },
+    {
+      "claim_id": "C2",
+      "claim_text": "MAD는 작업별 모달리티 요구사항을 동적으로 결정합니다.",
+      "status": "verified",
+      "confidence": 1.0,
+      "evidence_found": "MAD는 작업에 따라 모달리티 요구사항을 동적으로 조정한다고 설명됨.",
+      "notes": "논문에서 MAD의 핵심 기능으로 언급됨.",
+      "correction_hint": null
+    },
+    {
+      "claim_id": "C3",
+      "claim_text": "기존의 대조적 디코딩 방법은 작업별 모달리티 요구사항을 고려하지 않습니다.",
+      "status": "verified",
+      "confidence": 1.0,
+      "evidence_found": "VCD-Extended와 AVCD의 한계로 작업별 모달리티 요구사항을 고려하지 않는다고 명시됨.",
+      "notes": "논문에서 기존 방법의 한계로 언급됨.",
+      "correction_hint": null
+    }
+  ],
+  "summary": "기존 방법의 한계를 해결했다고 주장하지만, 실제로는 새로운 접근 방식을 제안한 것이므로 모순됨. 또한, baseline으로 언급된 방법들이 실험적으로 비교되지 않았음.",
+  "corrections_needed": [
+    "baseline:VCD-Extended",
+    "baseline:AVCD",
+    "one_line_takeaway"
+  ]
+}

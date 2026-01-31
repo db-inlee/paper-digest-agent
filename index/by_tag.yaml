@@ -1,0 +1,187 @@
+agent:
+- '2601.22154'
+- '2601.20730'
+- '2601.21754'
+- '2601.18129'
+agent evaluation:
+- '2601.20975'
+asr:
+- '2601.21337'
+audio understanding:
+- '2601.21337'
+automation:
+- '2601.20833'
+bci:
+- '2601.17883'
+benchmark:
+- '2601.20354'
+- '2601.22153'
+- '2601.20730'
+- '2601.20975'
+benchmarking:
+- '2601.17883'
+capability shaping:
+- '2601.21571'
+chain-of-thought:
+- '2601.21821'
+- '2601.21598'
+compression:
+- '2601.22069'
+compute allocation:
+- '2601.21420'
+cybersecurity:
+- '2601.21051'
+data engineering:
+- '2601.21639'
+data filtering:
+- '2601.21571'
+dataset:
+- '2601.21821'
+decoding:
+- '2601.21181'
+diffusion:
+- '2601.22158'
+diffusion models:
+- '2601.22158'
+dynamic manipulation:
+- '2601.22153'
+eeg:
+- '2601.17883'
+efficiency:
+- '2601.22069'
+- '2601.21337'
+embedding:
+- '2601.21204'
+evaluation:
+- '2601.20354'
+- '2601.22154'
+- '2601.20730'
+- '2601.21051'
+exploration:
+- '2601.21754'
+factuality:
+- '2601.21343'
+fine-tuning:
+- '2601.21754'
+- '2601.18129'
+- '2601.21821'
+flow-based:
+- '2601.22158'
+foundation models:
+- '2601.17883'
+gan:
+- '2601.22083'
+generative models:
+- '2601.22158'
+hallucinations:
+- '2601.21181'
+image generation:
+- '2601.22158'
+information retrieval:
+- '2601.20975'
+knowledge graph:
+- '2601.20833'
+language identification:
+- '2601.21337'
+language models:
+- '2601.21204'
+- '2601.21420'
+- '2601.21571'
+- '2601.22083'
+- '2601.21051'
+latent planning:
+- '2601.21598'
+latent space:
+- '2601.22083'
+latent-free:
+- '2601.22158'
+linguistic tokens:
+- '2601.21598'
+llm:
+- '2601.20833'
+- '2601.21754'
+- '2601.21590'
+- '2601.18129'
+- '2601.22069'
+- '2601.21181'
+- '2601.21051'
+long-context:
+- '2601.20730'
+- '2601.22069'
+long-context reasoning:
+- '2601.22069'
+moe:
+- '2601.21204'
+- '2601.21420'
+multi-step tasks:
+- '2601.20975'
+multimodal:
+- '2601.21639'
+- '2601.21181'
+multimodal reasoning:
+- '2601.21821'
+neural representations:
+- '2601.17883'
+ocr:
+- '2601.21639'
+one-step:
+- '2601.22158'
+open-source:
+- '2601.21051'
+post-training:
+- '2601.18129'
+preference optimization:
+- '2601.22083'
+pretraining:
+- '2601.21571'
+- '2601.21343'
+reasoning:
+- '2601.21590'
+- '2601.21051'
+- '2601.22069'
+reinforcement learning:
+- '2601.22154'
+- '2601.21754'
+- '2601.21590'
+- '2601.21598'
+- '2601.21343'
+reward model:
+- '2601.22154'
+safety:
+- '2601.21343'
+sampling:
+- '2601.21590'
+scaling:
+- '2601.21204'
+scientific discovery:
+- '2601.20833'
+sovereign:
+- '2601.18129'
+sovereign models:
+- '2601.18129'
+spatial reasoning:
+- '2601.20354'
+speech recognition:
+- '2601.21337'
+temporal reasoning:
+- '2601.22153'
+text-to-image:
+- '2601.20354'
+token compression:
+- '2601.21420'
+training:
+- '2601.21571'
+- '2601.22083'
+- '2601.18129'
+training-free:
+- '2601.21590'
+- '2601.21181'
+vision-language:
+- '2601.22153'
+- '2601.21639'
+vision-text:
+- '2601.22069'
+vla:
+- '2601.22153'
+vlm:
+- '2601.21821'

@@ -1,0 +1,48 @@
+{
+  "arxiv_id": "2601.21590",
+  "total_claims": 4,
+  "verified_count": 3,
+  "unverified_count": 1,
+  "contradicted_count": 0,
+  "overall_reliability": "high",
+  "results": [
+    {
+      "claim_id": "claim_1",
+      "claim_text": "파워 분포는 저온 분포의 스케일링된 버전으로 표현될 수 있다.",
+      "status": "verified",
+      "confidence": 1.0,
+      "evidence_found": "논문 본문에서 파워 분포가 저온 분포의 스케일링된 버전으로 표현될 수 있음을 명시적으로 설명함.",
+      "notes": "이론적 기여에 대한 명확한 설명이 있음.",
+      "correction_hint": null
+    },
+    {
+      "claim_id": "claim_2",
+      "claim_text": "제안된 방법은 MCMC 기반의 파워 샘플링과 동일한 파워 분포를 목표로 하지만, 자귀적 근사를 사용하여 추론 지연을 10배 이상 줄인다.",
+      "status": "verified",
+      "confidence": 1.0,
+      "evidence_found": "논문에서 제안된 방법이 MCMC 기반 방법보다 10배 이상의 추론 지연을 줄인다고 명시함.",
+      "notes": "효율성에 대한 실험 결과가 포함되어 있음.",
+      "correction_hint": null
+    },
+    {
+      "claim_id": "claim_3",
+      "claim_text": "파워 기반 샘플링은 RL 사후 훈련된 모델에서도 성능을 향상시킬 수 있다.",
+      "status": "verified",
+      "confidence": 1.0,
+      "evidence_found": "논문에서 RL 사후 훈련된 모델에 대한 성능 향상을 보여주는 실험 결과가 있음.",
+      "notes": "다양한 모델에 대한 평가가 포함됨.",
+      "correction_hint": null
+    },
+    {
+      "claim_id": "claim_4",
+      "claim_text": "제안된 방법은 훈련이나 외부 검증기 없이도 RL 기반 사후 훈련의 이점을 회복할 수 있다.",
+      "status": "unverified",
+      "confidence": 0.7,
+      "evidence_found": null,
+      "notes": "논문에서 이 주장을 명시적으로 뒷받침하는 근거가 부족함.",
+      "correction_hint": null
+    }
+  ],
+  "summary": "대부분의 클레임이 논문에서 지지되며, 제안된 방법의 효과와 한계가 명확히 설명됨.",
+  "corrections_needed": []
+}
