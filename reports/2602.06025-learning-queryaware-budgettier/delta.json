@@ -1,0 +1,46 @@
+{
+  "arxiv_id": "2602.06025",
+  "one_line_takeaway": "이 논문은 기존의 메모리 증강 에이전트 시스템의 비용 효율성 한계를 BudgetMem을 통해 개선한다",
+  "core_deltas": [
+    {
+      "axis": "메모리 구축 방식",
+      "old_approach": "오프라인, 쿼리 비인식 메모리 구축",
+      "new_approach": "쿼리 인식 런타임 에이전트 메모리 구축",
+      "why_better": "쿼리에 중요한 정보를 누락하지 않고 명시적 성능-비용 제어를 가능하게 함",
+      "evidence": {
+        "page": null,
+        "section": null,
+        "quote": "기존의 오프라인, 쿼리 비인식 메모리 구축 방식은 비효율적이며 쿼리에 중요한 정보를 누락할 수 있습니다.",
+        "type": "quote"
+      }
+    },
+    {
+      "axis": "성능-비용 제어",
+      "old_approach": "명시적 제어 불가능",
+      "new_approach": "BudgetMem을 통한 명시적 성능-비용 제어 가능",
+      "why_better": "사용자가 성능과 비용 간의 트레이드오프를 명확히 조정할 수 있음",
+      "evidence": {
+        "page": null,
+        "section": null,
+        "quote": "BudgetMem: 런타임 에이전트 메모리 프레임워크로, 명시적 성능-비용 제어를 가능하게 함",
+        "type": "quote"
+      }
+    }
+  ],
+  "tradeoffs": [
+    {
+      "aspect": "비용",
+      "benefit": "성능과 비용 간의 명시적 제어 가능",
+      "cost": "추가적인 제어 로직으로 인한 복잡성 증가",
+      "when_acceptable": "성능과 비용의 균형이 중요한 경우",
+      "evidence": {
+        "page": null,
+        "section": null,
+        "quote": "명시적 성능-비용 제어를 가능하게 하는 BudgetMem",
+        "type": "quote"
+      }
+    }
+  ],
+  "when_to_use": "성능과 비용 간의 명확한 트레이드오프가 필요한 경우",
+  "when_not_to_use": "단순한 메모리 구축이 필요한 경우, 추가적인 복잡성을 피하고자 할 때"
+}

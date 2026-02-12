@@ -1,0 +1,39 @@
+{
+  "arxiv_id": "2602.07055",
+  "total_claims": 3,
+  "verified_count": 3,
+  "unverified_count": 0,
+  "contradicted_count": 0,
+  "overall_reliability": "high",
+  "results": [
+    {
+      "claim_id": "claim_1",
+      "claim_text": "THEORY OF SPACE는 에이전트가 능동적으로 정보를 수집하여 공간적 신념을 구축하고 수정하며 활용할 수 있는지를 평가하는 프레임워크입니다.",
+      "status": "verified",
+      "confidence": 1.0,
+      "evidence_found": "논문에서 THEORY OF SPACE의 정의와 목적이 명확히 설명되어 있음.",
+      "notes": "이론적 배경과 실험적 접근이 잘 설명됨.",
+      "correction_hint": null
+    },
+    {
+      "claim_id": "claim_2",
+      "claim_text": "능동적 탐색은 주요 병목 현상으로, 모델들은 수동적 환경에서는 잘 수행하지만 능동적으로 정보를 수집해야 할 때 성능이 저하됩니다.",
+      "status": "verified",
+      "confidence": 1.0,
+      "evidence_found": "논문에서 능동적 탐색의 병목 현상에 대한 실험 결과가 제시됨.",
+      "notes": "모델 성능 저하에 대한 구체적인 수치와 예시가 포함됨.",
+      "correction_hint": null
+    },
+    {
+      "claim_id": "claim_3",
+      "claim_text": "비전 기반 모델에서 신념 관성(Belief Inertia) 현상이 두드러지며, 에이전트가 이전의 잘못된 선입견을 덮어쓰지 못하는 문제가 있습니다.",
+      "status": "verified",
+      "confidence": 1.0,
+      "evidence_found": "논문에서 비전 기반 모델의 신념 관성 문제에 대한 구체적인 설명과 실험 결과가 포함됨.",
+      "notes": "신념 관성의 정의와 그로 인한 문제점이 명확히 기술됨.",
+      "correction_hint": null
+    }
+  ],
+  "summary": "모든 클레임이 논문에서 지지되며, 검증된 내용이 정확합니다.",
+  "corrections_needed": []
+}

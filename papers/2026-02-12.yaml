@@ -1,0 +1,323 @@
+date: '2026-02-12'
+total_collected: 15
+total_skimmed: 15
+papers:
+- arxiv_id: '2602.10604'
+  title: 'Step 3.5 Flash: Open Frontier-Level Intelligence with 11B Active Parameters'
+  one_liner: Step 3.5 Flash는 11B 활성 매개변수를 가진 희소 혼합 전문가 모델로, 에이전트 지능과 계산 효율성을 결합하여
+    강력한 성능을 보여줍니다.
+  tags:
+  - agent
+  - reinforcement learning
+  - efficiency
+  - multi-agent
+  - tool use
+  interest_score: 4
+  interest_reason: 에이전트 지능과 효율성을 동시에 달성한 점에서 중요한 기여를 합니다.
+  baseline_mentioned: GPT-5.2 xHigh, Gemini 3.0 Pro
+  category: agent
+  has_code: true
+  link: https://arxiv.org/abs/2602.10604
+  github_url: https://github.com/stepfun-ai/Step-3.5-Flash
+  github_stars: 1221
+  matched_keywords:
+  - agent
+  - agentic
+  - reasoning
+- arxiv_id: '2602.11124'
+  title: 'PhyCritic: Multimodal Critic Models for Physical AI'
+  one_liner: PhyCritic는 물리적 AI 작업을 위한 다중 모달 비평 모델로, 물리적 인식과 추론을 개선합니다.
+  tags:
+  - rag
+  - multimodal
+  - evaluation
+  - physical AI
+  - reinforcement learning
+  interest_score: 4
+  interest_reason: 물리적 AI 작업에 최적화된 비평 모델을 제안하여 중요한 기여를 합니다.
+  baseline_mentioned: open-source baselines
+  category: evaluation
+  has_code: false
+  link: https://arxiv.org/abs/2602.11124
+  github_url: null
+  github_stars: null
+  matched_keywords:
+  - reasoning
+  - planning
+- arxiv_id: '2602.10177'
+  title: Towards Autonomous Mathematics Research
+  one_liner: Aletheia는 수학 연구를 위한 에이전트로, 자연어로 솔루션을 생성하고 검증하는 능력을 갖추고 있습니다.
+  tags:
+  - reasoning
+  - agent
+  - mathematics
+  - research
+  - tool use
+  interest_score: 5
+  interest_reason: AI가 독립적으로 연구 논문을 생성하는 혁신적인 접근을 보여줍니다.
+  baseline_mentioned: null
+  category: reasoning
+  has_code: false
+  link: https://arxiv.org/abs/2602.10177
+  github_url: null
+  github_stars: null
+  matched_keywords:
+  - agent
+  - reasoning
+- arxiv_id: '2602.11089'
+  title: 'DataChef: Cooking Up Optimal Data Recipes for LLM Adaptation via Reinforcement
+    Learning'
+  one_liner: DataChef는 LLM 적응을 위한 최적의 데이터 레시피를 생성하는 강화 학습 기반 시스템입니다.
+  tags:
+  - training
+  - data curation
+  - reinforcement learning
+  - LLM
+  - automation
+  interest_score: 4
+  interest_reason: LLM 훈련 데이터 자동화를 위한 새로운 접근 방식을 제시합니다.
+  baseline_mentioned: human experts
+  category: training
+  has_code: true
+  link: https://arxiv.org/abs/2602.11089
+  github_url: https://github.com/yichengchen24/DataChef
+  github_stars: 1
+  matched_keywords:
+  - LLM
+- arxiv_id: '2602.10560'
+  title: 'When to Memorize and When to Stop: Gated Recurrent Memory for Long-Context
+    Reasoning'
+  one_liner: GRU-Mem은 긴 컨텍스트 추론을 위한 메모리 업데이트 및 종료 메커니즘을 개선한 모델입니다.
+  tags:
+  - reasoning
+  - long-context
+  - memory
+  - reinforcement learning
+  - efficiency
+  interest_score: 3
+  interest_reason: 긴 컨텍스트에서의 성능을 개선하는 유용한 기여를 합니다.
+  baseline_mentioned: MemAgent
+  category: reasoning
+  has_code: false
+  link: https://arxiv.org/abs/2602.10560
+  github_url: null
+  github_stars: null
+  matched_keywords:
+  - LLM
+  - agent
+  - reasoning
+- arxiv_id: '2602.08253'
+  title: 'G-LNS: Generative Large Neighborhood Search for LLM-Based Automatic Heuristic
+    Design'
+  one_liner: G-LNS는 LLM 기반 자동 휴리스틱 설계를 위한 생성적 진화 프레임워크입니다.
+  tags:
+  - agent
+  - heuristic design
+  - optimization
+  - combinatorial problems
+  - evolutionary algorithms
+  interest_score: 4
+  interest_reason: 복잡한 최적화 문제를 해결하기 위한 혁신적인 접근을 제시합니다.
+  baseline_mentioned: classical solvers
+  category: other
+  has_code: true
+  link: https://arxiv.org/abs/2602.08253
+  github_url: https://github.com/ZBoyn/G-LNS
+  github_stars: 11
+  matched_keywords:
+  - LLM
+  - RAG
+- arxiv_id: '2602.10975'
+  title: 'FeatureBench: Benchmarking Agentic Coding for Complex Feature Development'
+  one_liner: FeatureBench는 복잡한 기능 개발을 위한 에이전트 코딩 성능을 평가하는 새로운 벤치마크입니다.
+  tags:
+  - evaluation
+  - agent
+  - coding
+  - benchmarking
+  - software development
+  interest_score: 4
+  interest_reason: 에이전트 코딩 성능을 평가하기 위한 새로운 기준을 제시합니다.
+  baseline_mentioned: Claude 4.5 Opus
+  category: evaluation
+  has_code: true
+  link: https://arxiv.org/abs/2602.10975
+  github_url: https://github.com/LiberCoders/FeatureBench
+  github_stars: 5
+  matched_keywords:
+  - LLM
+  - agent
+  - agentic
+  - RAG
+- arxiv_id: '2602.10224'
+  title: Internalizing Meta-Experience into Memory for Guided Reinforcement Learning
+    in Large Language Models
+  one_liner: Meta-Experience Learning은 LLM의 메모리에 메타 경험을 내재화하여 강화 학습을 개선하는 새로운 프레임워크입니다.
+  tags:
+  - training
+  - reinforcement learning
+  - meta-learning
+  - experience
+  - knowledge reuse
+  interest_score: 4
+  interest_reason: LLM의 학습 능력을 향상시키는 중요한 기여를 합니다.
+  baseline_mentioned: null
+  category: training
+  has_code: false
+  link: https://arxiv.org/abs/2602.10224
+  github_url: null
+  github_stars: null
+  matched_keywords:
+  - LLM
+  - RAG
+  - reasoning
+- arxiv_id: '2602.10609'
+  title: Online Causal Kalman Filtering for Stable and Effective Policy Optimization
+  one_liner: KPO는 정책 최적화를 위한 온라인 인과 칼만 필터링 방법을 제안하여 안정성을 개선합니다.
+  tags:
+  - training
+  - reinforcement learning
+  - policy optimization
+  - stability
+  - Kalman filtering
+  interest_score: 4
+  interest_reason: 정책 최적화의 안정성을 높이는 혁신적인 접근을 보여줍니다.
+  baseline_mentioned: state-of-the-art counterparts
+  category: training
+  has_code: false
+  link: https://arxiv.org/abs/2602.10609
+  github_url: null
+  github_stars: null
+  matched_keywords:
+  - reasoning
+- arxiv_id: '2602.10999'
+  title: 'CLI-Gym: Scalable CLI Task Generation via Agentic Environment Inversion'
+  one_liner: CLI-Gym은 에이전트 환경 역전환을 통해 스케일 가능한 CLI 작업 생성을 위한 시스템입니다.
+  tags:
+  - agent
+  - task generation
+  - environment
+  - automation
+  - CLI
+  interest_score: 4
+  interest_reason: 환경 집약적 작업 생성을 위한 새로운 접근 방식을 제시합니다.
+  baseline_mentioned: null
+  category: agent
+  has_code: true
+  link: https://arxiv.org/abs/2602.10999
+  github_url: https://github.com/LiberCoders/CLI-Gym
+  github_stars: 5
+  matched_keywords:
+  - agent
+  - agentic
+- arxiv_id: '2602.09713'
+  title: 'Stroke3D: Lifting 2D strokes into rigged 3D model via latent diffusion models'
+  one_liner: Stroke3D는 2D 스케치를 기반으로 리깅된 3D 모델을 생성하는 혁신적인 프레임워크를 제안합니다.
+  tags:
+  - 3D modeling
+  - rigging
+  - latent diffusion
+  - animation
+  - user input
+  interest_score: 3
+  interest_reason: 3D 모델링 분야에서의 유용한 기여이지만, 기존 기술과의 차별성이 제한적입니다.
+  baseline_mentioned: null
+  category: other
+  has_code: true
+  link: https://arxiv.org/abs/2602.09713
+  github_url: https://github.com/Whalesong-zrs/Stroke3D
+  github_stars: 16
+  matched_keywords:
+  - prompt
+- arxiv_id: '2602.08711'
+  title: 'TimeChat-Captioner: Scripting Multi-Scene Videos with Time-Aware and Structural
+    Audio-Visual Captions'
+  one_liner: TimeChat-Captioner는 시간 인식 및 구조적 오디오-비주얼 캡션을 생성하여 다중 장면 비디오 스크립팅을 가능하게
+    합니다.
+  tags:
+  - video captioning
+  - audio-visual
+  - benchmark
+  - narrative generation
+  - timestamp
+  interest_score: 4
+  interest_reason: 비디오 스크립팅의 새로운 접근 방식을 제시하며, 실험 결과가 뛰어납니다.
+  baseline_mentioned: Gemini-2.5-Pro
+  category: reasoning
+  has_code: true
+  link: https://arxiv.org/abs/2602.08711
+  github_url: https://github.com/yaolinli/TimeChat-Captioner
+  github_stars: 6
+  matched_keywords:
+  - RAG
+  - reasoning
+- arxiv_id: '2602.09901'
+  title: 'QP-OneModel: A Unified Generative LLM for Multi-Task Query Understanding
+    in Xiaohongshu Search'
+  one_liner: QP-OneModel은 소셜 네트워크 검색을 위한 다중 작업 쿼리 이해를 위한 통합 생성 LLM을 제안합니다.
+  tags:
+  - query processing
+  - social network
+  - multi-task
+  - reinforcement learning
+  - semantic understanding
+  interest_score: 4
+  interest_reason: 소셜 네트워크 검색의 쿼리 이해를 통합하는 혁신적인 접근 방식입니다.
+  baseline_mentioned: discriminative baselines
+  category: agent
+  has_code: false
+  link: https://arxiv.org/abs/2602.09901
+  github_url: null
+  github_stars: null
+  matched_keywords:
+  - LLM
+  - retrieval
+- arxiv_id: '2602.07106'
+  title: 'Ex-Omni: Enabling 3D Facial Animation Generation for Omni-modal Large Language
+    Models'
+  one_liner: Ex-Omni는 음성과 3D 얼굴 애니메이션을 결합하여 다중 모드 대화 모델을 향상시키는 프레임워크입니다.
+  tags:
+  - 3D animation
+  - facial animation
+  - speech
+  - omni-modal
+  - language model
+  interest_score: 3
+  interest_reason: 다중 모드 모델의 발전에 기여하지만, 기존 연구와의 차별성이 부족합니다.
+  baseline_mentioned: null
+  category: other
+  has_code: true
+  link: https://arxiv.org/abs/2602.07106
+  github_url: null
+  github_stars: null
+  matched_keywords:
+  - LLM
+  - RAG
+  - reasoning
+- arxiv_id: '2602.04935'
+  title: 'ASA: Training-Free Representation Engineering for Tool-Calling Agents'
+  one_liner: ASA는 도구 호출 에이전트를 위한 훈련 없는 표현 엔지니어링 방법을 제안합니다.
+  tags:
+  - tool calling
+  - LLM agents
+  - representation engineering
+  - inference-time
+  - activation steering
+  interest_score: 4
+  interest_reason: 도구 호출의 신뢰성을 높이는 혁신적인 접근 방식으로, 실험 결과가 인상적입니다.
+  baseline_mentioned: MTU-Bench with Qwen2.5-1.5B
+  category: agent
+  has_code: false
+  link: https://arxiv.org/abs/2602.04935
+  github_url: null
+  github_stars: null
+  matched_keywords:
+  - LLM
+  - agent
+  - RAG
+  - prompt
+deep_candidates:
+- '2602.10177'
+- '2602.04935'
+- '2602.08711'
+skimmed_at: '2026-02-12T15:28:51.919309'

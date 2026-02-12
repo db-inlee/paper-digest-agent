@@ -1,0 +1,16 @@
+services:
+  paper-digest:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    ports:
+      - "8000:8080"
+    volumes:
+      - ./reports:/app/data/reports
+    env_file:
+      - .env
+    environment:
+      REPORT_BASE_DIR: /app/data/reports
+      PYTHONPATH: /app/src
+      SCHEDULER_ENABLED: "true"
+    restart: unless-stopped

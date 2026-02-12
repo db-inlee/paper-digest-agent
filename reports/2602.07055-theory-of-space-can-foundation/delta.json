@@ -1,0 +1,21 @@
+{
+  "arxiv_id": "2602.07055",
+  "one_line_takeaway": "이 논문은 부분 관찰 환경에서 에이전트가 공간적 신념을 구축하고 수정할 수 있는지 평가하는 문제에 대해 Spatial Belief Probing 접근법을 제안한다.",
+  "core_deltas": [
+    {
+      "axis": "신념 구축 방법",
+      "old_approach": "해당 영역에 특화된 방법 없음",
+      "new_approach": "에이전트의 내부 공간 신념을 인지 지도(cognitive map)로 드러내어 그 품질을 측정하는 Spatial Belief Probing",
+      "why_better": "에이전트가 능동적으로 정보를 수집하여 공간적 신념을 구축하고 수정할 수 있는지를 평가할 수 있는 새로운 방법을 제공함",
+      "evidence": {
+        "page": null,
+        "section": null,
+        "quote": "Spatial Belief Probing: 에이전트의 내부 공간 신념을 인지 지도(cognitive map)로 드러내어 그 품질을 측정합니다.",
+        "type": "quote"
+      }
+    }
+  ],
+  "tradeoffs": [],
+  "when_to_use": "부분 관찰 환경에서 에이전트의 공간적 신념 구축 능력을 평가하고자 할 때",
+  "when_not_to_use": "명확한 베이스라인과의 성능 비교가 필요한 경우"
+}

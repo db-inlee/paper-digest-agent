@@ -1,11 +1,17 @@
 """CandidateFetcher 에이전트 - 논문 수집 (비-LLM)."""
 
+import logging
+import re
 from dataclasses import dataclass
+
+import arxiv
 
 from rtc.agents.base import BaseAgent
 from rtc.config import get_settings
 from rtc.mcp.servers.hf_papers_server import HFPapersServer, paper_dict_to_candidate
 from rtc.schemas import PaperCandidate
+
+logger = logging.getLogger(__name__)
 
 
 @dataclass
@@ -24,6 +30,8 @@ class FetchOutput:
     total_after_filter: int
     skipped_previously_processed: int
     skipped_keyword_filter: int
+    skipped_venue_filter: int = 0
+    venue_enriched_count: int = 0
 
 
 class CandidateFetcher(BaseAgent[FetchInput, FetchOutput]):
@@ -51,7 +59,12 @@ class CandidateFetcher(BaseAgent[FetchInput, FetchOutput]):
         candidates = await self._collect_papers()
         total_collected = len(candidates)
 
-        # 2. 필터링 적용
+        # 2. arXiv comment 보강 (venue 감지용)
+        venue_enriched = 0
+        if self.settings.venue_filter_enabled:
+            venue_enriched = self._enrich_arxiv_comments(candidates)
+
+        # 3. 필터링 적용
         filtered, stats = self._apply_filters(candidates)
 
         return FetchOutput(
@@ -60,6 +73,8 @@ class CandidateFetcher(BaseAgent[FetchInput, FetchOutput]):
             total_after_filter=len(filtered),
             skipped_previously_processed=stats["skipped_processed"],
             skipped_keyword_filter=stats["skipped_keyword"],
+            skipped_venue_filter=stats.get("skipped_venue", 0),
+            venue_enriched_count=venue_enriched,
         )
 
     async def _collect_papers(self) -> list[PaperCandidate]:
@@ -97,9 +112,10 @@ class CandidateFetcher(BaseAgent[FetchInput, FetchOutput]):
             "skipped_keyword": 0,
             "skipped_duplicate": 0,
             "skipped_hard_filter": 0,
+            "skipped_venue": 0,
         }
 
-        keywords = self.settings.hf_papers_keywords
+        keywords = self.settings.get_effective_hf_keywords()
 
         for paper in candidates:
             base_id = paper.arxiv_id.split("v")[0]
@@ -124,6 +140,14 @@ class CandidateFetcher(BaseAgent[FetchInput, FetchOutput]):
             if keywords and not self._matches_keywords(paper, keywords):
                 stats["skipped_keyword"] += 1
                 continue
+
+            # Venue 필터
+            if self.settings.venue_filter_enabled:
+                if self.settings.venue_filter_mode == "only" and paper.venue is None:
+                    stats["skipped_venue"] += 1
+                    continue
+                if self.settings.venue_filter_mode == "boost" and paper.venue:
+                    paper.matched_keywords.append(f"📍{paper.venue}")
 
             filtered.append(paper)
 
@@ -176,9 +200,85 @@ class CandidateFetcher(BaseAgent[FetchInput, FetchOutput]):
         return True
 
     def _matches_keywords(self, paper: PaperCandidate, keywords: list[str]) -> bool:
-        """키워드 매칭 확인."""
+        """키워드 매칭 확인. 매칭된 키워드를 paper에 기록."""
         if not keywords:
             return True
 
         text = f"{paper.title} {paper.abstract}".lower()
-        return any(kw.lower() in text for kw in keywords)
+        matched = [kw for kw in keywords if kw.lower() in text]
+        if matched:
+            paper.matched_keywords = matched
+            return True
+        return False
+
+    def _enrich_arxiv_comments(self, candidates: list[PaperCandidate]) -> int:
+        """arXiv API로 comment 필드 보강 및 venue 감지.
+
+        comment가 없는 논문만 대상으로 batch lookup 수행.
+
+        Returns:
+            venue가 감지된 논문 수
+        """
+        # comment가 없는 논문의 arxiv_id 수집
+        needs_comment = {
+            p.arxiv_id: p for p in candidates if p.comment is None
+        }
+        if not needs_comment:
+            return 0
+
+        id_list = list(needs_comment.keys())
+        logger.info("arXiv comment 보강: %d건 조회", len(id_list))
+
+        try:
+            client = arxiv.Client()
+            search = arxiv.Search(id_list=id_list)
+            results = list(client.results(search))
+        except Exception:
+            logger.warning("arXiv API 조회 실패, comment 보강 건너뜀", exc_info=True)
+            return 0
+
+        venue_count = 0
+        for result in results:
+            arxiv_id = result.entry_id.split("/abs/")[-1]
+            # 버전 제거하여 매칭 (예: 2401.12345v2 -> 2401.12345)
+            base_id = arxiv_id.split("v")[0]
+
+            paper = needs_comment.get(arxiv_id) or needs_comment.get(base_id)
+            if paper is None:
+                continue
+
+            if result.comment:
+                paper.comment = result.comment
+                venue = self._extract_venue(result.comment)
+                if venue:
+                    paper.venue = venue
+                    venue_count += 1
+
+        logger.info("arXiv comment 보강 완료: %d건 중 %d건 venue 감지", len(results), venue_count)
+        return venue_count
+
+    def _extract_venue(self, comment: str) -> str | None:
+        """arXiv comment에서 학회명 추출.
+
+        두 가지 방식으로 매칭:
+        1. 정규식: "Accepted at NeurIPS 2025" 등의 패턴
+        2. 직접 매칭: 학회명이 comment에 포함되어 있는지 확인
+        """
+        conferences = self.settings.venue_filter_conferences
+
+        # 1. 정규식 패턴 매칭
+        pattern = r"(?:accepted|published|appearing|to appear)\s+(?:at|in|by)\s+(\w+)"
+        match = re.search(pattern, comment, re.IGNORECASE)
+        if match:
+            detected = match.group(1)
+            for conf in conferences:
+                if detected.upper() == conf.upper():
+                    return conf
+
+        # 2. 직접 매칭 (comment 내에 학회명이 포함된 경우)
+        comment_upper = comment.upper()
+        for conf in conferences:
+            if conf.upper() in comment_upper:
+                return conf
+
+        return None

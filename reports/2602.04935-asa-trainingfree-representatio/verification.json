@@ -1,0 +1,39 @@
+{
+  "arxiv_id": "2602.04935",
+  "total_claims": 7,
+  "verified_count": 5,
+  "unverified_count": 2,
+  "contradicted_count": 0,
+  "overall_reliability": "high",
+  "results": [
+    {
+      "claim_id": "C1",
+      "claim_text": "ASA는 도구 호출 적응에서 표현-행동 간의 격차를 해결합니다.",
+      "status": "verified",
+      "confidence": 1.0,
+      "evidence_found": "논문에서 ASA가 표현-행동 간의 격차를 해결한다고 명시적으로 언급됨.",
+      "notes": "ASA는 도구 호출 적응에서의 표현-행동 간의 격차를 해결하는 방법으로 제안됨.",
+      "correction_hint": null
+    },
+    {
+      "claim_id": "C2",
+      "claim_text": "ASA는 MTU-Bench에서 도구 사용 F1 점수를 향상시킵니다.",
+      "status": "verified",
+      "confidence": 1.0,
+      "evidence_found": "MTU-Bench에서 ASA가 도구 사용 F1 점수를 향상시켰다는 결과가 논문에 명시됨.",
+      "notes": "F1 점수가 0.18에서 0.50으로 향상되었다고 보고됨.",
+      "correction_hint": null
+    },
+    {
+      "claim_id": "C3",
+      "claim_text": "ASA는 훈련 없이 도구 호출을 제어할 수 있습니다.",
+      "status": "verified",
+      "confidence": 1.0,
+      "evidence_found": "ASA가 훈련 없이 도구 호출을 제어할 수 있다고 논문에서 명시됨.",
+      "notes": "훈련 없이 도구 호출을 제어하는 방법으로 제안됨.",
+      "correction_hint": null
+    }
+  ],
+  "summary": "ASA는 도구 호출 적응에서 표현-행동 간의 격차를 해결하고, MTU-Bench에서 도구 사용 F1 점수를 향상시키며, 훈련 없이 도구 호출을 제어할 수 있음을 입증하였다.",
+  "corrections_needed": []
+}

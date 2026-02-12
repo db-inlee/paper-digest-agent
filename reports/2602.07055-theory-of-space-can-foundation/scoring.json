@@ -1,0 +1,10 @@
+{
+  "arxiv_id": "2602.07055",
+  "practicality": 3,
+  "codeability": 3,
+  "signal": 4,
+  "recommendation": "worth_reading",
+  "reasoning": "이 논문은 부분 관찰 환경에서 에이전트가 공간적 신념을 구축하고 수정하는 방법을 제안하고 있으며, 이는 실제 문제 해결에 기여할 가능성이 있다. 그러나 제안된 방법의 실용적 응용 가능성은 다소 제한적일 수 있다.",
+  "key_strength": "Spatial Belief Probing 접근법을 통해 에이전트의 내부 공간 신념을 측정하는 새로운 방법론을 제안한다.",
+  "main_concern": "제안된 방법이 실제 환경에서 얼마나 효과적으로 적용될 수 있는지에 대한 검증이 필요하다."
+}

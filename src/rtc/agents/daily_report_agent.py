@@ -103,8 +103,17 @@ class DailyReportAgent(BaseAgent[DailyReportInput, DailyReportOutput]):
             reverse=True,
         )
 
+        # 스킴만 통과한 나머지 논문 추출
+        deep_ids = set(input.deep_completed)
+        skim_only = [
+            p for p in input.all_papers
+            if p.arxiv_id not in deep_ids
+            and p.interest_score >= 4
+            and p.category in {"agent", "rag", "reasoning"}
+        ]
+
         # 마크다운 생성
-        markdown = self._generate_markdown(input.run_date, papers_data)
+        markdown = self._generate_markdown(input.run_date, papers_data, skim_only)
 
         # 저장
         report_path = self.report_store.save_daily_report(input.run_date, markdown)
@@ -132,7 +141,10 @@ class DailyReportAgent(BaseAgent[DailyReportInput, DailyReportOutput]):
         return create_paper_slug(arxiv_id, title)
 
     def _generate_markdown(
-        self, run_date: str, papers: list[PaperReportData]
+        self,
+        run_date: str,
+        papers: list[PaperReportData],
+        skim_only: list[SkimSummary] | None = None,
     ) -> str:
         """마크다운 리포트 생성.
 
@@ -155,6 +167,10 @@ class DailyReportAgent(BaseAgent[DailyReportInput, DailyReportOutput]):
             lines.extend(self._render_paper(i, paper))
             lines.append("")
 
+        # 스킴 요약 섹션
+        if skim_only:
+            lines.extend(self._render_skim_summary_section(skim_only))
+
         # 푸터
         lines.extend([
             "---",
@@ -163,6 +179,25 @@ class DailyReportAgent(BaseAgent[DailyReportInput, DailyReportOutput]):
         ])
 
         return "\n".join(lines)
+
+    def _render_skim_summary_section(self, papers: list[SkimSummary]) -> list[str]:
+        """스킴만 통과한 논문을 테이블 형식으로 렌더링."""
+        lines = [
+            "---",
+            "",
+            f"## 📋 기타 주목할 논문",
+            "",
+            "| # | 논문 | 키워드 | 카테고리 | 한줄 요약 |",
+            "|---|------|--------|----------|-----------|",
+        ]
+
+        for i, paper in enumerate(papers, 1):
+            keywords = ", ".join(f"`{kw}`" for kw in paper.matched_keywords) if paper.matched_keywords else ""
+            title_link = f"[{paper.title}]({paper.link})"
+            lines.append(f"| {i} | {title_link} | {keywords} | {paper.category} | {paper.one_liner} |")
+
+        lines.append("")
+        return lines
 
     def _render_paper(self, index: int, paper: PaperReportData) -> list[str]:
         """개별 논문 렌더링 (상세 버전)."""
@@ -181,6 +216,8 @@ class DailyReportAgent(BaseAgent[DailyReportInput, DailyReportOutput]):
             lines.append(f"**PDF**: [다운로드]({pdf_url})")
             if paper.skim.github_url:
                 lines.append(f"**GitHub**: [{paper.skim.github_url}]({paper.skim.github_url})")
+            if paper.skim.matched_keywords:
+                lines.append(f"**매칭 키워드**: {', '.join(paper.skim.matched_keywords)}")
             lines.append("")
 
         # 2. 왜 이 논문인가? (점수 상세 + 평가 근거 + 주요 강점)

@@ -1,0 +1,48 @@
+{
+  "arxiv_id": "2602.10177",
+  "total_claims": 4,
+  "verified_count": 3,
+  "unverified_count": 1,
+  "contradicted_count": 0,
+  "overall_reliability": "high",
+  "results": [
+    {
+      "claim_id": "claim_1",
+      "claim_text": "Aletheia는 자연어로 수학적 솔루션을 생성, 검증, 수정할 수 있는 에이전트입니다.",
+      "status": "verified",
+      "confidence": 1.0,
+      "evidence_found": "Aletheia는 자연어로 솔루션을 생성하고 검증하며 수정하는 기능을 갖춘 수학 연구 에이전트로 설명됩니다.",
+      "notes": "논문 1페이지에서 Aletheia의 기능이 명확히 설명됨.",
+      "correction_hint": null
+    },
+    {
+      "claim_id": "claim_2",
+      "claim_text": "Aletheia는 IMO-ProofBench Advanced에서 95.1%의 정확도를 달성했습니다.",
+      "status": "verified",
+      "confidence": 1.0,
+      "evidence_found": "Aletheia는 IMO-ProofBench Advanced에서 95.1%의 정확도를 달성했다고 명시되어 있습니다.",
+      "notes": "논문 2페이지에서 Aletheia의 성능이 언급됨.",
+      "correction_hint": null
+    },
+    {
+      "claim_id": "claim_3",
+      "claim_text": "Aletheia는 연구 수준의 수학 문제 해결에 있어 기존 모델보다 우수한 성능을 보입니다.",
+      "status": "unverified",
+      "confidence": 0.8,
+      "evidence_found": null,
+      "notes": "기존 모델과의 직접적인 비교가 명시되어 있지 않음.",
+      "correction_hint": null
+    },
+    {
+      "claim_id": "claim_4",
+      "claim_text": "Aletheia는 수학 연구에서 자율적인 결과를 생성할 수 있는 중요한 이정표를 세웠습니다.",
+      "status": "verified",
+      "confidence": 1.0,
+      "evidence_found": "Aletheia가 자율적으로 수학적 결과를 생성할 수 있는 이정표를 세웠다고 논문에서 언급됨.",
+      "notes": "논문 3페이지에서 Aletheia의 성과가 설명됨.",
+      "correction_hint": null
+    }
+  ],
+  "summary": "대부분의 클레임이 논문에서 확인되었으며, Aletheia의 성능과 기능에 대한 주장이 지지됩니다.",
+  "corrections_needed": []
+}

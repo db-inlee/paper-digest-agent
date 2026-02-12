@@ -169,6 +169,24 @@ class Settings(BaseSettings):
         description="Maximum number of papers for deep analysis per day",
     )
 
+    # Venue/Conference Filter
+    venue_filter_enabled: bool = Field(default=False, alias="VENUE_FILTER_ENABLED")
+    venue_filter_conferences: list[str] = Field(
+        default=[
+            "NeurIPS", "NIPS", "ICML", "ICLR",
+            "ACL", "EMNLP", "NAACL",
+            "AAAI", "IJCAI",
+            "CVPR", "ICCV", "ECCV",
+            "KDD", "WWW", "SIGIR",
+        ],
+        alias="VENUE_FILTER_CONFERENCES",
+    )
+    venue_filter_mode: Literal["only", "boost"] = Field(
+        default="boost",
+        alias="VENUE_FILTER_MODE",
+        description="'only': 학회 논문만 통과, 'boost': 학회 논문 우선 표시 (matched_keywords에 학회명 추가)",
+    )
+
     # GitHub Method Analysis
     analyze_github: bool = Field(
         default=False,
@@ -208,6 +226,36 @@ class Settings(BaseSettings):
     def index_dir(self) -> Path:
         """index/ 디렉토리 (인덱스 저장)."""
         return self.base_dir / "index"
+
+    def get_effective_hf_keywords(self) -> list[str]:
+        """topics.json 반영: disabled 제외 + custom 추가 + 중복 제거."""
+        import json
+
+        topics_path = self.reports_dir / "topics.json"
+        if not topics_path.exists():
+            return self.hf_papers_keywords
+
+        try:
+            data = json.loads(topics_path.read_text(encoding="utf-8"))
+        except (json.JSONDecodeError, OSError):
+            return self.hf_papers_keywords
+
+        disabled_lower = {
+            d.lower() for d in data.get("disabled_default_keywords", [])
+        }
+        result = [
+            kw for kw in self.hf_papers_keywords
+            if kw.lower() not in disabled_lower
+        ]
+        existing_lower = {kw.lower() for kw in result}
+
+        for entry in data.get("custom_keywords", []):
+            kw = entry.get("keyword", "")
+            if kw and kw.lower() not in existing_lower:
+                result.append(kw)
+                existing_lower.add(kw.lower())
+
+        return result
 
     class Config:
         env_file = ".env"

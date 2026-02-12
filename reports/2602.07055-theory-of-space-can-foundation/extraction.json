@@ -1,0 +1,108 @@
+{
+  "arxiv_id": "2602.07055",
+  "title": "Theory of Space: Can Foundation Models Construct Spatial Beliefs through Active Exploration?",
+  "problem_definition": {
+    "statement": "이 논문은 부분 관찰 환경에서 에이전트가 능동적으로 정보를 수집하여 공간적 신념을 구축하고 수정하며 활용할 수 있는지 평가하는 문제를 다룹니다.",
+    "baseline_methods": [],
+    "structural_limitation": "기존의 멀티모달 파운데이션 모델들은 수동적인 멀티모달 인식 및 추론 작업에서 강력한 성능을 보였으나, 부분 관찰 환경에서 능동적으로 탐색할 수 있는 능력은 체계적으로 연구되지 않았습니다.",
+    "evidence": [
+      {
+        "page": 1,
+        "section": "ABSTRACT",
+        "quote": "While multimodal foundation models have shown strong performance on passive multimodal perception and reasoning tasks, their ability to support active, self-directed exploration under partial observability has not been systematically studied.",
+        "type": "quote"
+      }
+    ]
+  },
+  "baselines": [],
+  "method_components": [
+    {
+      "name": "Spatial Belief Probing",
+      "description": "에이전트의 내부 공간 신념을 인지 지도(cognitive map)로 드러내어 그 품질을 측정합니다.",
+      "inputs": [
+        "부분 관찰 환경에서의 에이전트의 행동 및 관찰 기록"
+      ],
+      "outputs": [
+        "인지 지도(cognitive map)"
+      ],
+      "implementation_hint": null,
+      "evidence": [
+        {
+          "page": 1,
+          "section": "ABSTRACT",
+          "quote": "A core innovation is spatial belief probing: we prompt it to reveal its internal spatial belief as a cognitive map at each step, letting us measure the quality of its underlying spatial model.",
+          "type": "quote"
+        }
+      ]
+    }
+  ],
+  "benchmark": {
+    "dataset": "ThreeDWorld, Objaverse",
+    "metrics": [
+      "Exploration Efficiency",
+      "Belief Quality",
+      "Task Success"
+    ],
+    "baseline_results": {
+      "GPT-5.2": "57.1 (passive) → 46.0 (active)",
+      "GEMINI-3 PRO": "60.5 (passive) → 57.3 (active)"
+    },
+    "proposed_results": {
+      "GEMINI-3 PRO": "81.5 (text-based active)",
+      "GPT-5.2": "72.0 (text-based active)"
+    },
+    "evidence": [
+      {
+        "page": 8,
+        "section": "Active Exploration Results",
+        "quote": "Table 2 presents the active performance of the models, providing a holistic view of their ability to translate curiosity into knowledge.",
+        "type": "quote"
+      }
+    ]
+  },
+  "claims": [
+    {
+      "claim_id": "claim_1",
+      "text": "THEORY OF SPACE는 에이전트가 능동적으로 정보를 수집하여 공간적 신념을 구축하고 수정하며 활용할 수 있는지를 평가하는 프레임워크입니다.",
+      "claim_type": "method",
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "page": 2,
+          "section": "THEORY OF SPACE",
+          "quote": "We propose THEORY OF SPACE as a framework that explicitly treats exploration as a first-class decision-making problem, decoupled from any single downstream task, focusing on opening the box of the agent’s internal spatial belief.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "claim_id": "claim_2",
+      "text": "능동적 탐색은 주요 병목 현상으로, 모델들은 수동적 환경에서는 잘 수행하지만 능동적으로 정보를 수집해야 할 때 성능이 저하됩니다.",
+      "claim_type": "result",
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "page": 2,
+          "section": "INTRODUCTION",
+          "quote": "Active exploration remains a primary bottleneck. Models perform reasonablely well in passive setting, but degrade when they must actively gather information.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "claim_id": "claim_3",
+      "text": "비전 기반 모델에서 신념 관성(Belief Inertia) 현상이 두드러지며, 에이전트가 이전의 잘못된 선입견을 덮어쓰지 못하는 문제가 있습니다.",
+      "claim_type": "limitation",
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "page": 2,
+          "section": "INTRODUCTION",
+          "quote": "Despite directly observing the new configuration, models persist in their initial, now incorrect coordinates. This reveals a critical failure in spatial memory revision, where foundational models lack the plasticity to revise their internal cognitive maps in response to physical changes.",
+          "type": "quote"
+        }
+      ]
+    }
+  ],
+  "extraction_mode": "full"
+}

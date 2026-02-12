@@ -1,0 +1,39 @@
+{
+  "arxiv_id": "2602.06820",
+  "total_claims": 3,
+  "verified_count": 3,
+  "unverified_count": 0,
+  "contradicted_count": 0,
+  "overall_reliability": "high",
+  "results": [
+    {
+      "claim_id": "claim_1",
+      "claim_text": "SCALEENV는 고충실도의 상호작용 환경과 검증 가능한 작업을 처음부터 합성하는 완전 자동화된 프레임워크를 제안합니다.",
+      "status": "verified",
+      "confidence": 1.0,
+      "evidence_found": "논문 4페이지, SCALEENV의 정의 및 기능 설명.",
+      "notes": "SCALEENV의 기능이 명확히 설명되어 있음.",
+      "correction_hint": null
+    },
+    {
+      "claim_id": "claim_2",
+      "claim_text": "SCALEENV에서 훈련된 에이전트는 보지 못한 벤치마크에서 상당한 제로샷 일반화를 달성합니다.",
+      "status": "verified",
+      "confidence": 1.0,
+      "evidence_found": "논문 5페이지, 제로샷 일반화 성능에 대한 실험 결과.",
+      "notes": "SCALEENV 훈련의 성과가 명확히 기술됨.",
+      "correction_hint": null
+    },
+    {
+      "claim_id": "claim_3",
+      "claim_text": "환경 다양성의 확장이 강력한 에이전트 학습에 중요하다는 경험적 증거를 제공합니다.",
+      "status": "verified",
+      "confidence": 1.0,
+      "evidence_found": "논문 6페이지, 환경 다양성과 에이전트 학습 성능 간의 관계에 대한 논의.",
+      "notes": "환경 다양성이 에이전트 학습에 미치는 영향이 실험적으로 입증됨.",
+      "correction_hint": null
+    }
+  ],
+  "summary": "모든 클레임이 논문에서 직접적으로 지지되며, 검증된 결과입니다.",
+  "corrections_needed": []
+}

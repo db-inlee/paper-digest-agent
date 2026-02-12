@@ -1,0 +1,10 @@
+{
+  "arxiv_id": "2602.06454",
+  "practicality": 4,
+  "codeability": 3,
+  "signal": 4,
+  "recommendation": "worth_reading",
+  "reasoning": "RelayGen은 대규모 추론 모델의 효율성을 개선하는 새로운 접근 방식을 제안하며, 실제 문제 해결 가능성이 높다. 그러나 구현의 복잡성으로 인해 중간 정도의 구현 가능성을 보인다.",
+  "key_strength": "세그먼트 수준의 런타임 모델 전환을 통해 모델 용량을 동적으로 할당하는 혁신적인 접근 방식을 제안한다.",
+  "main_concern": "구현 시 복잡성이 증가할 수 있으며, 실제 환경에서의 성능 검증이 필요하다."
+}

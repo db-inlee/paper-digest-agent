@@ -1,0 +1,48 @@
+{
+  "arxiv_id": "2602.07035",
+  "total_claims": 4,
+  "verified_count": 3,
+  "unverified_count": 1,
+  "contradicted_count": 0,
+  "overall_reliability": "high",
+  "results": [
+    {
+      "claim_id": "claim_1",
+      "claim_text": "DLLM-Searcher는 dLLM의 정보 검색 및 추론 능력을 향상시킵니다.",
+      "status": "verified",
+      "confidence": 1.0,
+      "evidence_found": "논문에서 Agentic SFT와 Agentic VRPO를 통해 dLLM의 정보 검색 및 추론 능력을 향상시킨다고 명시되어 있음.",
+      "notes": "논문 1페이지, 2페이지에서 관련 내용 확인 가능.",
+      "correction_hint": null
+    },
+    {
+      "claim_id": "claim_2",
+      "claim_text": "DLLM-Searcher는 ReAct 패러다임에 비해 약 15%의 추론 가속을 제공합니다.",
+      "status": "verified",
+      "confidence": 1.0,
+      "evidence_found": "논문에서 P-ReAct를 통해 약 15%의 추론 가속을 달성했다고 명시되어 있음.",
+      "notes": "논문 1페이지, 5페이지에서 관련 내용 확인 가능.",
+      "correction_hint": null
+    },
+    {
+      "claim_id": "claim_3",
+      "claim_text": "DLLM-Searcher는 주류 LLM 기반 검색 에이전트와 비교할 만한 성능을 달성합니다.",
+      "status": "verified",
+      "confidence": 1.0,
+      "evidence_found": "논문에서 DLLM-Searcher가 주류 LLM 기반 검색 에이전트와 비교할 만한 성능을 달성했다고 명시되어 있음.",
+      "notes": "논문 1페이지, 5페이지에서 관련 내용 확인 가능.",
+      "correction_hint": null
+    },
+    {
+      "claim_id": "claim_4",
+      "claim_text": "기존 dLLM은 에이전트 시나리오에서 약한 추론 및 도구 호출 능력을 보입니다.",
+      "status": "unverified",
+      "confidence": 0.8,
+      "evidence_found": null,
+      "notes": "기존 dLLM의 약한 추론 및 도구 호출 능력에 대한 언급은 있으나, 구체적인 실험적 근거는 부족함.",
+      "correction_hint": null
+    }
+  ],
+  "summary": "대부분의 클레임이 논문에서 지지되며, 실험 결과와 주장을 잘 반영하고 있습니다.",
+  "corrections_needed": []
+}

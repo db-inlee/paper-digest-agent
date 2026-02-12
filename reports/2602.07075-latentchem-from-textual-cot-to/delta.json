@@ -1,0 +1,45 @@
+{
+  "arxiv_id": "2602.07075",
+  "one_line_takeaway": "이 논문은 자연어 기반의 명시적 Chain-of-Thought(CoT) 화학적 추론의 구조적 한계를 LatentChem의 연속적 벡터 생성 접근을 통해 개선한다",
+  "core_deltas": [
+    {
+      "axis": "추론 전략",
+      "old_approach": "자연어를 사용한 명시적 Chain-of-Thought(CoT) 기반의 화학적 추론",
+      "new_approach": "연속적인 입력 벡터를 생성하여 이산적인 토크나이제이션 병목을 우회하는 Latent Projector 사용",
+      "why_better": "연속적인 화학적 논리를 보다 자연스럽게 표현하여 비효율적인 추론 경로를 줄인다",
+      "evidence": {
+        "page": null,
+        "section": null,
+        "quote": "Latent Projector: 연속적인 입력 벡터를 생성하여 이산적인 토크나이제이션 병목을 우회하는 모듈",
+        "type": "quote"
+      }
+    },
+    {
+      "axis": "모달리티 간극 해결",
+      "old_approach": "연속적인 분자 특징과 이산적인 임베딩 공간 간의 모달리티 간극을 명시적으로 해결하지 않음",
+      "new_approach": "ChemAdapter를 통해 쿼리 기반 어텐션 프로젝터로 모달리티 간극을 연결",
+      "why_better": "분자 특징을 보다 정확하게 반영하여 추론의 정확성을 높인다",
+      "evidence": {
+        "page": null,
+        "section": null,
+        "quote": "ChemAdapter: 연속적인 분자 특징과 이산적인 임베딩 공간 간의 모달리티 간극을 연결하는 쿼리 기반 어텐션 프로젝터",
+        "type": "quote"
+      }
+    },
+    {
+      "axis": "추론과 인식의 상호작용",
+      "old_approach": "추론과 인식의 상호작용을 명시적으로 고려하지 않음",
+      "new_approach": "ChemUpdater를 통해 추론과 인식을 동적으로 상호작용하게 하여 분자 하위 구조에 대한 초점을 이동",
+      "why_better": "동적 상호작용을 통해 보다 유연하고 정확한 화학적 추론을 가능하게 한다",
+      "evidence": {
+        "page": null,
+        "section": null,
+        "quote": "ChemUpdater: 추론과 인식을 동적으로 상호작용하게 하는 모듈로, 분자 하위 구조에 대한 초점을 이동시킨다",
+        "type": "quote"
+      }
+    }
+  ],
+  "tradeoffs": [],
+  "when_to_use": "화학적 추론에서 연속적이고 구조적인 특성을 반영해야 할 때",
+  "when_not_to_use": "이산적인 언어적 단계로 충분히 표현 가능한 간단한 화학적 추론을 수행할 때"
+}

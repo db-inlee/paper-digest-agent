@@ -1,0 +1,206 @@
+{
+  "arxiv_id": "2602.07035",
+  "title": "DLLM-Searcher: Adapting Diffusion Large Language Model for Search Agents",
+  "problem_definition": {
+    "statement": "기존의 dLLM은 에이전트 시나리오에서 약한 추론 및 도구 호출 능력을 보이며, 이는 실질적인 배포를 방해합니다. 또한 ReAct 에이전트 패러다임 하에서의 직렬 실행으로 인해 심각한 지연 문제가 발생합니다.",
+    "baseline_methods": [],
+    "structural_limitation": "기존 dLLM은 에이전트 시나리오에서 약한 추론 및 도구 호출 능력을 보이며, 이는 실질적인 배포를 방해합니다.",
+    "evidence": [
+      {
+        "page": null,
+        "section": "Abstract",
+        "quote": "existing dLLMs exhibit remarkably weak reasoning and tool-calling capabilities, preventing these advantages from being effectively realized in practice.",
+        "type": "quote"
+      },
+      {
+        "page": null,
+        "section": "Introduction",
+        "quote": "the serial execution of multi-round reasoning, tool calling, and tool response waiting under the ReAct agent paradigm induces severe end-to-end latency.",
+        "type": "quote"
+      }
+    ]
+  },
+  "baselines": [
+    {
+      "name": "ReARTeR",
+      "description": "PRM 모델을 사용하여 추론 프로세스를 감독하는 강력한 RAG 기반 에이전트",
+      "limitation": "DLLM-Searcher는 ReARTeR보다 약 19% 더 나은 성능을 보입니다.",
+      "evidence": [
+        {
+          "page": null,
+          "section": "5.2 Overall Performance",
+          "quote": "It outperforms traditional RAG strategies by a substantial margin, especially attaining an improvement of about 19% over ReARTeR which is a strong baseline that leverages a PRM model to supervise the reasoning process.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "name": "R1Searcher",
+      "description": "로컬 검색 도구를 사용하여 훈련된 ARM 기반 검색 에이전트",
+      "limitation": "Musique 데이터셋에서 DLLM-Searcher와 비교하여 성능 격차가 존재합니다.",
+      "evidence": [
+        {
+          "page": null,
+          "section": "5.2 Overall Performance",
+          "quote": "It achieves comparable performance against search agents built on ARMs, with the only performance gap observed on the Musique dataset relative to R1Searcher.",
+          "type": "quote"
+        }
+      ]
+    }
+  ],
+  "method_components": [
+    {
+      "name": "Agentic Supervised Fine-Tuning (Agentic SFT)",
+      "description": "dLLM의 도구 호출 형식 준수 능력을 향상시키고, 대규모 블록 생성 하에서 정보 검색과 추론을 결합하는 초기 능력을 획득하도록 돕습니다.",
+      "inputs": [
+        "query Q",
+        "teacher trajectory Hteacher"
+      ],
+      "outputs": [
+        "improved dLLM with better tool-call format adherence"
+      ],
+      "implementation_hint": null,
+      "evidence": [
+        {
+          "page": null,
+          "section": "4.2 Agentic SFT",
+          "quote": "This stage improves the model’s tool-call format following ability and helps it acquire initial capabilities to combine information retrieval with reasoning under large-block generation.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "name": "Agentic Variance-Reduced Preference Optimization (Agentic VRPO)",
+      "description": "SFT 모델에서 시작하여, 올바른 경로로 모델을 정렬하여 강력한 정보 검색 행동을 강화합니다.",
+      "inputs": [
+        "query Q",
+        "winner trajectory Hw",
+        "loser trajectory Hl"
+      ],
+      "outputs": [
+        "further refined dLLM with enhanced reasoning and retrieval performance"
+      ],
+      "implementation_hint": null,
+      "evidence": [
+        {
+          "page": null,
+          "section": "4.3 Agentic VRPO",
+          "quote": "By utilizing data filtered from post-SFT model rollouts, this stage further refines the model’s reasoning and retrieval performance.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "name": "Parallel-Reasoning and Acting (P-ReAct)",
+      "description": "도구 호출 지시를 우선적으로 디코딩하도록 모델을 안내하여, 도구 실행 중에도 모델이 계속 생각할 수 있도록 합니다.",
+      "inputs": [
+        "query Q"
+      ],
+      "outputs": [
+        "prioritized tool-call decoding"
+      ],
+      "implementation_hint": null,
+      "evidence": [
+        {
+          "page": null,
+          "section": "4.4 P-ReAct Agent Paradigm",
+          "quote": "P-ReAct encourages the model to prioritize decoding the tool-call, effectively ensuring that tool-call instructions are generated ahead of the thinking process with near-perfect controllability.",
+          "type": "quote"
+        }
+      ]
+    }
+  ],
+  "benchmark": {
+    "dataset": "HotpotQA, 2WikiMultiHopQA, Musique, Bamboogle",
+    "metrics": [
+      "ACC_R",
+      "ACC_L"
+    ],
+    "baseline_results": {
+      "ReARTeR": "ACC_R: 45.4, ACC_L: 47.2",
+      "R1Searcher": "ACC_R: 53.1, ACC_L: 56.5"
+    },
+    "proposed_results": {
+      "DLLM-Searcher": "ACC_R: 57.0, ACC_L: 56.6"
+    },
+    "evidence": [
+      {
+        "page": null,
+        "section": "5.1.1 Datasets",
+        "quote": "four benchmark datasets are utilized in the experiments: HotpotQA, 2WikiMultiHopQA, Musique, Bamboogle.",
+        "type": "quote"
+      },
+      {
+        "page": null,
+        "section": "5.1.2 Evaluation Metrics",
+        "quote": "we adopt accuracy (ACC_R) as our primary evaluation metric, which checks whether the golden answer is contained in the predicted answer generated by the search agent.",
+        "type": "quote"
+      },
+      {
+        "page": null,
+        "section": "5.2 Overall Performance",
+        "quote": "DLLM-Searcher achieves excellent performance across all multi-hop QA benchmarks under both the ACC_R and ACC_L metrics.",
+        "type": "quote"
+      }
+    ]
+  },
+  "claims": [
+    {
+      "claim_id": "claim_1",
+      "text": "DLLM-Searcher는 dLLM의 정보 검색 및 추론 능력을 향상시킵니다.",
+      "claim_type": "method",
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "page": null,
+          "section": "Abstract",
+          "quote": "we propose DLLM-Searcher, an optimization framework for dLLM-based Search Agents.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "claim_id": "claim_2",
+      "text": "DLLM-Searcher는 ReAct 패러다임에 비해 약 15%의 추론 가속을 제공합니다.",
+      "claim_type": "result",
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "page": null,
+          "section": "Abstract",
+          "quote": "P-ReAct delivers approximately 15% inference acceleration.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "claim_id": "claim_3",
+      "text": "DLLM-Searcher는 주류 LLM 기반 검색 에이전트와 비교할 만한 성능을 달성합니다.",
+      "claim_type": "comparison",
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "page": null,
+          "section": "Abstract",
+          "quote": "Experimental results demonstrate that DLLM-Searcher achieves performance comparable to mainstream LLM-based search agents.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "claim_id": "claim_4",
+      "text": "기존 dLLM은 에이전트 시나리오에서 약한 추론 및 도구 호출 능력을 보입니다.",
+      "claim_type": "limitation",
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "page": null,
+          "section": "Introduction",
+          "quote": "existing dLLMs exhibit remarkably weak reasoning and tool-calling capabilities, preventing these advantages from being effectively realized in practice.",
+          "type": "quote"
+        }
+      ]
+    }
+  ],
+  "extraction_mode": "full"
+}

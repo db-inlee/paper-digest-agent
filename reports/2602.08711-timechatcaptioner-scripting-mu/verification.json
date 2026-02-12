@@ -1,0 +1,30 @@
+{
+  "arxiv_id": "2602.08711",
+  "total_claims": 2,
+  "verified_count": 2,
+  "unverified_count": 0,
+  "contradicted_count": 0,
+  "overall_reliability": "high",
+  "results": [
+    {
+      "claim_id": "claim_1",
+      "claim_text": "TimeChat-Captioner는 OmniDCBench에서 SOTA 성능을 달성합니다.",
+      "status": "verified",
+      "confidence": 1.0,
+      "evidence_found": "논문 5.2절에서 TimeChat-Captioner가 OmniDCBench에서 SOTA 성능을 달성했다고 명시되어 있습니다.",
+      "notes": "TimeChat-Captioner는 OmniDCBench에서 높은 성능을 기록했습니다.",
+      "correction_hint": null
+    },
+    {
+      "claim_id": "claim_2",
+      "claim_text": "TimeChat-Captioner는 Gemini-2.5-Pro를 능가하는 성능을 보입니다.",
+      "status": "verified",
+      "confidence": 1.0,
+      "evidence_found": "논문 5.2절에서 TimeChat-Captioner가 Gemini-2.5-Pro를 능가하는 성능을 보인다고 언급되어 있습니다.",
+      "notes": "TimeChat-Captioner는 Gemini-2.5-Pro보다 우수한 성능을 보여주었습니다.",
+      "correction_hint": null
+    }
+  ],
+  "summary": "모든 클레임이 논문에서 지지되며, TimeChat-Captioner는 OmniDCBench에서 SOTA 성능을 달성하고 Gemini-2.5-Pro를 능가하는 성능을 보입니다.",
+  "corrections_needed": []
+}

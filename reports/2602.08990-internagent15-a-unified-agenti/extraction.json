@@ -1,0 +1,217 @@
+{
+  "arxiv_id": "2602.08990",
+  "title": "InternAgent-1.5: A Unified Agentic Framework for Long-Horizon Autonomous Scientific Discovery",
+  "problem_definition": {
+    "statement": "기존 AI Scientist 시스템은 도메인 특정 설계, 불완전한 추론 능력, 단순한 최적화 파이프라인, 장기 자율 운영 지원 부족 등의 한계가 있습니다. InternAgent-1.5는 이러한 문제를 해결하기 위해 설계된 통합 시스템으로, 컴퓨팅 및 실험적 도메인 전반에 걸친 과학적 발견을 지원합니다.",
+    "baseline_methods": [],
+    "structural_limitation": "Domain-Specific Architectures: Many systems are organized around discipline-focused designs, which makes it difficult to perform unified reasoning across scientific fields.",
+    "evidence": [
+      {
+        "page": 3,
+        "section": "Introduction",
+        "quote": "Despite substantial progress, current systems of AI4S exhibit several characteristics that limit their ability to support autonomous cross-disciplinary discovery: Domain-Specific Architectures: Many systems are organized around discipline-focused designs, which makes it difficult to perform unified reasoning across scientific fields.",
+        "type": "quote"
+      }
+    ]
+  },
+  "baselines": [
+    {
+      "name": "AI Scientist",
+      "description": "문헌 분석, 코딩, 실험 평가를 통합한 알고리즘 최적화 시스템",
+      "limitation": "도메인 특정 설계로 인해 통합된 추론이 어려움",
+      "evidence": [
+        {
+          "page": 3,
+          "section": "Introduction",
+          "quote": "AI Scientist [1, 2] and AlphaEvolve [3] integrate literature analysis, coding, and experimental evaluation into end-to-end research loops.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "name": "AlphaEvolve",
+      "description": "문헌 분석, 코딩, 실험 평가를 통합한 알고리즘 최적화 시스템",
+      "limitation": "도메인 특정 설계로 인해 통합된 추론이 어려움",
+      "evidence": [
+        {
+          "page": 3,
+          "section": "Introduction",
+          "quote": "AI Scientist [1, 2] and AlphaEvolve [3] integrate literature analysis, coding, and experimental evaluation into end-to-end research loops.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "name": "AI Co-Scientist",
+      "description": "생물의학 분야에서 가설 생성 및 치료 실험 설계",
+      "limitation": "도메인 특정 설계로 인해 통합된 추론이 어려움",
+      "evidence": [
+        {
+          "page": 3,
+          "section": "Introduction",
+          "quote": "In biomedicine, AI Co-Scientist [4] generates hypotheses and designs therapeutic experiments.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "name": "Robin",
+      "description": "화학 분야에서 합성 계획 및 분자 설계를 위한 대형 언어 모델과 도메인 특정 툴체인 연결",
+      "limitation": "도메인 특정 설계로 인해 통합된 추론이 어려움",
+      "evidence": [
+        {
+          "page": 3,
+          "section": "Introduction",
+          "quote": "In chemistry, systems such as ChemCrow [13] and Robin [5] connect large language models with domain specific toolchains for synthesis planning and molecular design.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "name": "Kosmos",
+      "description": "대사체학, 재료 과학, 유전학 전반에 걸친 연구를 조직하기 위한 구조화된 과학적 세계 모델 도입",
+      "limitation": "도메인 특정 설계로 인해 통합된 추론이 어려움",
+      "evidence": [
+        {
+          "page": 3,
+          "section": "Introduction",
+          "quote": "To move beyond single domain expertise, systems such as Kosmos [6] introduce structured scientific world models to organize research across metabolomics, materials science, and genetics.",
+          "type": "quote"
+        }
+      ]
+    }
+  ],
+  "method_components": [
+    {
+      "name": "Generation Subsystem",
+      "description": "과학적 탐구의 개념적 기초를 구성하며, 대규모 문헌 분석, 과학적 추론, 맥락 통합을 수행",
+      "inputs": [
+        "문헌 데이터",
+        "과학적 도구"
+      ],
+      "outputs": [
+        "구조화된 가설",
+        "방법론적 계획"
+      ],
+      "implementation_hint": null,
+      "evidence": [
+        {
+          "page": 6,
+          "section": "2.1.1 Architecture",
+          "quote": "The Generation subsystem constructs the conceptual foundation of scientific inquiry. It follows the generation and reflection paradigm of InternAgent 1.0 [7] and is driven by the foundational capability of deep research.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "name": "Verification Subsystem",
+      "description": "생성된 가설과 방법론적 계획을 평가하며, 해결책 정제를 위한 기초 역량에 의해 구동됨",
+      "inputs": [
+        "가설",
+        "방법론적 계획"
+      ],
+      "outputs": [
+        "구조화된 증거"
+      ],
+      "implementation_hint": null,
+      "evidence": [
+        {
+          "page": 6,
+          "section": "2.1.1 Architecture",
+          "quote": "The Verification subsystem evaluates the hypotheses and methodological plans produced by the Generation subsystem. Its operation is driven by the foundational capability of solution refinement.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "name": "Evolution Subsystem",
+      "description": "시스템 이해와 장기 전략을 정제하며, 메모리 역량에 의해 구동됨",
+      "inputs": [
+        "검증 결과"
+      ],
+      "outputs": [
+        "정제된 사전 정보"
+      ],
+      "implementation_hint": null,
+      "evidence": [
+        {
+          "page": 6,
+          "section": "2.1.1 Architecture",
+          "quote": "The Evolution subsystem refines system understanding and long term strategies based on outcomes from the Generation and Verification subsystem.",
+          "type": "quote"
+        }
+      ]
+    }
+  ],
+  "benchmark": {
+    "dataset": "GAIA, HLE, GPQA, FrontierScience, SGI bench",
+    "metrics": [
+      "cross disciplinary retrieval",
+      "structured reasoning",
+      "scientifically grounded problem solving"
+    ],
+    "baseline_results": {
+      "AI Scientist": "도메인 특정 성능",
+      "AlphaEvolve": "도메인 특정 성능",
+      "AI Co-Scientist": "도메인 특정 성능",
+      "Robin": "도메인 특정 성능",
+      "Kosmos": "도메인 특정 성능"
+    },
+    "proposed_results": {
+      "InternAgent-1.5": "leading performance"
+    },
+    "evidence": [
+      {
+        "page": 4,
+        "section": "Introduction",
+        "quote": "InternAgent-1.5 is evaluated across standard benchmarks and open ended scientific discovery tasks. The system attains leading performance on agentic reasoning abilities, demonstrating the effectiveness of the foundational capabilities that drive the Generation and Verification subsystems.",
+        "type": "quote"
+      }
+    ]
+  },
+  "claims": [
+    {
+      "claim_id": "C1",
+      "text": "InternAgent-1.5는 과학적 발견을 위한 통합 아키텍처를 제공합니다.",
+      "claim_type": "method",
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "page": 4,
+          "section": "Introduction",
+          "quote": "A Unified Architecture for End-to-end Scientific Discovery: InternAgent-1.5 organizes the scientific discovery process into three coherent subsystems for Generation, Verification, and Evolution.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "claim_id": "C2",
+      "text": "InternAgent-1.5는 강력한 기초 역량을 제공합니다.",
+      "claim_type": "result",
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "page": 4,
+          "section": "Introduction",
+          "quote": "State-of-the-Art Foundational Capabilities: InternAgent-1.5 delivers strong foundational capabilities in deep research and solution refinement, supported by structured long horizon memory.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "claim_id": "C3",
+      "text": "InternAgent-1.5는 알고리즘 및 실험적 발견에서 돌파구를 보여줍니다.",
+      "claim_type": "result",
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "page": 4,
+          "section": "Introduction",
+          "quote": "Breakthroughs in Algorithmic and Empirical Discovery: InternAgent-1.5 demonstrates strong performance in both algorithm discovery and empirical scientific discovery.",
+          "type": "quote"
+        }
+      ]
+    }
+  ],
+  "extraction_mode": "full"
+}

@@ -1,0 +1,33 @@
+{
+  "arxiv_id": "2602.06820",
+  "one_line_takeaway": "이 논문은 다양한 시나리오에 적응할 수 있는 일반적인 에이전트 훈련을 위한 환경 합성 문제에 대해 Executable Graph Construction과 Task Instantiation을 통한 접근법을 제안한다.",
+  "core_deltas": [
+    {
+      "axis": "환경 합성 방법",
+      "old_approach": "해당 영역에 특화된 방법 없음",
+      "new_approach": "Executable Graph Construction을 통해 도메인의 논리적 골격을 설정",
+      "why_better": "환경의 다양성과 확장성을 높여 다양한 시나리오에 적응할 수 있는 에이전트 훈련을 지원함",
+      "evidence": {
+        "page": null,
+        "section": null,
+        "quote": "Executable Graph Construction: 도메인의 논리적 골격을 설정하는 실행 가능한 그래프를 구축합니다.",
+        "type": "quote"
+      }
+    },
+    {
+      "axis": "작업 인스턴스화",
+      "old_approach": "해당 영역에 특화된 방법 없음",
+      "new_approach": "Task Instantiation via Graph Expansion을 통해 에이전트 RL 훈련을 위한 다양한 작업을 인스턴스화",
+      "why_better": "다양한 작업을 생성하여 에이전트의 학습 범위를 확장할 수 있음",
+      "evidence": {
+        "page": null,
+        "section": null,
+        "quote": "Task Instantiation via Graph Expansion: 에이전트 RL 훈련을 위한 다양한 작업을 인스턴스화합니다.",
+        "type": "quote"
+      }
+    }
+  ],
+  "tradeoffs": [],
+  "when_to_use": "다양한 시나리오에 적응할 수 있는 일반적인 에이전트를 훈련할 때",
+  "when_not_to_use": "특정 시나리오에만 최적화된 환경이 필요한 경우"
+}

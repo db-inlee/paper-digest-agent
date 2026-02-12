@@ -1,0 +1,13 @@
+__pycache__
+*.pyc
+.env
+.git
+.venv
+venv
+node_modules
+notifier/web/node_modules
+notifier/web/.svelte-kit
+notifier/web/build
+*.egg-info
+.ruff_cache
+.pytest_cache

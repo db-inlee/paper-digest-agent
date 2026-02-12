@@ -1,0 +1,39 @@
+{
+  "arxiv_id": "2602.06454",
+  "total_claims": 7,
+  "verified_count": 5,
+  "unverified_count": 2,
+  "contradicted_count": 0,
+  "overall_reliability": "high",
+  "results": [
+    {
+      "claim_id": "C1",
+      "claim_text": "RelayGen은 대규모 모델의 대부분의 정확성을 유지하면서 추론 지연 시간을 크게 줄입니다.",
+      "status": "verified",
+      "confidence": 1.0,
+      "evidence_found": "RelayGen은 여러 추론 벤치마크에서 대규모 모델의 정확성을 유지하면서 추론 지연 시간을 줄이는 성능을 보여줍니다.",
+      "notes": "논문 6페이지, 7페이지에서 RelayGen의 성능을 설명하고 있습니다.",
+      "correction_hint": null
+    },
+    {
+      "claim_id": "C2",
+      "claim_text": "RelayGen은 학습된 라우터나 추가적인 감독 없이 세그먼트 수준의 런타임 모델 전환을 수행합니다.",
+      "status": "verified",
+      "confidence": 1.0,
+      "evidence_found": "RelayGen은 학습된 라우터 없이 세그먼트 수준의 모델 전환을 수행한다고 명시되어 있습니다.",
+      "notes": "논문 4페이지에서 RelayGen의 구조를 설명하고 있습니다.",
+      "correction_hint": null
+    },
+    {
+      "claim_id": "C3",
+      "claim_text": "RelayGen은 추론 지연 시간을 줄이면서도 추론의 대부분을 대규모 모델에 유지하여 안정적인 지연 시간 감소를 우선시합니다.",
+      "status": "verified",
+      "confidence": 1.0,
+      "evidence_found": "RelayGen은 대규모 모델의 성능을 유지하면서 지연 시간을 줄이는 데 중점을 두고 있습니다.",
+      "notes": "논문 5페이지에서 RelayGen의 효율성을 설명하고 있습니다.",
+      "correction_hint": null
+    }
+  ],
+  "summary": "RelayGen은 대규모 모델의 정확성을 유지하면서 추론 지연 시간을 줄이는 세그먼트 수준의 런타임 모델 전환 프레임워크로, 기존 방법들의 한계를 해결하고 실험적으로 검증된 성능을 보여줍니다.",
+  "corrections_needed": []
+}

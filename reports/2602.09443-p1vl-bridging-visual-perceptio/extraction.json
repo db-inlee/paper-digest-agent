@@ -1,0 +1,139 @@
+{
+  "arxiv_id": "2602.09443",
+  "title": "P1-VL: Bridging Visual Perception and Scientific Reasoning in Physics Olympiads",
+  "problem_definition": {
+    "statement": "물리학 올림피아드 문제 해결을 위한 시각적 인식과 과학적 추론을 연결하는 문제를 해결합니다.",
+    "baseline_methods": [],
+    "structural_limitation": "기존의 LLM들은 주로 텍스트 기반의 추론에 집중하여 물리 문제 해결에 필요한 다중 모달리티를 간과하고 있습니다.",
+    "evidence": [
+      {
+        "page": 3,
+        "section": "Introduction",
+        "quote": "While recent works have begun to adapt LLMs for these challenges, they predominantly focus on textual reasoning, overlooking a fundamental characteristic of physical problem-solving: its inherent multimodality.",
+        "type": "quote"
+      }
+    ]
+  },
+  "baselines": [
+    {
+      "name": "P1-235B-A22B+PhysicsMinions",
+      "description": "텍스트 기반의 에이전트 강화 시스템",
+      "limitation": "시각적 추론 능력이 부족하여 복잡한 물리 시나리오에서 순수한 에이전트 워크플로우를 초과하지 못함",
+      "evidence": [
+        {
+          "page": 13,
+          "section": "Evaluation on Physics Olympiads",
+          "quote": "Notably, the standalone P1-VL outperforms the agent-augmented baseline (P1-235B-A22B + PhysicsMinions, 38.4), proving that intrinsic visual reasoning capabilities can surpass purely agentic workflows in complex physical scenarios.",
+          "type": "quote"
+        }
+      ]
+    }
+  ],
+  "method_components": [
+    {
+      "name": "Curriculum RL Training",
+      "description": "점진적 난이도 확장을 통해 추론 능력을 향상시키는 RL 프레임워크",
+      "inputs": [
+        "기본 비전-언어 모델"
+      ],
+      "outputs": [
+        "향상된 추론 능력"
+      ],
+      "implementation_hint": null,
+      "evidence": [
+        {
+          "page": 4,
+          "section": "Approach",
+          "quote": "We develop a curriculum RL framework with difficulty expansion, and training stabilization for sustained reasoning improvement.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "name": "Agentic Augmentation",
+      "description": "PhysicsMinions 에이전트 프레임워크를 사용하여 추론을 강화",
+      "inputs": [
+        "P1-VL 모델"
+      ],
+      "outputs": [
+        "향상된 문제 해결 능력"
+      ],
+      "implementation_hint": null,
+      "evidence": [
+        {
+          "page": 4,
+          "section": "Approach",
+          "quote": "During the inference phase, we integrate P1-VL models with the PhysicsMinions agent framework to enable iterative correction and self-verification.",
+          "type": "quote"
+        }
+      ]
+    }
+  ],
+  "benchmark": {
+    "dataset": "HiPhO",
+    "metrics": [
+      "평균 점수",
+      "메달 획득 수"
+    ],
+    "baseline_results": {
+      "P1-235B-A22B+PhysicsMinions": "38.4"
+    },
+    "proposed_results": {
+      "P1-VL-235B-A22B": "39.3",
+      "P1-VL-235B-A22B+PhysicsMinions": "40.9"
+    },
+    "evidence": [
+      {
+        "page": 13,
+        "section": "Evaluation on Physics Olympiads",
+        "quote": "P1-VL-235B-A22B ranks 3rd among all evaluated models, following only Gemini-3-Pro and GPT-5.2. With 12 gold and 1 silver medals (average score: 39.3).",
+        "type": "quote"
+      }
+    ]
+  },
+  "claims": [
+    {
+      "claim_id": "claim_1",
+      "text": "P1-VL은 물리학 문제에 특화된 최초의 오픈소스 비전-언어 모델입니다.",
+      "claim_type": "method",
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "page": 4,
+          "section": "Contributions",
+          "quote": "We introduce P1-VL, a first family of open-source Vision-Language Model specialized in physics problems.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "claim_id": "claim_2",
+      "text": "P1-VL-235B-A22B는 HiPhO에서 12개의 금메달을 획득하며 3위를 차지했습니다.",
+      "claim_type": "result",
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "page": 13,
+          "section": "Evaluation on Physics Olympiads",
+          "quote": "P1-VL-235B-A22B ranks 3rd among all evaluated models, following only Gemini-3-Pro and GPT-5.2. With 12 gold and 1 silver medals (average score: 39.3).",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "claim_id": "claim_3",
+      "text": "PhysicsMinions 에이전트 프레임워크와 결합하여 P1-VL-235B-A22B의 평균 점수가 39.3에서 40.9로 향상되었습니다.",
+      "claim_type": "comparison",
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "page": 13,
+          "section": "Evaluation on Physics Olympiads",
+          "quote": "With the agentic augmentation of PhysicsMinions, the average score of P1-VL-235B-A22B improves from 39.3 to 40.9.",
+          "type": "quote"
+        }
+      ]
+    }
+  ],
+  "extraction_mode": "full"
+}

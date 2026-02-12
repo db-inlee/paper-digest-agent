@@ -1,0 +1,135 @@
+{
+  "arxiv_id": "2602.06454",
+  "title": "RelayGen: Intra-Generation Model Switching for Efficient Reasoning",
+  "problem_definition": {
+    "statement": "대규모 추론 모델(LRMs)은 복잡한 추론 작업에서 강력한 성능을 발휘하지만, 추론 시간 확장은 상당한 배포 비용을 초래합니다. 긴 추론 생성 내에서 난이도 변동을 활용하여 효율성을 개선하는 것이 핵심 과제입니다.",
+    "baseline_methods": [],
+    "structural_limitation": "기존의 효율성 지향 접근 방식은 단일 출력 내의 생성 난이도 변동을 무시하거나 높은 시스템 복잡성을 가진 감독된 토큰 수준 라우팅에 의존합니다.",
+    "evidence": [
+      {
+        "page": 1,
+        "section": "Abstract",
+        "quote": "A key challenge is that generation difficulty varies within a single output, whereas existing efficiency-oriented approaches either ignore this intra-generation variation or rely on supervised token-level routing with high system complexity.",
+        "type": "quote"
+      }
+    ]
+  },
+  "baselines": [
+    {
+      "name": "Speculative Thinking",
+      "description": "사전 정의된 어휘적 단서를 기반으로 단계 수준 전환을 수행하는 방법",
+      "limitation": "세분화된 생성 난이도 분석 없이 전환 결정을 내리며, 난이도가 높은 경우에도 작은 모델에 위임하여 정확도 저하를 초래할 수 있음",
+      "evidence": [
+        {
+          "page": 6,
+          "section": "5.2 Accuracy Evaluation",
+          "quote": "Although Speculative Thinking also relies on lexical cues to guide mid-generation switching, it makes switching decisions without an explicit analysis of generation difficulty and operates at a coarse, step-level granularity.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "name": "R2R",
+      "description": "학습된 토큰 수준 라우터를 사용하여 각 디코딩 단계에서 모델을 선택하는 방법",
+      "limitation": "매 디코딩 단계에서 신경 라우터를 호출하여 연속적인 생성을 방해하고, 라우팅 및 모델 전환 오버헤드로 인해 잠재적인 계산 절약이 상쇄됨",
+      "evidence": [
+        {
+          "page": 7,
+          "section": "5.3 Inference Latency and Composability",
+          "quote": "R2R achieves relatively moderate speedup despite using large model for merely 19.3% of tokens. This indicates that its potential compute savings are largely offset by routing and model-switching overhead.",
+          "type": "quote"
+        }
+      ]
+    }
+  ],
+  "method_components": [
+    {
+      "name": "RelayGen",
+      "description": "세그먼트 수준의 런타임 모델 전환 프레임워크로, 생성 난이도 변동을 활용하여 모델 용량을 동적으로 할당",
+      "inputs": [
+        "긴 추론 생성",
+        "디스코스 수준의 단서"
+      ],
+      "outputs": [
+        "효율적인 추론 결과"
+      ],
+      "implementation_hint": "학습된 라우터나 추가적인 감독 없이, 사전 훈련된 모델에서 추출한 생성 통계를 사용하여 전환 단서를 식별",
+      "evidence": [
+        {
+          "page": 4,
+          "section": "4 RelayGen",
+          "quote": "RelayGen is a training-free, runtime framework for model switching during long reasoning generation.",
+          "type": "quote"
+        }
+      ]
+    }
+  ],
+  "benchmark": {
+    "dataset": "AIME 2025, MATH500, GPQA-Diamond",
+    "metrics": [
+      "pass@1"
+    ],
+    "baseline_results": {
+      "Small Model": "MATH500: 88.60, AIME 2025: 31.67, GPQA-Diamond: 37.33",
+      "Large Model": "MATH500: 95.27, AIME 2025: 70.00, GPQA-Diamond: 64.58",
+      "Spec. Think.": "MATH500: 91.35, AIME 2025: 40.83, GPQA-Diamond: 41.29",
+      "R2R": "MATH500: 94.30, AIME 2025: 62.50, GPQA-Diamond: 61.62"
+    },
+    "proposed_results": {
+      "RelayGen": "MATH500: 94.80, AIME 2025: 68.33, GPQA-Diamond: 63.64"
+    },
+    "evidence": [
+      {
+        "page": 6,
+        "section": "5.2 Accuracy Evaluation",
+        "quote": "Table 2 reports pass@1 on three reasoning benchmarks.",
+        "type": "quote"
+      }
+    ]
+  },
+  "claims": [
+    {
+      "claim_id": "C1",
+      "text": "RelayGen은 대규모 모델의 대부분의 정확성을 유지하면서 추론 지연 시간을 크게 줄입니다.",
+      "claim_type": "result",
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "page": 8,
+          "section": "6 Conclusion",
+          "quote": "Across multiple reasoning benchmarks, RelayGen preserves most of the accuracy of large models while substantially reducing inference latency.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "claim_id": "C2",
+      "text": "RelayGen은 학습된 라우터나 추가적인 감독 없이 세그먼트 수준의 런타임 모델 전환을 수행합니다.",
+      "claim_type": "method",
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "page": 4,
+          "section": "4 RelayGen",
+          "quote": "RelayGen operates entirely at runtime and requires neither additional training nor auxiliary routing components such as learned routers or control modules.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "claim_id": "C3",
+      "text": "RelayGen은 추론 지연 시간을 줄이면서도 추론의 대부분을 대규모 모델에 유지하여 안정적인 지연 시간 감소를 우선시합니다.",
+      "claim_type": "comparison",
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "page": 7,
+          "section": "5.3 Inference Latency and Composability",
+          "quote": "RelayGen prioritizes stable latency reduction through selective offloading, retaining most generation on the large model while remaining composable with existing inference acceleration techniques.",
+          "type": "quote"
+        }
+      ]
+    }
+  ],
+  "extraction_mode": "full"
+}

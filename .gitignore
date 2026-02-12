@@ -47,8 +47,12 @@ htmlcov/
 # macOS
 .DS_Store
 
-# Project specific
-# Note: daily/ and metadata/ are tracked for reports
-# Uncomment if you don't want to track them:
-# daily/
-# metadata/
+# Project specific - user data (votes, comments, topics)
+reports/votes.json
+reports/comments.json
+reports/topics.json
+
+# notifier (Slack/Web)
+notifier/web/node_modules/
+notifier/web/.svelte-kit/
+notifier/web/build/

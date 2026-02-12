@@ -26,6 +26,8 @@ class SkimSummary(BaseModel):
     # GitHub 정보
     github_url: Optional[str] = Field(default=None, description="GitHub 레포 URL")
     github_stars: Optional[int] = Field(default=None, description="GitHub 스타 수")
+    # 매칭된 키워드
+    matched_keywords: list[str] = Field(default_factory=list, description="필터링에 매칭된 키워드")
 
 
 class BatchSkimResult(BaseModel):

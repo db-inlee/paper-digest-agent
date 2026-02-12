@@ -22,6 +22,10 @@ class PaperCandidate(BaseModel):
     # GitHub 정보 (HF Papers에서 제공)
     github_url: Optional[str] = Field(default=None, description="GitHub 레포 URL")
     github_stars: Optional[int] = Field(default=None, description="GitHub 스타 수")
+    # 학회/venue 정보 (arXiv comment에서 추출)
+    venue: Optional[str] = Field(default=None, description="Detected conference/venue from arXiv comment")
+    # 매칭된 키워드
+    matched_keywords: list[str] = Field(default_factory=list, description="필터링에 매칭된 키워드")
 
     @property
     def arxiv_url(self) -> str:

@@ -1,0 +1,39 @@
+{
+  "arxiv_id": "2602.08990",
+  "total_claims": 3,
+  "verified_count": 3,
+  "unverified_count": 0,
+  "contradicted_count": 0,
+  "overall_reliability": "high",
+  "results": [
+    {
+      "claim_id": "C1",
+      "claim_text": "InternAgent-1.5는 과학적 발견을 위한 통합 아키텍처를 제공합니다.",
+      "status": "verified",
+      "confidence": 1.0,
+      "evidence_found": "논문 2페이지, 'A Unified Architecture for End-to-end Scientific Discovery' 섹션에서 확인됨.",
+      "notes": "논문에서 통합 아키텍처에 대한 설명이 명확하게 제공됨.",
+      "correction_hint": null
+    },
+    {
+      "claim_id": "C2",
+      "claim_text": "InternAgent-1.5는 강력한 기초 역량을 제공합니다.",
+      "status": "verified",
+      "confidence": 1.0,
+      "evidence_found": "논문 4페이지, 'State-of-the-Art Foundational Capabilities' 섹션에서 확인됨.",
+      "notes": "기초 역량에 대한 성과가 명확하게 기술됨.",
+      "correction_hint": null
+    },
+    {
+      "claim_id": "C3",
+      "claim_text": "InternAgent-1.5는 알고리즘 및 실험적 발견에서 돌파구를 보여줍니다.",
+      "status": "verified",
+      "confidence": 1.0,
+      "evidence_found": "논문 4페이지, 'Breakthroughs in Algorithmic and Empirical Discovery' 섹션에서 확인됨.",
+      "notes": "알고리즘 및 실험적 발견에서의 성과가 구체적으로 언급됨.",
+      "correction_hint": null
+    }
+  ],
+  "summary": "모든 클레임이 논문에서 지지되며, 제시된 베이스라인과 원라인 테이크어웨이도 정확하게 표현됨.",
+  "corrections_needed": []
+}

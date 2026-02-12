@@ -1,0 +1,130 @@
+{
+  "arxiv_id": "2602.06820",
+  "title": "ScaleEnv: Scaling Environment Synthesis from Scratch for Generalist Interactive Tool-Use Agent Training",
+  "problem_definition": {
+    "statement": "다양한 시나리오에 적응할 수 있는 일반적인 에이전트를 훈련하기 위해서는 상호작용 가능한 환경이 필요합니다. 그러나 이러한 환경은 매우 부족하며, 기존의 합성 방법은 환경의 다양성과 확장성에 있어 상당한 한계를 가지고 있습니다.",
+    "baseline_methods": [],
+    "structural_limitation": "기존 합성 방법은 환경의 다양성과 확장성에 있어 상당한 한계를 가지고 있습니다.",
+    "evidence": [
+      {
+        "page": null,
+        "section": "Abstract",
+        "quote": "interactive environments remain critically scarce, and existing synthesis methods suffer from significant limitations regarding environmental diversity and scalability.",
+        "type": "quote"
+      }
+    ]
+  },
+  "baselines": [],
+  "method_components": [
+    {
+      "name": "Executable Graph Construction",
+      "description": "도메인의 논리적 골격을 설정하는 실행 가능한 그래프를 구축합니다.",
+      "inputs": [
+        "도메인 이름",
+        "도구 및 데이터베이스 스키마"
+      ],
+      "outputs": [
+        "실행 가능한 코드",
+        "도구 의존성 그래프"
+      ],
+      "implementation_hint": null,
+      "evidence": [
+        {
+          "page": null,
+          "section": "4.1. Executable Graph Construction",
+          "quote": "The executable graph establishes the logical skeleton of a given domain.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "name": "Task Instantiation via Graph Expansion",
+      "description": "에이전트 RL 훈련을 위한 다양한 작업을 인스턴스화합니다.",
+      "inputs": [
+        "도구 의존성 그래프",
+        "초기 환경 상태"
+      ],
+      "outputs": [
+        "다양한 작업",
+        "확장된 환경"
+      ],
+      "implementation_hint": null,
+      "evidence": [
+        {
+          "page": null,
+          "section": "4.2. Task Instantiation via Graph Expansion",
+          "quote": "we instantiate diverse tasks for agentic RL training.",
+          "type": "quote"
+        }
+      ]
+    }
+  ],
+  "benchmark": {
+    "dataset": "τ 2-Bench, VitaBench",
+    "metrics": [
+      "Zero-shot generalization performance",
+      "Pass@4"
+    ],
+    "baseline_results": {
+      "Qwen3-8B": "38.4, 30.5, 21.5, 1.5, 18.3, 14.8, 4.5",
+      "Qwen3-32B": "59.5, 48.0, 27.2, 5.3, 27.0, 22.5, 4.5"
+    },
+    "proposed_results": {
+      "Qwen3-SE-8B": "50.9, 37.5, 27.2, 3.0, 26.3, 23.8, 7.0",
+      "Qwen3-SE-32B": "63.6, 48.0, 30.9, 10.8, 31.3, 34.5, 12.5"
+    },
+    "evidence": [
+      {
+        "page": null,
+        "section": "5.2. Main Results: Generalization to Unseen Domains",
+        "quote": "Qwen3-SE model series, trained with environments and tasks constructed from our SCALEENV consistently outperforms baselines across diverse domains.",
+        "type": "quote"
+      }
+    ]
+  },
+  "claims": [
+    {
+      "claim_id": "claim_1",
+      "text": "SCALEENV는 고충실도의 상호작용 환경과 검증 가능한 작업을 처음부터 합성하는 완전 자동화된 프레임워크를 제안합니다.",
+      "claim_type": "method",
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "page": null,
+          "section": "Abstract",
+          "quote": "we introduce ScaleEnv, a framework that constructs fully interactive environments and verifiable tasks entirely from scratch.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "claim_id": "claim_2",
+      "text": "SCALEENV에서 훈련된 에이전트는 보지 못한 벤치마크에서 상당한 제로샷 일반화를 달성합니다.",
+      "claim_type": "result",
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "page": null,
+          "section": "Abstract",
+          "quote": "we demonstrate significant performance improvements on unseen, multi-turn tool-use benchmarks such as τ 2-Bench and VitaBench.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "claim_id": "claim_3",
+      "text": "환경 다양성의 확장이 강력한 에이전트 학습에 중요하다는 경험적 증거를 제공합니다.",
+      "claim_type": "result",
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "page": null,
+          "section": "Abstract",
+          "quote": "providing empirical evidence that scaling environmental diversity is critical for robust agent learning.",
+          "type": "quote"
+        }
+      ]
+    }
+  ],
+  "extraction_mode": "full"
+}

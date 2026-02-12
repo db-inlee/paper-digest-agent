@@ -142,6 +142,7 @@ class UltraSkimAgent(BaseAgent[list[PaperCandidate], BatchSkimResult]):
                         link=f"https://arxiv.org/abs/{paper.arxiv_id}",
                         github_url=paper.github_url,
                         github_stars=paper.github_stars,
+                        matched_keywords=paper.matched_keywords,
                     )
                 )
             else:
@@ -181,6 +182,7 @@ class UltraSkimAgent(BaseAgent[list[PaperCandidate], BatchSkimResult]):
             link=f"https://arxiv.org/abs/{paper.arxiv_id}",
             github_url=paper.github_url,
             github_stars=paper.github_stars,
+            matched_keywords=paper.matched_keywords,
         )
 
 

@@ -1,0 +1,178 @@
+{
+  "arxiv_id": "2602.07075",
+  "title": "LatentChem: From Textual CoT to Latent Thinking in Chemical Reasoning",
+  "problem_definition": {
+    "statement": "화학적 추론을 자연어의 Chain-of-Thought(CoT)로 수행하는 기존 방법은 화학적 추론의 연속적이고 구조적인 특성과 맞지 않으며, 이는 효율성과 성능을 제한한다.",
+    "baseline_methods": [],
+    "structural_limitation": "화학적 논리를 언어적 병목으로 강제하는 것은 화학적 추론의 연속성-이산화 간극을 초래한다.",
+    "evidence": [
+      {
+        "page": 1,
+        "section": "Abstract",
+        "quote": "Chemical reasoning is inherently continuous and structural, and forcing it into discrete linguistic tokens introduces a fundamental representation mismatch that constrains both efficiency and performance.",
+        "type": "quote"
+      }
+    ]
+  },
+  "baselines": [
+    {
+      "name": "Explicit CoT",
+      "description": "자연어를 사용한 명시적 Chain-of-Thought(CoT) 기반의 화학적 추론 방법",
+      "limitation": "연속적인 화학적 논리를 이산적인 언어적 단계로 분절하여 비효율적인 추론 경로를 유도한다.",
+      "evidence": [
+        {
+          "page": 2,
+          "section": "Introduction",
+          "quote": "Linguistic tokenization fragments chemical state transitions into discrete symbolic steps, inducing staircase-like landscapes and inefficient reasoning paths.",
+          "type": "quote"
+        }
+      ]
+    }
+  ],
+  "method_components": [
+    {
+      "name": "ChemAdapter",
+      "description": "연속적인 분자 특징과 이산적인 임베딩 공간 간의 모달리티 간극을 연결하는 쿼리 기반 어텐션 프로젝터",
+      "inputs": [
+        "분자 특징"
+      ],
+      "outputs": [
+        "ChemTokens"
+      ],
+      "implementation_hint": null,
+      "evidence": [
+        {
+          "page": 4,
+          "section": "Latent Thinking Neural Architecture",
+          "quote": "To bridge the modality gap between continuous molecular features and the discrete embedding space, we employ a query-based attention projector.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "name": "ChemUpdater",
+      "description": "추론과 인식을 동적으로 상호작용하게 하는 모듈로, 분자 하위 구조에 대한 초점을 이동시킨다.",
+      "inputs": [
+        "현재 ChemTokens",
+        "누적된 추론 이력"
+      ],
+      "outputs": [
+        "업데이트된 ChemTokens"
+      ],
+      "implementation_hint": null,
+      "evidence": [
+        {
+          "page": 4,
+          "section": "Latent Thinking Neural Architecture",
+          "quote": "The ChemUpdater enables dynamic perceptual refinement.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "name": "Latent Projector",
+      "description": "연속적인 입력 벡터를 생성하여 이산적인 토크나이제이션 병목을 우회하는 모듈",
+      "inputs": [
+        "LLM 백본의 숨겨진 상태"
+      ],
+      "outputs": [
+        "연속적인 입력 벡터"
+      ],
+      "implementation_hint": null,
+      "evidence": [
+        {
+          "page": 4,
+          "section": "Latent Thinking Neural Architecture",
+          "quote": "We employ a Latent Projector, implemented as a lightweight residual feed-forward network (FFN).",
+          "type": "quote"
+        }
+      ]
+    }
+  ],
+  "benchmark": {
+    "dataset": "ChemCoTBench, Mol-Instructions, ChEBI-20, ChemLLMBench",
+    "metrics": [
+      "non-tie win rate",
+      "inference speedup"
+    ],
+    "baseline_results": {
+      "ChemCoTBench": "Stage 1+2+4: 41.73%",
+      "Mol-Instructions": "Stage 1+2+4: 51.25%",
+      "ChEBI-20": "Stage 1+2+4: 64.80%",
+      "ChemLLMBench": "Stage 1+2+4: 46.21%"
+    },
+    "proposed_results": {
+      "ChemCoTBench": "LatentChem: 59.88%",
+      "Mol-Instructions": "LatentChem: 49.88%",
+      "ChEBI-20": "LatentChem: 85.26%",
+      "ChemLLMBench": "LatentChem: 55.58%"
+    },
+    "evidence": [
+      {
+        "page": 9,
+        "section": "Main Results",
+        "quote": "LatentChem demonstrates robust superiority, dominating on ChemCoTBench (59.88%) and ChEBI-20 (85.26%), while generalizing well to ChemLLMBench (55.58%).",
+        "type": "quote"
+      }
+    ]
+  },
+  "claims": [
+    {
+      "claim_id": "claim_1",
+      "text": "LatentChem은 화학적 추론을 언어 생성과 분리하여 연속적인 잠재 공간에서 다단계 추론을 수행할 수 있게 한다.",
+      "claim_type": "method",
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "page": 1,
+          "section": "Abstract",
+          "quote": "We introduce LatentChem, a latent reasoning interface that decouples chemical computation from textual generation.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "claim_id": "claim_2",
+      "text": "LatentChem은 ChemCoTBench에서 강력한 CoT 기반 베이스라인 대비 59.88%의 비동점 승률을 달성하며, 평균 10.84배의 추론 속도 향상을 제공한다.",
+      "claim_type": "result",
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "page": 1,
+          "section": "Abstract",
+          "quote": "LatentChem achieves a 59.88% non-tie win rate over strong CoT-based baselines on ChemCoTBench, while delivering a 10.84× average inference speedup.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "claim_id": "claim_3",
+      "text": "LatentChem은 연속적인 잠재 역학이 화학적 논리를 더 자연스럽고 효과적으로 실현할 수 있음을 보여준다.",
+      "claim_type": "comparison",
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "page": 1,
+          "section": "Abstract",
+          "quote": "Our results provide empirical evidence that chemical reasoning is more naturally and effectively realized as continuous latent dynamics rather than discretized linguistic trajectories.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "claim_id": "claim_4",
+      "text": "LatentChem의 잠재적 추론은 중간 단계의 명시적 가독성을 희생하지만, 이는 더 나은 계산 전략을 나타낸다.",
+      "claim_type": "limitation",
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "page": 2,
+          "section": "Introduction",
+          "quote": "While this shift sacrifices the explicit readability of intermediate steps, it strongly suggests that the model perceives natural language as a low-bandwidth constraint.",
+          "type": "quote"
+        }
+      ]
+    }
+  ],
+  "extraction_mode": "full"
+}

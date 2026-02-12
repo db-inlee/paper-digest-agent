@@ -1,0 +1,21 @@
+{
+  "arxiv_id": "2602.10177",
+  "one_line_takeaway": "이 논문은 수학 연구에서 AI가 자율적으로 새로운 수학 정리를 발견하고 증명할 수 있는지 탐구하며, Aletheia라는 수학 연구 에이전트를 제안한다.",
+  "core_deltas": [
+    {
+      "axis": "연구 에이전트 구조",
+      "old_approach": "해당 영역에 특화된 방법 없음",
+      "new_approach": "Aletheia: 자연어로 솔루션을 생성, 검증, 수정하는 기능을 갖춘 수학 연구 에이전트",
+      "why_better": "수학 연구에서 AI의 자율성을 높이고, 새로운 수학 정리의 발견과 증명을 지원할 수 있는 가능성을 제안함",
+      "evidence": {
+        "page": null,
+        "section": null,
+        "quote": "Aletheia: 수학 연구 에이전트로, 자연어로 솔루션을 생성, 검증, 수정하는 기능을 갖추고 있습니다.",
+        "type": "quote"
+      }
+    }
+  ],
+  "tradeoffs": [],
+  "when_to_use": "AI를 활용하여 수학 연구에서 새로운 정리를 발견하고 증명하는 과정을 탐구할 때",
+  "when_not_to_use": "기존의 수학적 방법론이나 정형화된 증명 절차가 필요한 경우"
+}

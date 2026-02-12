@@ -1,0 +1,282 @@
+date: '2026-02-10'
+total_collected: 19
+total_skimmed: 13
+papers:
+- arxiv_id: '2602.07026'
+  title: Modality Gap-Driven Subspace Alignment Training Paradigm For Multimodal Large
+    Language Models
+  one_liner: 이 논문은 시각 및 언어 표현의 정렬을 위한 새로운 훈련 패러다임인 ReAlign과 ReVision을 제안하여 다중 모달 대형
+    언어 모델의 성능을 향상시킵니다.
+  tags:
+  - multimodal
+  - alignment
+  - training
+  - large language models
+  - contrastive learning
+  interest_score: 4
+  interest_reason: 다중 모달 정렬 문제를 해결하기 위한 새로운 접근법을 제시하여 중요한 기여를 합니다.
+  baseline_mentioned: null
+  category: training
+  has_code: true
+  link: https://arxiv.org/abs/2602.07026
+  github_url: https://github.com/Yu-xm/ReVision.git
+  github_stars: 26
+  matched_keywords:
+  - LLM
+  - RAG
+- arxiv_id: '2602.08794'
+  title: 'MOVA: Towards Scalable and Synchronized Video-Audio Generation'
+  one_liner: MOVA는 고품질의 동기화된 비디오-오디오 콘텐츠 생성을 위한 오픈 소스 모델로, 실시간 음성 및 환경 인식 사운드를 포함합니다.
+  tags:
+  - video generation
+  - audio generation
+  - multimodal
+  - open source
+  - synchronization
+  interest_score: 4
+  interest_reason: 비디오와 오디오의 동시 생성을 위한 혁신적인 접근법을 제공하여 연구 발전에 기여합니다.
+  baseline_mentioned: null
+  category: agent
+  has_code: true
+  link: https://arxiv.org/abs/2602.08794
+  github_url: https://github.com/OpenMOSS/MOVA
+  github_stars: 521
+  matched_keywords:
+  - prompt
+- arxiv_id: '2602.07085'
+  title: 'QuantaAlpha: An Evolutionary Framework for LLM-Driven Alpha Mining'
+  one_liner: QuantaAlpha는 진화적 접근 방식을 통해 금융 시장에서의 알파 마이닝을 개선하는 프레임워크를 제안합니다.
+  tags:
+  - alpha mining
+  - financial markets
+  - evolutionary algorithms
+  - agentic frameworks
+  - performance improvement
+  interest_score: 4
+  interest_reason: 금융 시장에서의 성능을 향상시키는 새로운 방법론을 제시하여 중요한 기여를 합니다.
+  baseline_mentioned: strong baseline models
+  category: reasoning
+  has_code: true
+  link: https://arxiv.org/abs/2602.07085
+  github_url: https://github.com/QuantaAlpha/QuantaAlpha
+  github_stars: 11
+  matched_keywords:
+  - LLM
+  - agent
+  - agentic
+- arxiv_id: '2602.07845'
+  title: 'Recurrent-Depth VLA: Implicit Test-Time Compute Scaling of Vision-Language-Action
+    Models via Latent Iterative Reasoning'
+  one_liner: Recurrent-Depth VLA는 비전-언어-행동 모델의 계산 깊이를 동적으로 조정하여 효율성을 극대화합니다.
+  tags:
+  - vision-language-action
+  - adaptive computation
+  - robotics
+  - inference speedup
+  - latent reasoning
+  interest_score: 4
+  interest_reason: 계산 효율성을 높이는 혁신적인 아키텍처를 제안하여 중요한 기여를 합니다.
+  baseline_mentioned: null
+  category: reasoning
+  has_code: true
+  link: https://arxiv.org/abs/2602.07845
+  github_url: https://github.com/rd-vla/rd-vla
+  github_stars: 0
+  matched_keywords:
+  - reasoning
+  - prompt
+- arxiv_id: '2602.08676'
+  title: 'LLaDA2.1: Speeding Up Text Diffusion via Token Editing'
+  one_liner: LLaDA2.1은 텍스트 확산 속도를 높이기 위해 토큰 편집을 통합한 새로운 접근 방식을 제안합니다.
+  tags:
+  - text diffusion
+  - token editing
+  - reinforcement learning
+  - large language models
+  - decoding speed
+  interest_score: 4
+  interest_reason: 디퓨전 모델의 속도와 품질 간의 균형을 개선하는 혁신적인 방법을 제시합니다.
+  baseline_mentioned: null
+  category: training
+  has_code: true
+  link: https://arxiv.org/abs/2602.08676
+  github_url: https://github.com/inclusionAI/LLaDA2.X
+  github_stars: 242
+  matched_keywords:
+  - LLM
+  - reasoning
+- arxiv_id: '2602.08222'
+  title: 'Weak-Driven Learning: How Weak Agents make Strong Agents Stronger'
+  one_liner: WMSS는 약한 체크포인트를 활용하여 강한 에이전트의 성능을 향상시키는 새로운 후속 훈련 패러다임을 제안합니다.
+  tags:
+  - post-training
+  - optimization
+  - large language models
+  - performance improvement
+  - entropy dynamics
+  interest_score: 4
+  interest_reason: 후속 훈련에서의 성능 향상을 위한 새로운 접근법을 제시하여 중요한 기여를 합니다.
+  baseline_mentioned: null
+  category: training
+  has_code: true
+  link: https://arxiv.org/abs/2602.08222
+  github_url: https://github.com/chenzehao82/Weak-Driven-Learning
+  github_stars: 9
+  matched_keywords:
+  - agent
+  - RAG
+  - reasoning
+- arxiv_id: '2602.08439'
+  title: 'Demo-ICL: In-Context Learning for Procedural Video Knowledge Acquisition'
+  one_liner: Demo-ICL은 비디오 지식 습득을 위한 새로운 절차적 학습 방법을 제안하며, 이를 평가하기 위한 벤치마크를 개발합니다.
+  tags:
+  - video understanding
+  - in-context learning
+  - multimodal
+  - benchmark
+  - demonstration
+  interest_score: 4
+  interest_reason: 비디오 이해 능력을 평가하기 위한 새로운 벤치마크를 제시하여 연구에 기여합니다.
+  baseline_mentioned: null
+  category: evaluation
+  has_code: true
+  link: https://arxiv.org/abs/2602.08439
+  github_url: https://github.com/dongyh20/Demo-ICL
+  github_stars: 8
+  matched_keywords:
+  - LLM
+- arxiv_id: '2602.07962'
+  title: 'LOCA-bench: Benchmarking Language Agents Under Controllable and Extreme
+    Context Growth'
+  one_liner: LOCA-bench는 긴 맥락에서 언어 에이전트를 평가하기 위한 새로운 벤치마크를 제안합니다.
+  tags:
+  - long-context
+  - language agents
+  - benchmark
+  - context management
+  - evaluation
+  interest_score: 4
+  interest_reason: 긴 맥락에서의 에이전트 성능을 평가하기 위한 혁신적인 벤치마크를 제시합니다.
+  baseline_mentioned: null
+  category: evaluation
+  has_code: true
+  link: https://arxiv.org/abs/2602.07962
+  github_url: https://github.com/hkust-nlp/LOCA-bench
+  github_stars: 5
+  matched_keywords:
+  - LLM
+  - agent
+  - agentic
+  - RAG
+  - prompt
+- arxiv_id: '2602.08543'
+  title: 'GISA: A Benchmark for General Information-Seeking Assistant'
+  one_liner: GISA는 일반 정보 탐색 보조 도구를 위한 새로운 벤치마크를 제안하여 실제 정보 탐색 시나리오를 반영합니다.
+  tags:
+  - information-seeking
+  - benchmark
+  - large language models
+  - real-world scenarios
+  - evaluation
+  interest_score: 4
+  interest_reason: 실제 정보 탐색을 반영한 새로운 벤치마크를 제시하여 중요한 기여를 합니다.
+  baseline_mentioned: null
+  category: evaluation
+  has_code: false
+  link: https://arxiv.org/abs/2602.08543
+  github_url: null
+  github_stars: null
+  matched_keywords:
+  - LLM
+  - agent
+  - reasoning
+  - planning
+- arxiv_id: '2602.07075'
+  title: 'LatentChem: From Textual CoT to Latent Thinking in Chemical Reasoning'
+  one_liner: LatentChem은 화학 추론을 위한 새로운 잠재적 사고 인터페이스를 제안하여 효율성을 높입니다.
+  tags:
+  - chemical reasoning
+  - latent reasoning
+  - large language models
+  - efficiency
+  - continuous dynamics
+  interest_score: 4
+  interest_reason: 화학 추론의 효율성을 높이는 혁신적인 접근법을 제시하여 중요한 기여를 합니다.
+  baseline_mentioned: strong CoT-based baselines
+  category: reasoning
+  has_code: false
+  link: https://arxiv.org/abs/2602.07075
+  github_url: null
+  github_stars: null
+  matched_keywords:
+  - LLM
+  - RAG
+  - reasoning
+- arxiv_id: '2602.07055'
+  title: 'Theory of Space: Can Foundation Models Construct Spatial Beliefs through
+    Active Exploration?'
+  one_liner: 이 논문은 에이전트가 능동적으로 정보를 수집하고 공간적 신념을 구축하는 능력을 평가하는 'Theory of Space'를 제안합니다.
+  tags:
+  - active exploration
+  - spatial beliefs
+  - foundation models
+  - cognitive mapping
+  - agent
+  interest_score: 4
+  interest_reason: 능동적 탐색과 공간적 신념 구축에 대한 새로운 접근 방식을 제시하여 중요한 기여를 합니다.
+  baseline_mentioned: null
+  category: agent
+  has_code: true
+  link: https://arxiv.org/abs/2602.07055
+  github_url: https://github.com/mll-lab-nu/Theory-of-Space
+  github_stars: 2
+  matched_keywords:
+  - agent
+  - prompt
+- arxiv_id: '2602.06540'
+  title: 'AgentCPM-Report: Interleaving Drafting and Deepening for Open-Ended Deep
+    Research'
+  one_liner: AgentCPM-Report는 정보 수집과 분석을 통합하여 깊이 있는 연구 보고서를 생성하는 경량 솔루션을 제안합니다.
+  tags:
+  - deep research
+  - information acquisition
+  - writing process
+  - reasoning
+  - agent
+  interest_score: 4
+  interest_reason: 기존의 연구 시스템의 한계를 극복하는 혁신적인 방법론을 제시하여 중요한 기여를 합니다.
+  baseline_mentioned: closed-source systems
+  category: agent
+  has_code: true
+  link: https://arxiv.org/abs/2602.06540
+  github_url: https://github.com/OpenBMB/AgentCPM/tree/main/AgentCPM-Report
+  github_stars: 726
+  matched_keywords:
+  - agent
+  - agentic
+  - reasoning
+- arxiv_id: '2602.06694'
+  title: 'NanoQuant: Efficient Sub-1-Bit Quantization of Large Language Models'
+  one_liner: NanoQuant는 대형 언어 모델을 서브-1비트 수준으로 효율적으로 압축하는 새로운 포스트 트레이닝 양자화 방법을 제안합니다.
+  tags:
+  - quantization
+  - language models
+  - compression
+  - post-training
+  - efficiency
+  interest_score: 5
+  interest_reason: 서브-1비트 압축을 가능하게 하여 대형 모델의 배포를 혁신적으로 개선하는 획기적인 연구입니다.
+  baseline_mentioned: null
+  category: training
+  has_code: false
+  link: https://arxiv.org/abs/2602.06694
+  github_url: null
+  github_stars: null
+  matched_keywords:
+  - LLM
+  - RAG
+deep_candidates:
+- '2602.06540'
+- '2602.07055'
+- '2602.07075'
+skimmed_at: '2026-02-10T18:09:26.219218'

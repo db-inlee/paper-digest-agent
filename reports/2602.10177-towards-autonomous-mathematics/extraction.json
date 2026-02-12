@@ -1,0 +1,119 @@
+{
+  "arxiv_id": "2602.10177",
+  "title": "Towards Autonomous Mathematics Research",
+  "problem_definition": {
+    "statement": "수학 연구에서 AI가 자율적으로 새로운 수학 정리를 발견하고 증명할 수 있는지 탐구합니다.",
+    "baseline_methods": [],
+    "structural_limitation": "기존의 파운데이션 모델이나 대형 언어 모델은 전문적인 주제에 대한 이해가 피상적이며, 관련 훈련 데이터의 부족으로 인해 환각(hallucination)을 자주 일으킵니다.",
+    "evidence": [
+      {
+        "page": 1,
+        "section": "Introduction",
+        "quote": "Unlike self-contained competition problems, research questions require synthesizing advanced techniques from an extensive body of literature. This poses a major hurdle for foundation or large language models, which often hallucinate and exhibit only a superficial understanding of specialized topics—limitations likely stemming from a scarcity of relevant training data.",
+        "type": "quote"
+      }
+    ]
+  },
+  "baselines": [],
+  "method_components": [
+    {
+      "name": "Aletheia",
+      "description": "수학 연구 에이전트로, 자연어로 솔루션을 생성, 검증, 수정하는 기능을 갖추고 있습니다.",
+      "inputs": [
+        "문제 정의",
+        "기존 수학적 지식"
+      ],
+      "outputs": [
+        "자연어로 된 솔루션"
+      ],
+      "implementation_hint": "Gemini Deep Think의 고급 버전을 기반으로 하며, 세 가지 하위 에이전트(생성기, 검증기, 수정기)로 구성되어 있습니다.",
+      "evidence": [
+        {
+          "page": 3,
+          "section": "Aletheia: towards autonomous mathematics research",
+          "quote": "Aletheia is an agent composed of three subagents, a (solution) Generator, a (natural language) Verifier, and a Reviser that interact continuously until a solution is found that the Verifier approves, or until the attempts reach a preset (hyperparameter) limit.",
+          "type": "quote"
+        }
+      ]
+    }
+  ],
+  "benchmark": {
+    "dataset": "IMO-ProofBench Advanced, FutureMath Basic",
+    "metrics": [
+      "accuracy"
+    ],
+    "baseline_results": {
+      "Gemini Deep Think": "IMO-ProofBench Advanced에서 65.7% 정확도"
+    },
+    "proposed_results": {
+      "Aletheia": "IMO-ProofBench Advanced에서 95.1% 정확도"
+    },
+    "evidence": [
+      {
+        "page": 4,
+        "section": "Scaling Laws and the Evolution of Deep Think",
+        "quote": "Aletheia achieved a 95.07% overall score, surpassing Deep Think across all tested compute scales using the same base model.",
+        "type": "quote"
+      }
+    ]
+  },
+  "claims": [
+    {
+      "claim_id": "claim_1",
+      "text": "Aletheia는 자연어로 수학적 솔루션을 생성, 검증, 수정할 수 있는 에이전트입니다.",
+      "claim_type": "method",
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "page": 3,
+          "section": "Aletheia: towards autonomous mathematics research",
+          "quote": "Aletheia is an agent composed of three subagents, a (solution) Generator, a (natural language) Verifier, and a Reviser that interact continuously until a solution is found that the Verifier approves, or until the attempts reach a preset (hyperparameter) limit.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "claim_id": "claim_2",
+      "text": "Aletheia는 IMO-ProofBench Advanced에서 95.1%의 정확도를 달성했습니다.",
+      "claim_type": "result",
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "page": 4,
+          "section": "Scaling Laws and the Evolution of Deep Think",
+          "quote": "Aletheia achieved a 95.07% overall score, surpassing Deep Think across all tested compute scales using the same base model.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "claim_id": "claim_3",
+      "text": "Aletheia는 연구 수준의 수학 문제 해결에 있어 기존 모델보다 우수한 성능을 보입니다.",
+      "claim_type": "comparison",
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "page": 4,
+          "section": "Scaling Laws and the Evolution of Deep Think",
+          "quote": "Aletheia achieved a 95.07% overall score, surpassing Deep Think across all tested compute scales using the same base model.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "claim_id": "claim_4",
+      "text": "Aletheia는 수학 연구에서 자율적인 결과를 생성할 수 있는 중요한 이정표를 세웠습니다.",
+      "claim_type": "result",
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "page": 6,
+          "section": "Summary of Mathematical Research Results",
+          "quote": "This success encouraged us to task Aletheia with calculating the eigenweights in general. Without any human intervention, Aletheia found an elegant way to do this, using techniques from a different field of mathematics unfamiliar to the authors of (FYZ26), and in the process resolved several questions left open in (FYZ26).",
+          "type": "quote"
+        }
+      ]
+    }
+  ],
+  "extraction_mode": "full"
+}

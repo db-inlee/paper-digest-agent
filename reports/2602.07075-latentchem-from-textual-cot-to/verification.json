@@ -1,0 +1,48 @@
+{
+  "arxiv_id": "2602.07075",
+  "total_claims": 4,
+  "verified_count": 3,
+  "unverified_count": 1,
+  "contradicted_count": 0,
+  "overall_reliability": "high",
+  "results": [
+    {
+      "claim_id": "claim_1",
+      "claim_text": "LatentChem은 화학적 추론을 언어 생성과 분리하여 연속적인 잠재 공간에서 다단계 추론을 수행할 수 있게 한다.",
+      "status": "verified",
+      "confidence": 1.0,
+      "evidence_found": "논문 1페이지, LatentChem의 구조와 기능 설명.",
+      "notes": "LatentChem의 설계가 언어 생성과 화학적 추론을 분리함을 명확히 설명하고 있음.",
+      "correction_hint": null
+    },
+    {
+      "claim_id": "claim_2",
+      "claim_text": "LatentChem은 ChemCoTBench에서 강력한 CoT 기반 베이스라인 대비 59.88%의 비동점 승률을 달성하며, 평균 10.84배의 추론 속도 향상을 제공한다.",
+      "status": "verified",
+      "confidence": 1.0,
+      "evidence_found": "논문 5페이지, 성능 결과 표.",
+      "notes": "성능 결과가 명확하게 제시되어 있음.",
+      "correction_hint": null
+    },
+    {
+      "claim_id": "claim_3",
+      "claim_text": "LatentChem은 연속적인 잠재 역학이 화학적 논리를 더 자연스럽고 효과적으로 실현할 수 있음을 보여준다.",
+      "status": "verified",
+      "confidence": 1.0,
+      "evidence_found": "논문 11페이지, LatentChem의 이점 설명.",
+      "notes": "연속적인 잠재 역학의 장점이 논문에서 강조됨.",
+      "correction_hint": null
+    },
+    {
+      "claim_id": "claim_4",
+      "claim_text": "LatentChem의 잠재적 추론은 중간 단계의 명시적 가독성을 희생하지만, 이는 더 나은 계산 전략을 나타낸다.",
+      "status": "unverified",
+      "confidence": 0.8,
+      "evidence_found": null,
+      "notes": "중간 단계의 가독성 희생에 대한 명확한 언급이 부족함.",
+      "correction_hint": null
+    }
+  ],
+  "summary": "대부분의 클레임이 논문에서 지지되며, LatentChem의 성능과 효율성에 대한 주장이 명확하게 뒷받침됨.",
+  "corrections_needed": []
+}

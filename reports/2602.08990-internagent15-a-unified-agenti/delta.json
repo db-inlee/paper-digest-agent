@@ -1,0 +1,46 @@
+{
+  "arxiv_id": "2602.08990",
+  "one_line_takeaway": "이 논문은 기존의 분산된 접근들을 통합 프레임워크로 체계화하여 장기 자율 과학적 발견을 지원한다",
+  "core_deltas": [
+    {
+      "axis": "시스템 통합",
+      "old_approach": "도메인 특정 설계로 인해 통합된 추론이 어려움",
+      "new_approach": "컴퓨팅 및 실험적 도메인 전반에 걸친 통합 시스템",
+      "why_better": "다양한 도메인에서의 과학적 발견을 지원하여 장기 자율 운영을 가능하게 함",
+      "evidence": {
+        "page": null,
+        "section": null,
+        "quote": "InternAgent-1.5는 이러한 문제를 해결하기 위해 설계된 통합 시스템으로, 컴퓨팅 및 실험적 도메인 전반에 걸친 과학적 발견을 지원합니다.",
+        "type": "quote"
+      }
+    },
+    {
+      "axis": "추론 및 검증 구조",
+      "old_approach": "단순한 최적화 파이프라인",
+      "new_approach": "생성, 검증, 진화의 세 가지 서브시스템으로 구성된 구조",
+      "why_better": "과학적 탐구의 개념적 기초를 구성하고, 가설과 방법론적 계획을 평가하며, 장기 전략을 정제함",
+      "evidence": {
+        "page": null,
+        "section": null,
+        "quote": "Generation Subsystem: 과학적 탐구의 개념적 기초를 구성하며, 대규모 문헌 분석, 과학적 추론, 맥락 통합을 수행",
+        "type": "quote"
+      }
+    }
+  ],
+  "tradeoffs": [
+    {
+      "aspect": "복잡성",
+      "benefit": "다양한 도메인에서의 통합된 과학적 발견 지원",
+      "cost": "시스템의 복잡성이 증가하여 구현 및 유지보수가 어려울 수 있음",
+      "when_acceptable": "다양한 도메인에서의 장기 자율 과학적 발견이 필요한 경우",
+      "evidence": {
+        "page": null,
+        "section": null,
+        "quote": null,
+        "type": "quote"
+      }
+    }
+  ],
+  "when_to_use": "다양한 도메인에서의 장기 자율 과학적 발견이 필요한 경우",
+  "when_not_to_use": "단일 도메인에 특화된 간단한 최적화가 필요한 경우"
+}

@@ -1,0 +1,26 @@
+app = "paper-digest"
+primary_region = "nrt"  # Tokyo (한국에서 가장 가까운 리전)
+
+[build]
+  dockerfile = "docker/Dockerfile"
+
+[env]
+  REPORT_BASE_DIR = "/app/data/reports"
+  PYTHONPATH = "/app/src"
+  SCHEDULER_ENABLED = "true"
+  PORT = "8080"
+
+[http_service]
+  internal_port = 8080
+  force_https = true
+  auto_stop_machines = "stop"
+  auto_start_machines = true
+  min_machines_running = 0
+
+[mounts]
+  source = "paper_data"
+  destination = "/app/data"
+
+[[vm]]
+  size = "shared-cpu-1x"
+  memory = "256mb"

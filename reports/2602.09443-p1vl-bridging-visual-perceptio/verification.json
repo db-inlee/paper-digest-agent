@@ -1,0 +1,39 @@
+{
+  "arxiv_id": "2602.09443",
+  "total_claims": 3,
+  "verified_count": 2,
+  "unverified_count": 1,
+  "contradicted_count": 0,
+  "overall_reliability": "high",
+  "results": [
+    {
+      "claim_id": "claim_1",
+      "claim_text": "P1-VL은 물리학 문제에 특화된 최초의 오픈소스 비전-언어 모델입니다.",
+      "status": "verified",
+      "confidence": 1.0,
+      "evidence_found": "논문에서 P1-VL이 물리학 문제에 특화된 최초의 오픈소스 비전-언어 모델이라고 명시됨.",
+      "notes": "P1-VL의 독창성을 강조함.",
+      "correction_hint": null
+    },
+    {
+      "claim_id": "claim_2",
+      "claim_text": "P1-VL-235B-A22B는 HiPhO에서 12개의 금메달을 획득하며 3위를 차지했습니다.",
+      "status": "verified",
+      "confidence": 1.0,
+      "evidence_found": "논문에서 P1-VL-235B-A22B가 HiPhO에서 12개의 금메달을 획득하고 3위를 차지했다고 명시됨.",
+      "notes": "실험 결과와 일치함.",
+      "correction_hint": null
+    },
+    {
+      "claim_id": "claim_3",
+      "claim_text": "PhysicsMinions 에이전트 프레임워크와 결합하여 P1-VL-235B-A22B의 평균 점수가 39.3에서 40.9로 향상되었습니다.",
+      "status": "unverified",
+      "confidence": 0.7,
+      "evidence_found": null,
+      "notes": "논문에서 PhysicsMinions와의 결합에 대한 구체적인 수치적 증거가 부족함.",
+      "correction_hint": null
+    }
+  ],
+  "summary": "대부분의 클레임이 논문에서 지지되며, 실험적 결과와 일치함.",
+  "corrections_needed": []
+}
