@@ -37,7 +37,38 @@ pipeline_status: dict[str, Any] = {"state": "idle", "date": None, "error": None}
 paper_add_jobs: dict[str, dict[str, Any]] = {}
 
 
-def trigger_pipeline(target_date: str) -> bool:
+def _send_report_to_slack(target_date: str) -> None:
+    """Send the daily report to Slack after pipeline completion."""
+    try:
+        if not settings.slack_webhook_url:
+            logger.info("SLACK_WEBHOOK_URL not configured, skipping Slack send")
+            return
+
+        content = read_daily_report(target_date)
+        papers, _ = parse_report(content)
+        if not papers:
+            logger.warning("No papers found in report for %s, skipping Slack send", target_date)
+            return
+
+        vote_counts = {}
+        for paper in papers:
+            votes = vote_store.get_paper_votes(target_date, paper.arxiv_id)
+            vote_counts[paper.arxiv_id] = {
+                "applicable_count": votes["applicable_count"],
+                "idea_count": votes["idea_count"],
+                "pass_count": votes["pass_count"],
+            }
+
+        payload = to_slack_blocks_interactive(papers, target_date, vote_counts)
+        from .sender import send_to_slack_sync
+
+        send_to_slack_sync({"blocks": payload})
+        logger.info("Daily report for %s sent to Slack", target_date)
+    except Exception as exc:
+        logger.error("Failed to send report to Slack: %s", exc)
+
+
+def trigger_pipeline(target_date: str, send_slack: bool = True) -> bool:
     """Trigger pipeline in a background thread. Returns False if already running."""
     if pipeline_status["state"] == "running":
         return False
@@ -54,6 +85,8 @@ def trigger_pipeline(target_date: str) -> bool:
             )
             if result.returncode == 0:
                 pipeline_status.update(state="completed", error=None)
+                if send_slack:
+                    _send_report_to_slack(target_date)
             else:
                 pipeline_status.update(state="error", error=result.stderr[:500])
         except Exception as exc:
