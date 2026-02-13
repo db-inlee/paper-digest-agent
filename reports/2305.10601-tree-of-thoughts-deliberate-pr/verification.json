@@ -1,0 +1,48 @@
+{
+  "arxiv_id": "2305.10601",
+  "total_claims": 4,
+  "verified_count": 3,
+  "unverified_count": 1,
+  "contradicted_count": 0,
+  "overall_reliability": "high",
+  "results": [
+    {
+      "claim_id": "claim_1",
+      "claim_text": "Tree of Thoughts (ToT) 프레임워크는 언어 모델이 다양한 사고 경로를 탐색하고, 자기 평가를 통해 다음 행동을 결정할 수 있게 합니다.",
+      "status": "verified",
+      "confidence": 1.0,
+      "evidence_found": "논문 본문에서 ToT 프레임워크의 기능에 대한 설명이 있음.",
+      "notes": "ToT는 다양한 사고 경로를 탐색하고 자기 평가를 통해 결정을 내리는 기능을 명시적으로 설명함.",
+      "correction_hint": null
+    },
+    {
+      "claim_id": "claim_2",
+      "claim_text": "ToT는 Game of 24, Creative Writing, Mini Crosswords와 같은 문제에서 언어 모델의 문제 해결 능력을 크게 향상시킵니다.",
+      "status": "verified",
+      "confidence": 1.0,
+      "evidence_found": "논문에서 ToT가 세 가지 문제에서 성능을 향상시킨 결과를 제시함.",
+      "notes": "실험 결과에서 ToT의 성능 향상이 명확히 나타남.",
+      "correction_hint": null
+    },
+    {
+      "claim_id": "claim_3",
+      "claim_text": "ToT는 IO, CoT, CoT-SC와 같은 기존 방법들보다 더 나은 성능을 보입니다.",
+      "status": "verified",
+      "confidence": 1.0,
+      "evidence_found": "논문에서 ToT가 기존 방법들과 비교하여 성능이 우수하다는 실험 결과를 제시함.",
+      "notes": "ToT의 성능이 IO, CoT, CoT-SC와 비교하여 우수하다는 점이 명확히 설명됨.",
+      "correction_hint": null
+    },
+    {
+      "claim_id": "claim_4",
+      "claim_text": "ToT는 더 많은 자원을 필요로 하며, 성능-비용 절충을 사용자에게 맞출 수 있는 유연성을 제공합니다.",
+      "status": "unverified",
+      "confidence": 0.7,
+      "evidence_found": null,
+      "notes": "논문에서 자원 요구 사항에 대한 언급은 있으나, 구체적인 성능-비용 절충에 대한 설명은 부족함.",
+      "correction_hint": null
+    }
+  ],
+  "summary": "대부분의 클레임이 논문에서 지지되며, 실험 결과와 방법론이 명확하게 설명됨.",
+  "corrections_needed": []
+}

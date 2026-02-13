@@ -1,0 +1,208 @@
+{
+  "arxiv_id": "2305.10601",
+  "title": "Tree of Thoughts: Deliberate Problem Solving with Large Language Models",
+  "problem_definition": {
+    "statement": "기존의 언어 모델은 토큰 수준의 좌에서 우로의 결정 과정에 국한되어 있어 탐색이나 전략적 예측이 필요한 문제에서 한계를 가집니다. 이를 해결하기 위해 'Tree of Thoughts'라는 새로운 프레임워크를 제안합니다.",
+    "baseline_methods": [
+      "Chain-of-Thought (CoT) prompting",
+      "Self-consistency with CoT (CoT-SC)"
+    ],
+    "structural_limitation": "기존 방법들은 문제 해결 과정에서 다양한 경로를 탐색하지 않으며, 계획, 예측, 또는 백트래킹을 포함하지 않습니다.",
+    "evidence": [
+      {
+        "page": 3,
+        "section": "Introduction",
+        "quote": "This perspective highlights two key shortcomings of existing approaches that use LMs to solve general problems: 1) Locally, they do not explore different continuations within a thought process – the branches of the tree. 2) Globally, they do not incorporate any type of planning, lookahead, or backtracking to help evaluate these different options.",
+        "type": "quote"
+      }
+    ]
+  },
+  "baselines": [
+    {
+      "name": "Chain-of-Thought (CoT) prompting",
+      "description": "입력과 출력 사이에 중간 단계의 사고를 도입하여 문제를 해결하는 방법.",
+      "limitation": "각 사고 단계 내에서 지역 탐색이 없으며, '가장 빈번한' 휴리스틱은 출력 공간이 제한된 경우에만 적용됩니다.",
+      "evidence": [
+        {
+          "page": 2,
+          "section": "Background",
+          "quote": "However, within each chain there is no local exploration of different thought steps, and the 'most frequent' heuristic only applies when the output space is limited (e.g. multi-choice QA).",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "name": "Self-consistency with CoT (CoT-SC)",
+      "description": "여러 독립적인 사고 체인을 샘플링하여 가장 빈번한 출력을 반환하는 방법.",
+      "limitation": "각 체인 내에서 지역 탐색이 없으며, 출력 공간이 제한된 경우에만 적용됩니다.",
+      "evidence": [
+        {
+          "page": 2,
+          "section": "Background",
+          "quote": "CoT-SC improves upon CoT, because there are generally different thought processes for the same problem (e.g. different ways to prove the same theorem), and the output decision can be more faithful by exploring a richer set of thoughts.",
+          "type": "quote"
+        }
+      ]
+    }
+  ],
+  "method_components": [
+    {
+      "name": "Thought Decomposition",
+      "description": "문제의 특성에 따라 중간 사고 단계를 설계하고 분해하는 과정.",
+      "inputs": [
+        "문제의 특성"
+      ],
+      "outputs": [
+        "중간 사고 단계"
+      ],
+      "implementation_hint": null,
+      "evidence": [
+        {
+          "page": 3,
+          "section": "Tree of Thoughts: Deliberate Problem Solving with LM",
+          "quote": "ToT leverages problem properties to design and decompose intermediate thought steps.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "name": "Thought Generator",
+      "description": "다음 사고 단계를 생성하기 위한 후보를 생성하는 전략.",
+      "inputs": [
+        "현재 상태"
+      ],
+      "outputs": [
+        "다음 사고 단계 후보"
+      ],
+      "implementation_hint": null,
+      "evidence": [
+        {
+          "page": 3,
+          "section": "Tree of Thoughts: Deliberate Problem Solving with LM",
+          "quote": "Given a tree state s = [x, z1···i], we consider two strategies to generate k candidates for the next thought step.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "name": "State Evaluator",
+      "description": "문제 해결을 위한 진행 상황을 평가하여 탐색 알고리즘이 어떤 상태를 계속 탐색할지 결정하는 휴리스틱 역할을 합니다.",
+      "inputs": [
+        "다양한 상태의 전선"
+      ],
+      "outputs": [
+        "상태의 평가 값"
+      ],
+      "implementation_hint": null,
+      "evidence": [
+        {
+          "page": 3,
+          "section": "Tree of Thoughts: Deliberate Problem Solving with LM",
+          "quote": "The state evaluator evaluates the progress they make towards solving the problem, serving as a heuristic for the search algorithm to determine which states to keep exploring and in which order.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "name": "Search Algorithm",
+      "description": "트리 구조에 따라 다양한 탐색 알고리즘을 플러그 앤 플레이할 수 있습니다.",
+      "inputs": [
+        "트리 구조"
+      ],
+      "outputs": [
+        "탐색 결과"
+      ],
+      "implementation_hint": null,
+      "evidence": [
+        {
+          "page": 4,
+          "section": "Tree of Thoughts: Deliberate Problem Solving with LM",
+          "quote": "Finally, within the ToT framework, one can plug and play different search algorithms depending on the tree structure.",
+          "type": "quote"
+        }
+      ]
+    }
+  ],
+  "benchmark": {
+    "dataset": "Game of 24, Creative Writing, Mini Crosswords",
+    "metrics": [
+      "Success Rate"
+    ],
+    "baseline_results": {
+      "IO prompt": "7.3%",
+      "CoT prompt": "4.0%",
+      "CoT-SC (k=100)": "9.0%"
+    },
+    "proposed_results": {
+      "ToT (b=1)": "45%",
+      "ToT (b=5)": "74%"
+    },
+    "evidence": [
+      {
+        "page": 5,
+        "section": "Experiments",
+        "quote": "As shown in Table 2, IO, CoT, and CoT-SC prompting methods perform badly on the task, achieving only 7.3%, 4.0%, and 9.0% success rates. In contrast, ToT with a breadth of b = 1 already achieves a success rate of 45%, while b = 5 achieves 74%.",
+        "type": "quote"
+      }
+    ]
+  },
+  "claims": [
+    {
+      "claim_id": "claim_1",
+      "text": "Tree of Thoughts (ToT) 프레임워크는 언어 모델이 다양한 사고 경로를 탐색하고, 자기 평가를 통해 다음 행동을 결정할 수 있게 합니다.",
+      "claim_type": "method",
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "page": 1,
+          "section": "Abstract",
+          "quote": "ToT allows LMs to perform deliberate decision making by considering multiple different reasoning paths and self-evaluating choices to decide the next course of action.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "claim_id": "claim_2",
+      "text": "ToT는 Game of 24, Creative Writing, Mini Crosswords와 같은 문제에서 언어 모델의 문제 해결 능력을 크게 향상시킵니다.",
+      "claim_type": "result",
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "page": 1,
+          "section": "Abstract",
+          "quote": "Our experiments show that ToT significantly enhances language models’ problem-solving abilities on three novel tasks requiring non-trivial planning or search: Game of 24, Creative Writing, and Mini Crosswords.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "claim_id": "claim_3",
+      "text": "ToT는 IO, CoT, CoT-SC와 같은 기존 방법들보다 더 나은 성능을 보입니다.",
+      "claim_type": "comparison",
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "page": 5,
+          "section": "Experiments",
+          "quote": "As shown in Table 2, IO, CoT, and CoT-SC prompting methods perform badly on the task, achieving only 7.3%, 4.0%, and 9.0% success rates. In contrast, ToT with a breadth of b = 1 already achieves a success rate of 45%, while b = 5 achieves 74%.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "claim_id": "claim_4",
+      "text": "ToT는 더 많은 자원을 필요로 하며, 성능-비용 절충을 사용자에게 맞출 수 있는 유연성을 제공합니다.",
+      "claim_type": "limitation",
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "page": 9,
+          "section": "Discussion",
+          "quote": "Also, search methods like ToT requires more resources (e.g. GPT-4 API cost) than sampling methods in order to improve task performances, but the modular flexibility of ToT allows users to customize such performance-cost tradeoffs.",
+          "type": "quote"
+        }
+      ]
+    }
+  ],
+  "extraction_mode": "full"
+}

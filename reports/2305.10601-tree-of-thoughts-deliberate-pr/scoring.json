@@ -1,0 +1,10 @@
+{
+  "arxiv_id": "2305.10601",
+  "practicality": 4,
+  "codeability": 3,
+  "signal": 4,
+  "recommendation": "worth_reading",
+  "reasoning": "Tree of Thoughts 프레임워크는 기존의 문제 해결 방식의 한계를 개선하고, 다양한 탐색 알고리즘을 적용할 수 있는 가능성을 보여준다. 이는 실제 문제 해결에 기여할 수 있는 방향성을 제시한다.",
+  "key_strength": "기존의 Chain-of-Thought 방식의 한계를 극복하고, 문제 해결을 위한 새로운 접근 방식을 제안한다.",
+  "main_concern": "탐색 알고리즘의 효과성과 실제 적용 가능성에 대한 검증이 필요할 수 있다."
+}

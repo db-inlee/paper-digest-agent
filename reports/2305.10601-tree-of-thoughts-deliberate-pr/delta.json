@@ -1,0 +1,46 @@
+{
+  "arxiv_id": "2305.10601",
+  "one_line_takeaway": "이 논문은 기존의 Chain-of-Thought (CoT) 및 Self-consistency with CoT (CoT-SC)의 구조적 한계를 Tree of Thoughts 프레임워크를 통해 개선한다",
+  "core_deltas": [
+    {
+      "axis": "문제 해결 프레임워크",
+      "old_approach": "Chain-of-Thought (CoT) 및 Self-consistency with CoT (CoT-SC) 방식은 각 사고 단계 내에서 지역 탐색이 없고, 출력 공간이 제한된 경우에만 효과적임",
+      "new_approach": "Tree of Thoughts 프레임워크는 문제를 중간 사고 단계로 분해하고, 다양한 탐색 알고리즘을 트리 구조에 적용하여 문제 해결을 지원함",
+      "why_better": "이 접근법은 문제 해결 과정에서 더 깊이 있는 탐색과 전략적 예측을 가능하게 하여, 기존 방법의 한계를 극복하고자 함",
+      "evidence": {
+        "page": null,
+        "section": null,
+        "quote": "Tree of Thoughts라는 새로운 프레임워크를 제안합니다.",
+        "type": "quote"
+      }
+    },
+    {
+      "axis": "탐색 알고리즘",
+      "old_approach": "기존 CoT 및 CoT-SC는 각 체인 내에서 지역 탐색이 없었음",
+      "new_approach": "Tree of Thoughts는 다양한 탐색 알고리즘을 플러그 앤 플레이 방식으로 적용 가능",
+      "why_better": "탐색 알고리즘의 유연성을 높여 다양한 문제에 적합한 탐색 전략을 선택할 수 있도록 함",
+      "evidence": {
+        "page": null,
+        "section": null,
+        "quote": "트리 구조에 따라 다양한 탐색 알고리즘을 플러그 앤 플레이할 수 있습니다.",
+        "type": "quote"
+      }
+    }
+  ],
+  "tradeoffs": [
+    {
+      "aspect": "복잡성",
+      "benefit": "더 깊이 있는 탐색과 전략적 예측 가능",
+      "cost": "구현 및 계산 복잡도가 증가할 수 있음",
+      "when_acceptable": "문제 해결의 정확성과 깊이가 중요한 경우",
+      "evidence": {
+        "page": null,
+        "section": null,
+        "quote": null,
+        "type": "quote"
+      }
+    }
+  ],
+  "when_to_use": "탐색이나 전략적 예측이 필요한 복잡한 문제를 해결할 때",
+  "when_not_to_use": "단순한 문제나 계산 자원이 제한된 환경에서는 사용하지 않는 것이 좋음"
+}
