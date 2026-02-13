@@ -13,7 +13,7 @@
 
 ## 빠른 시작
 
-### Docker (로컬)
+### 1. 서버 실행
 
 ```bash
 git clone https://github.com/db-inlee/paper-digest-agent.git
@@ -24,29 +24,32 @@ docker-compose up --build
 
 http://localhost:8000 에서 웹 대시보드에 접속할 수 있습니다.
 
-> 로컬 Docker는 같은 네트워크에서만 접속 가능합니다.
-> Slack 투표/댓글 버튼은 서버가 외부에서 접근 가능해야 동작합니다.
+### 2. 팀원에게 공유 (ngrok)
 
-### Fly.io (권장)
-
-Slack 연동과 팀원 접속을 위해 Fly.io 배포를 권장합니다.
+Slack 투표/댓글 버튼과 외부 접속을 위해 [ngrok](https://ngrok.com/)으로 공개 URL을 만듭니다.
 
 ```bash
-fly launch
-fly secrets set \
-  OPENAI_API_KEY=sk-... \
-  SLACK_WEBHOOK_URL=https://hooks.slack.com/services/... \
-  SLACK_SIGNING_SECRET=... \
-  SLACK_BOT_TOKEN=xoxb-...
-fly deploy
+# ngrok 설치 (https://ngrok.com/download)
+# 회원가입 후 무료 고정 도메인 발급 (https://dashboard.ngrok.com/domains)
+
+# 터널 실행 (고정 도메인 사용)
+ngrok http 8000 --url your-team.ngrok-free.app
 ```
 
-배포 후 `https://your-app.fly.dev` 로 팀원 모두 접속 가능합니다.
+ngrok 무료 계정에 **고정 도메인 1개**가 포함되어 있어 URL이 바뀌지 않습니다.
+이 URL을 팀원에게 공유하고, Slack App의 Request URL로 설정하면 됩니다.
 
-> **API 키 관리**: Fly.io에서는 `fly secrets set`으로 환경 변수를 암호화하여 관리합니다. 소스 코드나 이미지에 키가 포함되지 않습니다.
-> Docker 로컬에서는 `.env` 파일에 키를 입력하면 실행 시점에 컨테이너에 주입됩니다 (`.env`는 `.gitignore`에 포함).
+```
+팀원 A (브라우저) ──┐
+팀원 B (브라우저) ──┼──→ ngrok 고정 URL ──→ 내 PC의 Docker (localhost:8000)
+Slack 투표/댓글   ──┘
+```
 
-### 환경 변수 설정
+> **데이터 보존**: 투표, 댓글, 리포트는 Docker 볼륨(`./reports/`)에 저장됩니다.
+> ngrok을 재시작하거나 PC를 껐다 켜도 데이터는 유지됩니다.
+> 단, Docker 서버가 꺼져 있는 동안에는 접속과 Slack 버튼이 동작하지 않습니다.
+
+### 3. 환경 변수 설정
 
 `.env` 파일에 API 키를 입력합니다:
 
@@ -61,30 +64,7 @@ SLACK_SIGNING_SECRET=your_signing_secret
 SLACK_BOT_TOKEN=xoxb-your-bot-token
 ```
 
-### CLI 사용법
-
-Docker 없이 직접 실행할 때 사용합니다.
-
-```bash
-# 설치
-pip install -e .              # 핵심 파이프라인
-pip install -e notifier/      # Slack/Web 모듈
-cp .env.example .env          # 환경 변수
-
-# 파이프라인 실행
-python -m rtc.agents.orchestrator                    # 오늘 날짜
-python -m rtc.agents.orchestrator --date 2026-01-31  # 특정 날짜
-python -m rtc.agents.orchestrator --code             # GitHub 코드 분석 포함
-
-# Slack 전송
-cd notifier
-toslack send                    # 오늘 리포트 전송
-toslack send -d 2026-02-10     # 특정 날짜 전송
-toslack send --interactive      # 투표 버튼 포함
-
-# 서버 실행
-toslack server                  # http://localhost:8000
-```
+> API 키는 `.env` 파일에만 저장되며, `.gitignore`에 포함되어 Git에 커밋되지 않습니다.
 
 ---
 
@@ -104,23 +84,21 @@ toslack server                  # http://localhost:8000
 ### 3. Interactivity (투표/댓글 버튼)
 
 1. **Interactivity & Shortcuts** → On
-2. **Request URL**: `https://<your-server>/slack/interactions`
+2. **Request URL**: `https://your-team.ngrok-free.app/slack/interactions`
 3. **Basic Information** → **Signing Secret**을 `.env`의 `SLACK_SIGNING_SECRET`에 입력
-
-> Request URL은 Slack이 접근할 수 있는 공개 URL이어야 합니다 (예: `https://paper-digest.fly.dev/slack/interactions`).
 
 ### 4. Bot Token (댓글 스레드 + 닉네임 연동)
 
 1. **OAuth & Permissions** → **Bot Token Scopes**에 추가:
-   - `chat:write` — 댓글 스레드 전송 + 메시지
+   - `chat:write` — 댓글 스레드 전송
    - `commands` — 슬래시 커맨드
    - `users:read` — 웹 대시보드에서 Slack 닉네임 자동 연동
 2. **Install to Workspace** → Bot Token을 `.env`의 `SLACK_BOT_TOKEN`에 입력
-3. **봇을 채널에 초대**: Slack 채널에서 `/invite @봇이름` 실행 (댓글 스레드 전송에 필요)
+3. Slack 채널에서 `/invite @봇이름` 실행 (댓글 스레드 전송에 필요)
 
 ---
 
-## 웹 대시보드 + Slack 연동
+## 주요 기능
 
 ### 웹 대시보드
 
@@ -147,21 +125,9 @@ Slack 채널                          웹 대시보드
 └──────────────────┘
 ```
 
-> Slack 투표/댓글 버튼은 **서버가 외부에서 접근 가능한 URL**이어야 동작합니다 (Fly.io 등).
-> 로컬 Docker에서는 Slack 메시지 발송만 가능하고, 버튼 클릭은 동작하지 않습니다.
-
 ### 팀 협업 구조
 
 한 팀이 하나의 서버를 공유합니다.
-
-```
-팀원 A (브라우저) ──┐
-팀원 B (브라우저) ──┼──→  하나의 서버  ←── Slack 채널
-팀원 C (Slack)    ──┘  (Fly.io / Docker)
-                           │
-                    투표, 댓글, 분석 결과
-                     모두 여기에 저장
-```
 
 - **서버는 1개**: 팀 중 1명이 서버를 띄우면 나머지는 URL로 접속
 - **데이터 공유**: 투표, 댓글, 분석 결과가 서버에 저장되어 팀원 전체가 공유
@@ -183,6 +149,33 @@ Slack 채널                          웹 대시보드
 | Slack 메시지 발송 | `SLACK_WEBHOOK_URL` |
 | Slack 투표/댓글 버튼 | `SLACK_SIGNING_SECRET`, `SLACK_BOT_TOKEN` |
 | 웹에서 Slack 닉네임 연동 | `SLACK_BOT_TOKEN` + `users:read` 스코프 |
+
+---
+
+## CLI 사용법
+
+Docker 없이 직접 실행할 때 사용합니다.
+
+```bash
+# 설치
+pip install -e .              # 핵심 파이프라인
+pip install -e notifier/      # Slack/Web 모듈
+cp .env.example .env          # 환경 변수
+
+# 파이프라인 실행
+python -m rtc.agents.orchestrator                    # 오늘 날짜
+python -m rtc.agents.orchestrator --date 2026-01-31  # 특정 날짜
+python -m rtc.agents.orchestrator --code             # GitHub 코드 분석 포함
+
+# Slack 전송
+cd notifier
+toslack send                    # 오늘 리포트 전송
+toslack send -d 2026-02-10     # 특정 날짜 전송
+toslack send --interactive      # 투표 버튼 포함
+
+# 서버 실행
+toslack server                  # http://localhost:8000
+```
 
 ---
 
@@ -439,8 +432,7 @@ paper-digest-agent/
 ├── docker/                    # Docker 빌드 파일
 ├── docker-compose.yml         # Docker Compose 설정
 ├── reports/                   # 생성된 리포트
-├── .env.example               # 환경 변수 템플릿
-└── fly.toml                   # Fly.io 배포 설정
+└── .env.example               # 환경 변수 템플릿
 ```
 
 ## 출력 예시
