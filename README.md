@@ -1,5 +1,7 @@
 # Paper Digest Agent
 
+[![License: CC BY-NC 4.0](https://img.shields.io/badge/License-CC%20BY--NC%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by-nc/4.0/)
+
 > 매일 쏟아지는 AI 논문, 자동으로 분석하고 골라보세요.
 
 **Paper Digest Agent**는 HuggingFace Daily Papers에서 LLM/Agent 관련 논문을 매일 자동으로 수집하고 분석해주는 도구입니다. 혼자 쓸 수도 있고, Slack을 연동하면 팀원들과 투표·댓글로 함께 의사결정할 수 있습니다.
