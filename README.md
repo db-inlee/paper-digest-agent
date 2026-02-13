@@ -39,13 +39,20 @@ ngrok http 8000 --url your-team.ngrok-free.app
 ```
 
 ngrok 무료 계정에는 **고정 도메인 1개**가 포함되어 있어 URL이 바뀌지 않습니다.
-이 URL을 팀원에게 공유하고, Slack App의 Request URL로 설정하면 됩니다.
+이 URL로 두 가지를 설정합니다:
+
+1. **Slack App의 Request URL**로 설정 → Slack 투표·댓글 버튼이 동작합니다
+2. **팀원에게 URL 공유** → 팀원이 웹 대시보드에 접속하여 상세 분석 결과를 볼 수 있습니다
 
 ```
-팀원 A (브라우저) ──┐
-팀원 B (브라우저) ──┼──→ ngrok 고정 URL ──→ 내 PC의 Docker (localhost:8000)
-Slack 투표/댓글   ──┘
+나 (localhost:8000) ────────┐
+팀원 A (ngrok URL) ─────────┤
+팀원 B (ngrok URL) ─────────┼──→ 같은 Docker 컨테이너 (같은 데이터)
+Slack 투표/댓글 (ngrok URL) ┘
 ```
+
+`localhost:8000`과 ngrok URL은 같은 서버에 연결됩니다.
+Slack에서 투표한 내용이 웹에 보이고, 웹에서 쓴 댓글이 Slack 스레드에 달립니다.
 
 > **데이터는 안전하게 보존됩니다.** 투표, 댓글, 리포트는 Docker 볼륨(`./reports/`)에 저장되므로
 > ngrok을 재시작하거나 PC를 껐다 켜도 데이터가 유지됩니다.
@@ -65,8 +72,6 @@ SLACK_WEBHOOK_URL=https://hooks.slack.com/services/YOUR/WEBHOOK/URL
 SLACK_SIGNING_SECRET=your_signing_secret
 SLACK_BOT_TOKEN=xoxb-your-bot-token
 ```
-
-전체 환경 변수 목록은 [환경 변수 전체 목록](#환경-변수-전체-목록)을 참고하세요.
 
 > API 키는 `.env` 파일에만 저장되며, `.gitignore`에 포함되어 Git에 커밋되지 않습니다.
 
@@ -155,6 +160,9 @@ Slack 채널                          웹 대시보드
 
 Docker 없이 직접 실행할 수도 있습니다.
 
+<details>
+<summary>설치 및 실행 명령어</summary>
+
 ```bash
 # 설치
 pip install -e .              # 핵심 파이프라인
@@ -176,26 +184,14 @@ toslack send --interactive      # 투표 버튼 포함
 toslack server                  # http://localhost:8000
 ```
 
+</details>
+
 ---
 
 ## 아키텍처
 
-### 분석 원칙
-
 이 도구는 논문을 깊이 리뷰하기보다, **최근 연구 트렌드를 정확하게 감지**하는 것을 목표로 합니다.
-
-- **과장 표현 금지**: "해결했다", "자동화했다" ❌ → "제안한다", "개선한다" ✅
-- **확장 해석 금지**: 논문이 직접 언급하지 않은 상위 해석을 추가하지 않습니다
-
-### MCP 서버
-
-[MCP (Model Context Protocol)](https://modelcontextprotocol.io/) 패턴으로 외부 서비스와의 통신을 모듈화하고 있습니다.
-
-| MCP 서버 | 역할 |
-|----------|------|
-| `HFPapersServer` | HuggingFace Daily Papers에서 논문 메타데이터 수집 |
-| `GrobidServer` | GROBID를 통해 PDF → TEI-XML 변환, 섹션·테이블·참고문헌 추출 |
-| `PyMuPDFParser` | GROBID 미사용 시 폴백으로 PyMuPDF로 텍스트 추출 |
+과장된 표현이나 확장 해석 없이, 논문이 명시한 범위까지만 요약합니다.
 
 ### 파이프라인 흐름
 
@@ -217,7 +213,21 @@ Orchestrator
 Deep Pipeline에서는 LangGraph의 조건부 분기를 활용하여 **자기 교정 루프**를 구현합니다.
 Verification 단계에서 과장이나 부정확을 탐지하면, Correction → 재추출 → 재검증을 자동으로 수행합니다.
 
-### 에이전트 구성
+<details>
+<summary>MCP 서버 구성</summary>
+
+[MCP (Model Context Protocol)](https://modelcontextprotocol.io/) 패턴으로 외부 서비스와의 통신을 모듈화하고 있습니다.
+
+| MCP 서버 | 역할 |
+|----------|------|
+| `HFPapersServer` | HuggingFace Daily Papers에서 논문 메타데이터 수집 |
+| `GrobidServer` | GROBID를 통해 PDF → TEI-XML 변환, 섹션·테이블·참고문헌 추출 |
+| `PyMuPDFParser` | GROBID 미사용 시 폴백으로 PyMuPDF로 텍스트 추출 |
+
+</details>
+
+<details>
+<summary>에이전트 구성</summary>
 
 | 에이전트 | 역할 | LLM | 모델 |
 |----------|------|:---:|------|
@@ -233,13 +243,20 @@ Verification 단계에서 과장이나 부정확을 탐지하면, Correction →
 | `GitHubMethodAgent` | GitHub 코드-방법론 매핑 | ✅ | gpt-4o |
 | `DailyReportAgent` | 일일 통합 리포트 생성 | - | - |
 
+</details>
+
 ---
 
 ## 관심사 설정
 
-수집할 논문의 키워드는 `src/rtc/config.py`에서 설정합니다. 웹 대시보드의 "관심사 설정" 탭에서도 변경할 수 있습니다.
+수집할 논문의 키워드는 웹 대시보드의 "관심사 설정" 탭에서 변경할 수 있습니다.
+
+<details>
+<summary>config.py에서 직접 설정하기</summary>
 
 ```python
+# src/rtc/config.py
+
 class Settings(BaseSettings):
     hf_papers_keywords: list[str] = [
         "LLM", "large language model", "agent", "RAG",
@@ -255,6 +272,11 @@ class Settings(BaseSettings):
     skim_interest_threshold: int = 4        # 심층 분석 임계값 (1-5점)
 ```
 
+</details>
+
+<details>
+<summary>관심 분야별 추천 키워드</summary>
+
 | 관심 분야 | 추천 키워드 |
 |-----------|-------------|
 | LLM Agent | `agent`, `agentic`, `multi-agent`, `tool use`, `function calling`, `ReAct` |
@@ -264,9 +286,14 @@ class Settings(BaseSettings):
 | 코드 생성 | `code generation`, `programming`, `software engineering`, `code LLM` |
 | 파인튜닝 | `fine-tuning`, `RLHF`, `DPO`, `instruction tuning`, `alignment` |
 
+</details>
+
 ---
 
 ## 환경 변수 전체 목록
+
+<details>
+<summary>전체 환경 변수 보기</summary>
 
 ```bash
 # LLM API (논문 분석용, 둘 중 하나 필수)
@@ -294,9 +321,14 @@ SCHEDULER_CRON_HOUR=9
 SCHEDULER_TIMEZONE=Asia/Seoul
 ```
 
+</details>
+
 ---
 
 ## 프로젝트 구조
+
+<details>
+<summary>디렉토리 구조 보기</summary>
 
 ```
 paper-digest-agent/
@@ -318,9 +350,12 @@ paper-digest-agent/
 └── .env.example               # 환경 변수 템플릿
 ```
 
+</details>
+
 ## 출력 예시
 
-### Daily Report
+<details>
+<summary>Daily Report 예시</summary>
 
 ```markdown
 # 2026-01-31 Daily Paper Report
@@ -344,7 +379,10 @@ paper-digest-agent/
 - [기존: ...] → [변경: ...]
 ```
 
-### 개별 논문 리포트
+</details>
+
+<details>
+<summary>개별 논문 리포트 파일</summary>
 
 각 논문별로 `reports/{paper-slug}/` 폴더에 다음 파일들이 생성됩니다.
 
@@ -356,9 +394,14 @@ paper-digest-agent/
 | `verification.json` | 검증 결과 |
 | `deep.md` | 마크다운 리포트 |
 
+</details>
+
 ---
 
 ## 개발
+
+<details>
+<summary>개발 환경 설정</summary>
 
 ```bash
 pip install -e ".[dev]"
@@ -366,6 +409,8 @@ pytest
 ruff format .
 ruff check .
 ```
+
+</details>
 
 ## 라이선스
 
