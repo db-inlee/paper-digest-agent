@@ -43,6 +43,9 @@ fly deploy
 
 배포 후 `https://your-app.fly.dev` 로 팀원 모두 접속 가능합니다.
 
+> **API 키 관리**: Fly.io에서는 `fly secrets set`으로 환경 변수를 암호화하여 관리합니다. 소스 코드나 이미지에 키가 포함되지 않습니다.
+> Docker 로컬에서는 `.env` 파일에 키를 입력하면 실행 시점에 컨테이너에 주입됩니다 (`.env`는 `.gitignore`에 포함).
+
 ### 환경 변수 설정
 
 `.env` 파일에 API 키를 입력합니다:
