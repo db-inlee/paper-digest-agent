@@ -1,6 +1,187 @@
 # Paper Digest Agent
 
-> 매일 HuggingFace에서 LLM/Agent 관련 논문을 자동 수집하고, 트렌드를 파악하여 핵심 분석 리포트를 생성하는 에이전트
+> 매일 HuggingFace에서 LLM/Agent 관련 논문을 자동 수집/분석하고, Slack + 웹 대시보드에서 팀원들과 투표/댓글로 협업하는 도구
+
+**Paper Digest Agent**는 LangGraph 기반의 논문 분석 파이프라인 + 팀 협업 대시보드입니다.
+
+- HuggingFace Daily Papers에서 관심 분야 논문을 자동 수집
+- LLM이 실용성/구현 가능성/신뢰도를 평가하고 한글 리포트 생성
+- Slack으로 팀에 공유 → 투표/댓글로 의사결정
+- 웹 대시보드에서 분석 결과 열람, 투표 현황 확인, 논문 수동 추가
+
+---
+
+## 빠른 시작
+
+### Docker (로컬)
+
+```bash
+git clone https://github.com/db-inlee/paper-digest-agent.git
+cd paper-digest-agent
+cp .env.example .env   # API 키 입력
+docker-compose up --build
+```
+
+http://localhost:8000 에서 웹 대시보드에 접속할 수 있습니다.
+
+> 로컬 Docker는 같은 네트워크에서만 접속 가능합니다.
+> Slack 투표/댓글 버튼은 서버가 외부에서 접근 가능해야 동작합니다.
+
+### Fly.io (권장)
+
+Slack 연동과 팀원 접속을 위해 Fly.io 배포를 권장합니다.
+
+```bash
+fly launch
+fly secrets set \
+  OPENAI_API_KEY=sk-... \
+  SLACK_WEBHOOK_URL=https://hooks.slack.com/services/... \
+  SLACK_SIGNING_SECRET=... \
+  SLACK_BOT_TOKEN=xoxb-...
+fly deploy
+```
+
+배포 후 `https://your-app.fly.dev` 로 팀원 모두 접속 가능합니다.
+
+### 환경 변수 설정
+
+`.env` 파일에 API 키를 입력합니다:
+
+```bash
+# 필수 - 논문 분석용 (둘 중 하나)
+OPENAI_API_KEY=sk-...
+ANTHROPIC_API_KEY=sk-ant-...
+
+# Slack 연동 (팀 협업 시 필요)
+SLACK_WEBHOOK_URL=https://hooks.slack.com/services/YOUR/WEBHOOK/URL
+SLACK_SIGNING_SECRET=your_signing_secret
+SLACK_BOT_TOKEN=xoxb-your-bot-token
+```
+
+### CLI 사용법
+
+Docker 없이 직접 실행할 때 사용합니다.
+
+```bash
+# 설치
+pip install -e .              # 핵심 파이프라인
+pip install -e notifier/      # Slack/Web 모듈
+cp .env.example .env          # 환경 변수
+
+# 파이프라인 실행
+python -m rtc.agents.orchestrator                    # 오늘 날짜
+python -m rtc.agents.orchestrator --date 2026-01-31  # 특정 날짜
+python -m rtc.agents.orchestrator --code             # GitHub 코드 분석 포함
+
+# Slack 전송
+cd notifier
+toslack send                    # 오늘 리포트 전송
+toslack send -d 2026-02-10     # 특정 날짜 전송
+toslack send --interactive      # 투표 버튼 포함
+
+# 서버 실행
+toslack server                  # http://localhost:8000
+```
+
+---
+
+## Slack 설정
+
+### 1. Slack App 생성
+
+1. [api.slack.com/apps](https://api.slack.com/apps) → **Create New App** → **From scratch**
+2. App 이름과 워크스페이스 지정
+
+### 2. Incoming Webhooks
+
+1. **Incoming Webhooks** → On
+2. **Add New Webhook to Workspace** → 채널 선택
+3. Webhook URL을 `.env`의 `SLACK_WEBHOOK_URL`에 입력
+
+### 3. Interactivity (투표/댓글 버튼)
+
+1. **Interactivity & Shortcuts** → On
+2. **Request URL**: `https://<your-server>/slack/interactions`
+3. **Basic Information** → **Signing Secret**을 `.env`의 `SLACK_SIGNING_SECRET`에 입력
+
+> Request URL은 Slack이 접근할 수 있는 공개 URL이어야 합니다 (예: `https://paper-digest.fly.dev/slack/interactions`).
+
+### 4. Bot Token (댓글 스레드 + 닉네임 연동)
+
+1. **OAuth & Permissions** → **Bot Token Scopes**에 추가:
+   - `chat:write` — 댓글 스레드 전송 + 메시지
+   - `commands` — 슬래시 커맨드
+   - `users:read` — 웹 대시보드에서 Slack 닉네임 자동 연동
+2. **Install to Workspace** → Bot Token을 `.env`의 `SLACK_BOT_TOKEN`에 입력
+3. **봇을 채널에 초대**: Slack 채널에서 `/invite @봇이름` 실행 (댓글 스레드 전송에 필요)
+
+---
+
+## 웹 대시보드 + Slack 연동
+
+### 웹 대시보드
+
+| 탭 | 기능 |
+|----|------|
+| **논문 보기** | 날짜별 분석 리포트 열람, 투표, 댓글 |
+| **논문 추가** | arXiv URL로 논문 수동 추가 → 자동 분석 |
+| **관심사 설정** | 논문 수집 키워드 관리 (arXiv/텍스트에서 추출 가능) |
+
+### Slack 연동
+
+- 데일리 리포트를 Slack 채널에 자동 전송
+- 투표 버튼: 실무 적용 / 아이디어 / 패스 → 웹 대시보드에 실시간 반영
+- 댓글 버튼: 모달에서 의견 작성 → 리포트 메시지의 **스레드로** 댓글이 달리고, 웹 대시보드에도 동시 반영
+
+```
+Slack 채널                          웹 대시보드
+┌──────────────────┐
+│ 📊 Daily Report  │
+│ 논문1 [투표][댓글]│ ──투표──→  투표 현황 실시간 반영
+│ 논문2 [투표][댓글]│
+│  └─ 스레드 댓글   │ ──댓글──→  댓글 섹션에 동시 표시
+│     @user: 의견   │
+└──────────────────┘
+```
+
+> Slack 투표/댓글 버튼은 **서버가 외부에서 접근 가능한 URL**이어야 동작합니다 (Fly.io 등).
+> 로컬 Docker에서는 Slack 메시지 발송만 가능하고, 버튼 클릭은 동작하지 않습니다.
+
+### 팀 협업 구조
+
+한 팀이 하나의 서버를 공유합니다.
+
+```
+팀원 A (브라우저) ──┐
+팀원 B (브라우저) ──┼──→  하나의 서버  ←── Slack 채널
+팀원 C (Slack)    ──┘  (Fly.io / Docker)
+                           │
+                    투표, 댓글, 분석 결과
+                     모두 여기에 저장
+```
+
+- **서버는 1개**: 팀 중 1명이 서버를 띄우면 나머지는 URL로 접속
+- **데이터 공유**: 투표, 댓글, 분석 결과가 서버에 저장되어 팀원 전체가 공유
+- **Slack ↔ 웹 통합**: Slack에서 투표한 내용이 웹에 반영되고, 웹에서 Slack 계정으로 로그인하면 동일 사용자로 통합
+
+### 닉네임 & Slack 연동
+
+- **개인 사용**: 웹 대시보드에서 닉네임을 직접 입력
+- **팀 사용 (Slack 연동)**: 닉네임 설정에서 Slack 멤버 목록이 표시 → 선택하면 Slack과 웹의 투표/댓글이 동일 사용자로 통합
+
+### API 키별 기능 범위
+
+| 기능 | 필요한 키 |
+|------|----------|
+| 웹 대시보드 열람 + 투표 + 댓글 | 없음 |
+| 논문 자동 수집/분석 (파이프라인) | `OPENAI_API_KEY` 또는 `ANTHROPIC_API_KEY` |
+| 논문 수동 추가 (웹에서) | `OPENAI_API_KEY` 또는 `ANTHROPIC_API_KEY` |
+| 관심사 키워드 추출 | `OPENAI_API_KEY` |
+| Slack 메시지 발송 | `SLACK_WEBHOOK_URL` |
+| Slack 투표/댓글 버튼 | `SLACK_SIGNING_SECRET`, `SLACK_BOT_TOKEN` |
+| 웹에서 Slack 닉네임 연동 | `SLACK_BOT_TOKEN` + `users:read` 스코프 |
+
+---
 
 ## 프로젝트 소개
 
@@ -12,9 +193,7 @@
 - **GitHub 코드 분석**: 논문의 공식 구현 코드를 분석하여 방법론과 매핑합니다
 - **한글 리포트**: 모든 분석 결과를 한글로 제공합니다
 
-## 핵심 원칙
-
-### 정확성 가이드
+### 핵심 원칙
 
 이 프로젝트는 논문을 깊이 리뷰하기보다, **최근 연구 트렌드를 정확하게 감지**하는 것을 목표로 합니다.
 
@@ -26,16 +205,7 @@
 - 논문이 직접 언급하지 않은 상위 해석을 추가하지 않습니다
 - 반드시 논문에서 명시적으로 언급한 범위까지만 요약합니다
 
-## 주요 기능
-
-| 기능 | 설명 |
-|------|------|
-| 📚 논문 수집 (Skim) | HuggingFace Daily Papers에서 논문 수집 및 빠른 스크리닝 |
-| 🎯 심층 분석 (Deep) | 실용성, 구현 가능성, 신뢰도 점수 산출 + Delta 분석 |
-| 🔍 PDF 분석 | GROBID/PyMuPDF를 활용한 구조화된 PDF 파싱 |
-| 💻 GitHub 분석 | 공식 코드 저장소 분석 및 방법론 매핑 |
-| ✅ 검증 | 추출된 정보와 논문 주장의 일치 여부 검증 |
-| 📝 Daily Report | 일일 통합 리포트 자동 생성 |
+---
 
 ## MCP 서버 구성
 
@@ -59,6 +229,8 @@
                                       ▼
                               구조화된 PDF (sections, tables, figures)
 ```
+
+---
 
 ## 파이프라인 구조
 
@@ -171,83 +343,7 @@ GitHub URL ──▶ GitHubMethodAgent (LLM) ──▶ 방법론-코드 매핑
 | `GitHubMethodAgent` | GitHub 코드-방법론 매핑 | ✅ | gpt-4o |
 | `DailyReportAgent` | 일일 통합 리포트 생성 | ❌ | - |
 
-## 설치 방법
-
-### 요구사항
-
-- Python 3.10 이상
-- Docker (GROBID 실행용, 선택)
-- API 키: OpenAI (필수), LangSmith (선택)
-
-### 설치
-
-```bash
-# 저장소 클론
-git clone <repo-url>
-cd paper-digest-agent
-
-# 의존성 설치
-pip install -e .
-
-# 환경 변수 설정
-cp .env.example .env
-# .env 파일을 열어 API 키 입력
-```
-
-### GROBID 실행 (선택)
-
-```bash
-docker run -d --name grobid -p 8070:8070 lfoppiano/grobid:0.8.0
-```
-
-> GROBID가 없으면 PyMuPDF로 자동 폴백됩니다.
-
-## 사용법
-
-### 전체 파이프라인 실행
-
-```bash
-# 오늘 날짜로 전체 파이프라인 실행
-python -m rtc.agents.orchestrator
-
-# 특정 날짜로 실행
-python -m rtc.agents.orchestrator --date 2026-01-31
-
-# GitHub 코드 분석 포함
-python -m rtc.agents.orchestrator --code
-
-# 강제 재실행 (이미 처리된 논문도 다시 분석)
-python -m rtc.agents.orchestrator --force
-```
-
-### 개별 파이프라인 실행
-
-```bash
-# Deep Pipeline만 실행 (단일 논문)
-python -m rtc.pipeline.deep --arxiv-id "2601.20833" --title "Paper Title"
-
-# Skim Pipeline만 실행
-python -m rtc.pipeline.skim --date 2026-01-31
-```
-
-### 주요 옵션
-
-| 옵션 | 설명 | 기본값 |
-|------|------|--------|
-| `--date` | 실행 날짜 (YYYY-MM-DD) | 오늘 |
-| `--deep` / `--no-deep` | Deep 분석 실행 여부 | True |
-| `--code` | GitHub 코드 분석 포함 | False |
-| `--force` | 강제 재실행 | False |
-
-## 환경 변수
-
-| 변수 | 설명 | 기본값 |
-|------|------|--------|
-| `OPENAI_API_KEY` | OpenAI API 키 | (필수) |
-| `LANGSMITH_API_KEY` | LangSmith API 키 | (선택) |
-| `LANGSMITH_PROJECT` | LangSmith 프로젝트명 | `paper-digest-agent` |
-| `GROBID_URL` | GROBID 서비스 URL | `http://localhost:8070` |
-| `HF_TOKEN` | HuggingFace 토큰 | (선택) |
+---
 
 ## 관심사 설정
 
@@ -271,11 +367,6 @@ class Settings(BaseSettings):
         "RAG", "retrieval", "reasoning", "chain of thought", ...
     ]
 
-    # 카테고리 우선순위
-    category_priority: list[str] = [
-        "agent", "rag", "reasoning", "training", "evaluation", "other"
-    ]
-
     # 하루 최대 심층 분석 논문 수
     max_deep_papers_per_day: int = 3
 
@@ -283,27 +374,7 @@ class Settings(BaseSettings):
     skim_interest_threshold: int = 4
 ```
 
-### 관심사 변경 방법
-
-**방법 1: config.py 직접 수정**
-
-```python
-# src/rtc/config.py 수정
-
-hf_papers_keywords: list[str] = Field(
-    default=[
-        # 원하는 키워드 추가/수정
-        "multimodal",
-        "vision language",
-        "image generation",
-        "diffusion",
-        ...
-    ],
-    alias="HF_PAPERS_KEYWORDS",
-)
-```
-
-**방법 2: 관심 분야 예시**
+### 관심 분야 예시
 
 | 관심 분야 | 추천 키워드 |
 |-----------|-------------|
@@ -314,18 +385,37 @@ hf_papers_keywords: list[str] = Field(
 | 코드 생성 | `code generation`, `programming`, `software engineering`, `code LLM` |
 | 파인튜닝 | `fine-tuning`, `RLHF`, `DPO`, `instruction tuning`, `alignment` |
 
-### 필터링 조건 변경
+---
 
-```python
-# 최소 upvote 수 (HuggingFace Papers)
-hf_papers_min_votes: int = 5  # 기본값: 5
+## 환경 변수 전체 목록
 
-# 검색 기간 (일)
-hf_papers_lookback_days: int = 1  # 기본값: 1일
+```bash
+# LLM API (논문 분석용, 둘 중 하나 필수)
+OPENAI_API_KEY=sk-...
+ANTHROPIC_API_KEY=sk-ant-...
 
-# 하루 최대 심층 분석 수
-max_deep_papers_per_day: int = 3  # 기본값: 3편
+# LLM 설정
+LLM_PROVIDER=openai              # openai 또는 claude
+LLM_MODEL_OPENAI=gpt-4o          # Deep 분석 모델
+LLM_MODEL_CLAUDE=claude-sonnet-4-20250514
+
+# Slack
+SLACK_WEBHOOK_URL=               # 메시지 발송용
+SLACK_SIGNING_SECRET=            # 투표 콜백 검증용
+SLACK_BOT_TOKEN=                 # 댓글 스레드 + 닉네임 연동용
+
+# LangSmith (선택, 트레이싱)
+LANGSMITH_API_KEY=
+LANGSMITH_PROJECT=paper-digest-agent
+LANGSMITH_TRACING=true
+
+# 스케줄러 (자동 실행)
+SCHEDULER_ENABLED=false          # true로 설정 시 매일 자동 실행
+SCHEDULER_CRON_HOUR=9            # 실행 시각 (시)
+SCHEDULER_TIMEZONE=Asia/Seoul
 ```
+
+---
 
 ## 프로젝트 구조
 
@@ -334,42 +424,20 @@ paper-digest-agent/
 ├── src/rtc/
 │   ├── config.py              # 설정 관리
 │   ├── schemas/               # Pydantic 데이터 모델
-│   │   ├── skim.py            # 스킴 스키마
-│   │   ├── extraction_v2.py   # 추출 스키마
-│   │   ├── delta_v2.py        # 차별점 스키마
-│   │   ├── scoring_v2.py      # 점수 스키마
-│   │   └── github_method.py   # GitHub 분석 스키마
-│   ├── agents/                # 에이전트 구현
-│   │   ├── orchestrator.py    # 전체 조율
-│   │   ├── extraction.py      # 정보 추출
-│   │   ├── delta_agent.py     # 차별점 분석
-│   │   ├── scoring_agent.py   # 점수 평가
-│   │   ├── verification_agent.py  # 검증
-│   │   ├── correction_agent.py    # 수정
-│   │   ├── github_method_agent.py # GitHub 분석
-│   │   └── daily_report_agent.py  # 일일 리포트
-│   ├── pipeline/              # LangGraph 파이프라인
-│   │   ├── skim.py            # 스킴 파이프라인
-│   │   ├── deep.py            # 심층 분석 파이프라인
-│   │   └── code.py            # 코드 분석 파이프라인
-│   ├── mcp/servers/           # MCP 서버
-│   │   ├── hf_papers_server.py # HuggingFace Papers
-│   │   ├── grobid_server.py   # GROBID API
-│   │   └── pymupdf_parser.py  # PyMuPDF 파서
-│   ├── llm/                   # LLM 클라이언트
-│   │   ├── openai.py          # OpenAI 클라이언트
-│   │   └── claude.py          # Claude 클라이언트
-│   ├── storage/               # 저장소
-│   │   ├── skim_store.py      # 스킴 결과 저장
-│   │   ├── deep_store.py      # 심층 분석 결과 저장
-│   │   ├── code_store.py      # 코드 분석 결과 저장
-│   │   └── report_store.py    # 리포트 저장
+│   ├── agents/                # LLM 에이전트
+│   ├── pipeline/              # LangGraph 파이프라인 (skim, deep, code)
+│   ├── mcp/servers/           # MCP 서버 (HuggingFace, GROBID, PyMuPDF)
+│   ├── llm/                   # LLM 클라이언트 (OpenAI, Claude)
+│   ├── storage/               # 데이터 저장소
 │   └── tracing/               # LangSmith 트레이싱
+├── notifier/                  # Slack + 웹 대시보드
+│   ├── src/toslack/           # FastAPI 서버 + Slack 연동
+│   └── web/                   # SvelteKit 프론트엔드
+├── docker/                    # Docker 빌드 파일
+├── docker-compose.yml         # Docker Compose 설정
 ├── reports/                   # 생성된 리포트
-│   ├── daily/                 # 일일 통합 리포트
-│   └── {paper-slug}/          # 개별 논문 리포트
-├── index/                     # 인덱스 파일
-└── papers/                    # 다운로드된 PDF
+├── .env.example               # 환경 변수 템플릿
+└── fly.toml                   # Fly.io 배포 설정
 ```
 
 ## 출력 예시
@@ -378,9 +446,6 @@ paper-digest-agent/
 
 ```markdown
 # 2026-01-31 Daily Paper Report
-
-> 이 리포트는 논문을 상세히 분석하기 위한 것이 아니라,
-> 최근 연구 흐름을 빠르게 파악하기 위한 데일리 요약입니다.
 
 ## 📚 오늘의 논문 (3편)
 
@@ -399,8 +464,6 @@ paper-digest-agent/
 
 ## 차별점 (Delta)
 - [기존: ...] → [변경: ...]
-
-...
 ```
 
 ### 개별 논문 리포트
@@ -416,16 +479,9 @@ paper-digest-agent/
 ## 개발
 
 ```bash
-# 개발 의존성 설치
 pip install -e ".[dev]"
-
-# 테스트 실행
 pytest
-
-# 코드 포맷팅
 ruff format .
-
-# 린트 검사
 ruff check .
 ```
 
