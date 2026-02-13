@@ -479,4 +479,4 @@ ruff check .
 
 ## 라이선스
 
-MIT
+[CC BY-NC 4.0](https://creativecommons.org/licenses/by-nc/4.0/) — 비상업적 용도로 자유롭게 사용할 수 있습니다.
