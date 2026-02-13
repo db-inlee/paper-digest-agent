@@ -1,0 +1,160 @@
+{
+  "arxiv_id": "2602.12099",
+  "title": "GigaBrain-0.5M*: a VLA That Learns From World Model-Based Reinforcement Learning",
+  "problem_definition": {
+    "statement": "기존 VLA 모델의 제한된 장면 이해와 미래 예측 능력의 한계를 극복하기 위해, GigaBrain-0.5M*은 세계 모델 기반 강화 학습을 통해 학습하는 VLA 모델을 제안합니다.",
+    "baseline_methods": [
+      "RECAP"
+    ],
+    "structural_limitation": "기존 VLA 아키텍처는 반응적 제어에 치우쳐 있어 장기적인 행동 계획에 대한 예측 능력이 부족합니다.",
+    "evidence": [
+      {
+        "page": null,
+        "section": "Abstract",
+        "quote": "Vision-language-action (VLA) models that directly predict multi-step action chunks from current observations face inherent limitations due to constrained scene understanding and weak future anticipation capabilities.",
+        "type": "quote"
+      },
+      {
+        "page": null,
+        "section": "Introduction",
+        "quote": "a fundamental limitation persists in mainstream VLA architectures: their reliance on myopic observations for long-horizon action planning, this shortcoming stems from an architectural bias toward reactive control rather than prospective planning.",
+        "type": "quote"
+      }
+    ]
+  },
+  "baselines": [
+    {
+      "name": "RECAP",
+      "description": "Advantage-conditioned reinforcement learning framework.",
+      "limitation": "Sparse advantages (0 or 1) as input, providing limited information gain.",
+      "evidence": [
+        {
+          "page": null,
+          "section": "Abstract",
+          "quote": "RAMP achieves substantial performance gains over the RECAP baseline, yielding improvements of approximately 30% on challenging tasks.",
+          "type": "quote"
+        },
+        {
+          "page": null,
+          "section": "3.2.1. RAMP Formulation",
+          "quote": "RECAP only uses sparse advantages (0 or 1) as input, providing limited information gain.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "name": "AWR",
+      "description": "An offline RL baseline that fine-tunes the GigaBrain-0.5 policy using weighted imitation learning.",
+      "limitation": "Lower sample efficiency and weaker multi-task generalization capability compared to RAMP.",
+      "evidence": [
+        {
+          "page": null,
+          "section": "4.2. RAMP Performance",
+          "quote": "RAMP exhibits significantly higher sample efficiency and stronger multi-task generalization capability.",
+          "type": "quote"
+        }
+      ]
+    }
+  ],
+  "method_components": [
+    {
+      "name": "RAMP",
+      "description": "Reinforcement learning via world Model-conditioned Policy framework.",
+      "inputs": [
+        "World model's predicted future states",
+        "Value estimates"
+      ],
+      "outputs": [
+        "Optimized policy for long-horizon task performance"
+      ],
+      "implementation_hint": "Operates through a four-stage pipeline: World Model Pre-training, Policy Training with World Model Conditioning, Human-in-the-Loop Rollout Data Collection, Continual Training with Rollout Data.",
+      "evidence": [
+        {
+          "page": null,
+          "section": "3.2.2. The RAMP Implementation",
+          "quote": "RAMP enables VLA models to learn from experiences by incorporating world model guidance, throughout the entire training lifecycle.",
+          "type": "quote"
+        }
+      ]
+    }
+  ],
+  "benchmark": {
+    "dataset": "RoboChallenge",
+    "metrics": [
+      "Success rate"
+    ],
+    "baseline_results": {
+      "RECAP": "42.67%"
+    },
+    "proposed_results": {
+      "GigaBrain-0.5M*": "51.67%"
+    },
+    "evidence": [
+      {
+        "page": null,
+        "section": "4.1. Foundation Model Performance",
+        "quote": "GigaBrain-0.5, pretrained on over 10,000 hours of diverse robotic data, demonstrates state-of-the-art performance across eight internal manipulation tasks and 30 standardized tasks on the RoboChallenge benchmark, achieving a 51.67% average success rate.",
+        "type": "quote"
+      }
+    ]
+  },
+  "claims": [
+    {
+      "claim_id": "claim_1",
+      "text": "GigaBrain-0.5M*은 세계 모델 기반 강화 학습을 통해 VLA 모델의 장기적 행동 계획 능력을 향상시킵니다.",
+      "claim_type": "method",
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "page": null,
+          "section": "Abstract",
+          "quote": "we propose GigaBrain-0.5M*, a VLA model trained via world model-based reinforcement learning.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "claim_id": "claim_2",
+      "text": "RAMP는 RECAP에 비해 약 30%의 성능 향상을 달성합니다.",
+      "claim_type": "result",
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "page": null,
+          "section": "Abstract",
+          "quote": "RAMP achieves substantial performance gains over the RECAP baseline, yielding improvements of approximately 30% on challenging tasks.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "claim_id": "claim_3",
+      "text": "GigaBrain-0.5M*은 복잡한 조작 작업을 실패 없이 일관되게 수행할 수 있습니다.",
+      "claim_type": "result",
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "page": null,
+          "section": "Abstract",
+          "quote": "GigaBrain-0.5M* exhibits reliable long-horizon execution, consistently accomplishing complex manipulation tasks without failure.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "claim_id": "claim_4",
+      "text": "RAMP는 AWR 및 RECAP보다 샘플 효율성과 다중 작업 일반화 능력이 뛰어납니다.",
+      "claim_type": "comparison",
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "page": null,
+          "section": "4.2. RAMP Performance",
+          "quote": "RAMP exhibits significantly higher sample efficiency and stronger multi-task generalization capability.",
+          "type": "quote"
+        }
+      ]
+    }
+  ],
+  "extraction_mode": "full"
+}

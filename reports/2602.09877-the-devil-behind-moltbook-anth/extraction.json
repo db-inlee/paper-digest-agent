@@ -1,0 +1,111 @@
+{
+  "arxiv_id": "2602.09877",
+  "title": "The Devil Behind Moltbook: Anthropic Safety is Always Vanishing in Self-Evolving AI Societies",
+  "problem_definition": {
+    "statement": "자기 진화하는 AI 사회에서 안전성을 유지하는 것이 불가능하다는 문제를 다룹니다.",
+    "baseline_methods": [],
+    "structural_limitation": "자기 진화, 완전한 고립, 안전 불변성을 동시에 만족하는 시스템은 불가능하다는 것을 이론적으로 증명합니다.",
+    "evidence": [
+      {
+        "page": 1,
+        "section": "Abstract",
+        "quote": "we demonstrate both theoretically and empirically that an agent society satisfying continuous self-evolution, complete isolation, and safety invariance is impossible.",
+        "type": "quote"
+      }
+    ]
+  },
+  "baselines": [],
+  "method_components": [
+    {
+      "name": "Self-Evolution Operator",
+      "description": "에이전트의 자기 진화 과정을 정의하는 확률적 연산자입니다.",
+      "inputs": [
+        "현재 시스템 상태 Θt"
+      ],
+      "outputs": [
+        "다음 시스템 상태 Θt+1"
+      ],
+      "implementation_hint": null,
+      "evidence": [
+        {
+          "page": 4,
+          "section": "2.4.1 Self-Evolution Mechanism",
+          "quote": "The evolution from round t to round t+1 is governed by a stochastic operator T , formally expressed as Θt+1 = T (Θt).",
+          "type": "quote"
+        }
+      ]
+    }
+  ],
+  "benchmark": {
+    "dataset": "AdvBench, TruthfulQA",
+    "metrics": [
+      "ASR-G",
+      "Harmfulness Score",
+      "MC1",
+      "MC2"
+    ],
+    "baseline_results": {
+      "ASR-G": "증가",
+      "Harmfulness Score": "3.6에서 4.1로 증가",
+      "MC1": "감소"
+    },
+    "proposed_results": {
+      "ASR-G": "증가",
+      "Harmfulness Score": "3.6에서 4.1로 증가",
+      "MC1": "감소"
+    },
+    "evidence": [
+      {
+        "page": 14,
+        "section": "4 Quantitative Analysis on the Isolated Self-Evolving Systems",
+        "quote": "RL-based self-evolution leads to a continuous decrease in model safety across both tasks.",
+        "type": "quote"
+      }
+    ]
+  },
+  "claims": [
+    {
+      "claim_id": "claim_1",
+      "text": "자기 진화하는 에이전트 사회는 본질적으로 안전하지 않으며 인간에게 잠재적으로 해로울 수 있습니다.",
+      "claim_type": "limitation",
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "page": 2,
+          "section": "Introduction",
+          "quote": "we theoretically demonstrate that self-evolving agent societies are inherently unsafe and potentially harmful to humans.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "claim_id": "claim_2",
+      "text": "자기 진화하는 시스템에서 안전성은 보존될 수 없는 양입니다.",
+      "claim_type": "limitation",
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "page": 2,
+          "section": "Introduction",
+          "quote": "we propose that safety cannot be presumed to be a conserved quantity in closed-loop self-evolving systems.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "claim_id": "claim_3",
+      "text": "자기 진화하는 시스템은 안전 관련 행동에서 점진적인 저하를 보입니다.",
+      "claim_type": "result",
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "page": 14,
+          "section": "4 Quantitative Analysis on the Isolated Self-Evolving Systems",
+          "quote": "our results suggest that, under isolated self-evolution settings without external corrective feedback, both paradigms exhibit progressive degradation in safety-related behaviors.",
+          "type": "quote"
+        }
+      ]
+    }
+  ],
+  "extraction_mode": "full"
+}

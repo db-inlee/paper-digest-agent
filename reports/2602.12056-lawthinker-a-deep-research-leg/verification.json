@@ -1,0 +1,39 @@
+{
+  "arxiv_id": "2602.12056",
+  "total_claims": 3,
+  "verified_count": 2,
+  "unverified_count": 1,
+  "contradicted_count": 0,
+  "overall_reliability": "high",
+  "results": [
+    {
+      "claim_id": "C1",
+      "claim_text": "LawThinker는 동적 사법 환경에서 탐색-검증-기억 전략을 채택하여 기존 방법보다 우수한 성능을 보입니다.",
+      "status": "verified",
+      "confidence": 1.0,
+      "evidence_found": "논문에서 LawThinker의 성능이 기존 방법보다 우수하다고 명시되어 있음.",
+      "notes": "법적 추론의 정확성과 절차적 준수를 강조함.",
+      "correction_hint": null
+    },
+    {
+      "claim_id": "C2",
+      "claim_text": "LawThinker는 절차적 준수와 법적 추론의 정확성을 크게 향상시킵니다.",
+      "status": "verified",
+      "confidence": 1.0,
+      "evidence_found": "논문에서 LawThinker가 절차적 준수와 법적 추론의 정확성을 향상시킨다고 명시되어 있음.",
+      "notes": "Explore-Verify-Memorize 전략의 효과를 강조함.",
+      "correction_hint": null
+    },
+    {
+      "claim_id": "C3",
+      "claim_text": "LawThinker는 다양한 법적 시나리오에 적응할 수 있는 능력을 보여줍니다.",
+      "status": "unverified",
+      "confidence": 0.8,
+      "evidence_found": null,
+      "notes": "논문에서 다양한 시나리오에 대한 적응 능력에 대한 구체적인 실험 결과는 제시되지 않음.",
+      "correction_hint": null
+    }
+  ],
+  "summary": "LawThinker는 동적 사법 환경에서 탐색-검증-기억 전략을 통해 법적 추론의 정확성과 절차적 준수를 향상시키며, 다양한 법적 시나리오에 적응할 수 있는 능력을 보여줍니다.",
+  "corrections_needed": []
+}

@@ -1,0 +1,178 @@
+{
+  "arxiv_id": "2602.12056",
+  "title": "LawThinker: A Deep Research Legal Agent in Dynamic Environments",
+  "problem_definition": {
+    "statement": "법적 추론에서 중간 추론 단계의 검증 메커니즘이 부족하여 잘못된 법령 인용과 같은 오류가 추론 체인에 전파되는 문제를 해결하고자 합니다.",
+    "baseline_methods": [],
+    "structural_limitation": "기존 방법들은 중간 단계의 정확성과 관련성을 검증하지 않고, 최종 결과의 정확성에만 의존합니다.",
+    "evidence": [
+      {
+        "page": null,
+        "section": "Abstract",
+        "quote": "existing methods lack mechanisms to verify intermediate reasoning steps, allowing errors such as inapplicable statute citations to propagate undetected through the reasoning chain.",
+        "type": "quote"
+      }
+    ]
+  },
+  "baselines": [
+    {
+      "name": "Direct Reasoning",
+      "description": "모델의 내부 지식에만 의존하여 법적 추론을 수행하는 방법",
+      "limitation": "법적 조항을 조작하거나 잘못된 법령 번호를 매칭하는 등 심각한 환각 문제가 발생합니다.",
+      "evidence": [
+        {
+          "page": null,
+          "section": "4.2 Main Result",
+          "quote": "Direct Reasoning exhibits consistently limited performance across all tasks, with particularly poor results in more complex scenarios.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "name": "Workflow-based Methods",
+      "description": "외부 지식을 통합하여 작업을 수행하는 방법",
+      "limitation": "명시적인 검증 메커니즘이 없어 절차적 준수 점수가 낮습니다.",
+      "evidence": [
+        {
+          "page": null,
+          "section": "4.2 Main Result",
+          "quote": "Workflow-based Methods outperform direct reasoning by incorporating external knowledge, but their gains are constrained by the absence of explicit verification mechanisms.",
+          "type": "quote"
+        }
+      ]
+    }
+  ],
+  "method_components": [
+    {
+      "name": "Explore-Verify-Memorize Strategy",
+      "description": "지식 탐색과 검증을 시스템 수준에서 원자적 작업으로 처리하는 전략",
+      "inputs": [
+        "법적 과제",
+        "대화 이력"
+      ],
+      "outputs": [
+        "추론 체인",
+        "응답"
+      ],
+      "implementation_hint": null,
+      "evidence": [
+        {
+          "page": null,
+          "section": "3.2 Overview of the LawThinker Framework",
+          "quote": "The central design principle is to treat knowledge exploration and verification as an enforced atomic operation at the system level.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "name": "DeepVerifier",
+      "description": "각 탐색 결과의 정확성, 사실-법 관련성, 절차적 준수를 검증하는 모듈",
+      "inputs": [
+        "탐색 결과",
+        "대화 이력"
+      ],
+      "outputs": [
+        "구조화된 평가"
+      ],
+      "implementation_hint": null,
+      "evidence": [
+        {
+          "page": null,
+          "section": "3.4 DeepVerifier: Hybrid Step-Level Verification",
+          "quote": "The DeepVerifier selects and invokes verification tools along three dimensions that correspond to the core requirements of legal reasoning.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "name": "Memory Module",
+      "description": "검증된 법적 지식과 주요 사건 컨텍스트를 저장하여 장기 상호작용 작업을 지원",
+      "inputs": [
+        "검증된 법적 지식",
+        "사건 컨텍스트"
+      ],
+      "outputs": [
+        "저장된 정보"
+      ],
+      "implementation_hint": null,
+      "evidence": [
+        {
+          "page": null,
+          "section": "3.5 Memory Mechanism",
+          "quote": "The memory module maintains two categories of content: Legal Knowledge Memory and Case Context Memory.",
+          "type": "quote"
+        }
+      ]
+    }
+  ],
+  "benchmark": {
+    "dataset": "J1-EVAL",
+    "metrics": [
+      "Format-Following Score (FOR)",
+      "Procedural-Following Score (PFS)",
+      "Civil Judgment Score (JUD)",
+      "Crime Accuracy (CRI)",
+      "Law Accuracy (LAW)"
+    ],
+    "baseline_results": {
+      "Direct Reasoning": "Overall accuracy remains below 50%",
+      "Workflow-based Methods": "13% improvement in overall accuracy compared to direct reasoning"
+    },
+    "proposed_results": {
+      "LawThinker": "24% improvement over direct reasoning and an 11% gain over workflow-based methods"
+    },
+    "evidence": [
+      {
+        "page": null,
+        "section": "4.2 Main Result",
+        "quote": "LawThinker achieves a 24% improvement over direct reasoning and an 11% gain over workflow-based methods.",
+        "type": "quote"
+      }
+    ]
+  },
+  "claims": [
+    {
+      "claim_id": "C1",
+      "text": "LawThinker는 동적 사법 환경에서 탐색-검증-기억 전략을 채택하여 기존 방법보다 우수한 성능을 보입니다.",
+      "claim_type": "method",
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "page": null,
+          "section": "1 Introduction",
+          "quote": "To address these limitations, we propose LawThinker, an autonomous legal research agent designed for dynamic judicial environments.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "claim_id": "C2",
+      "text": "LawThinker는 절차적 준수와 법적 추론의 정확성을 크게 향상시킵니다.",
+      "claim_type": "result",
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "page": null,
+          "section": "4.2 Main Result",
+          "quote": "LawThinker achieves a 24% improvement over direct reasoning and an 11% gain over workflow-based methods, with particularly strong performance on process-oriented metrics.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "claim_id": "C3",
+      "text": "LawThinker는 다양한 법적 시나리오에 적응할 수 있는 능력을 보여줍니다.",
+      "claim_type": "comparison",
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "page": null,
+          "section": "4.2 Main Result",
+          "quote": "LawThinker demonstrates robust performance across judicial environments ranging from inquiry to adjudication.",
+          "type": "quote"
+        }
+      ]
+    }
+  ],
+  "extraction_mode": "full"
+}

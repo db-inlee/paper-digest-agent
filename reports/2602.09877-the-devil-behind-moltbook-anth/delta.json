@@ -1,0 +1,21 @@
+{
+  "arxiv_id": "2602.09877",
+  "one_line_takeaway": "이 논문은 자기 진화하는 AI 사회에서 안전성을 유지하는 문제에 대해 Self-Evolution Operator를 제안한다.",
+  "core_deltas": [
+    {
+      "axis": "진화 연산자",
+      "old_approach": "해당 영역에 특화된 방법 없음",
+      "new_approach": "에이전트의 자기 진화 과정을 정의하는 확률적 연산자",
+      "why_better": "자기 진화하는 AI 사회에서 안전성을 유지하는 데 필요한 구조적 지원을 제공함",
+      "evidence": {
+        "page": null,
+        "section": null,
+        "quote": "Self-Evolution Operator: 에이전트의 자기 진화 과정을 정의하는 확률적 연산자입니다.",
+        "type": "quote"
+      }
+    }
+  ],
+  "tradeoffs": [],
+  "when_to_use": "자기 진화하는 AI 사회에서 안전성 문제를 연구할 때",
+  "when_not_to_use": "안전성 유지가 필요하지 않거나, 자기 진화 메커니즘이 없는 AI 시스템에 적용할 때"
+}

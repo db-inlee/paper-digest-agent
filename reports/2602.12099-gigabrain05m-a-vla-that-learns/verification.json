@@ -1,0 +1,48 @@
+{
+  "arxiv_id": "2602.12099",
+  "total_claims": 4,
+  "verified_count": 3,
+  "unverified_count": 1,
+  "contradicted_count": 0,
+  "overall_reliability": "high",
+  "results": [
+    {
+      "claim_id": "claim_1",
+      "claim_text": "GigaBrain-0.5M*은 세계 모델 기반 강화 학습을 통해 VLA 모델의 장기적 행동 계획 능력을 향상시킵니다.",
+      "status": "verified",
+      "confidence": 1.0,
+      "evidence_found": "논문에서 GigaBrain-0.5M*이 세계 모델 기반 강화 학습을 통해 장기적 행동 계획 능력을 향상시킨다고 명시되어 있음.",
+      "notes": "GigaBrain-0.5M*의 기여가 명확히 설명됨.",
+      "correction_hint": null
+    },
+    {
+      "claim_id": "claim_2",
+      "claim_text": "RAMP는 RECAP에 비해 약 30%의 성능 향상을 달성합니다.",
+      "status": "verified",
+      "confidence": 1.0,
+      "evidence_found": "논문에서 RAMP가 RECAP에 비해 약 30%의 성능 향상을 달성했다고 명시됨.",
+      "notes": "실험 결과에 기반한 주장.",
+      "correction_hint": null
+    },
+    {
+      "claim_id": "claim_3",
+      "claim_text": "GigaBrain-0.5M*은 복잡한 조작 작업을 실패 없이 일관되게 수행할 수 있습니다.",
+      "status": "verified",
+      "confidence": 1.0,
+      "evidence_found": "논문에서 GigaBrain-0.5M*이 복잡한 조작 작업을 실패 없이 수행한다고 명시됨.",
+      "notes": "실제 배포 비디오로 검증됨.",
+      "correction_hint": null
+    },
+    {
+      "claim_id": "claim_4",
+      "claim_text": "RAMP는 AWR 및 RECAP보다 샘플 효율성과 다중 작업 일반화 능력이 뛰어납니다.",
+      "status": "unverified",
+      "confidence": 0.8,
+      "evidence_found": null,
+      "notes": "RAMP의 성능이 AWR 및 RECAP과 비교되었으나, 구체적인 수치나 결과가 명시되지 않음.",
+      "correction_hint": null
+    }
+  ],
+  "summary": "대부분의 클레임이 논문에서 지지되며, RECAP 및 AWR과의 비교가 명확하게 이루어졌습니다.",
+  "corrections_needed": []
+}
