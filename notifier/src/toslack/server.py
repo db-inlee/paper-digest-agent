@@ -21,7 +21,7 @@ from pydantic import BaseModel
 
 from .analysis import find_paper_dir, load_paper_detail
 from .config import settings
-from .converter import parse_report, to_slack_blocks_interactive
+from .converter import parse_report, to_slack_blocks_interactive, to_slack_payload_interactive
 from .reader import list_available_reports, read_daily_report
 from .scheduler import start_scheduler, stop_scheduler
 from .storage import comment_store, vote_store
@@ -59,10 +59,10 @@ def _send_report_to_slack(target_date: str) -> None:
                 "pass_count": votes["pass_count"],
             }
 
-        payload = to_slack_blocks_interactive(papers, target_date, vote_counts)
+        payload = to_slack_payload_interactive(papers, target_date, vote_counts)
         from .sender import send_to_slack_sync
 
-        send_to_slack_sync({"blocks": payload})
+        send_to_slack_sync(payload)
         logger.info("Daily report for %s sent to Slack", target_date)
     except Exception as exc:
         logger.error("Failed to send report to Slack: %s", exc)
