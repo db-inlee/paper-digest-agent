@@ -62,9 +62,9 @@ class DailyReportAgent(BaseAgent[DailyReportInput, DailyReportOutput]):
 
     def __init__(self):
         self.settings = get_settings()
-        self.deep_store = DeepStore(self.settings.base_dir)
-        self.code_store = CodeStore(self.settings.base_dir)
-        self.report_store = ReportStore(self.settings.base_dir)
+        self.deep_store = DeepStore(self.settings.base_dir, reports_dir=self.settings.reports_dir)
+        self.code_store = CodeStore(self.settings.base_dir, reports_dir=self.settings.reports_dir)
+        self.report_store = ReportStore(self.settings.base_dir, reports_dir=self.settings.reports_dir)
 
     async def run(self, input: DailyReportInput) -> DailyReportOutput:
         """일일 리포트 생성.
@@ -77,8 +77,16 @@ class DailyReportAgent(BaseAgent[DailyReportInput, DailyReportOutput]):
         """
         papers_data: list[PaperReportData] = []
 
+        # 중복 제거
+        seen_ids: set[str] = set()
+        unique_completed = []
+        for aid in input.deep_completed:
+            if aid not in seen_ids:
+                seen_ids.add(aid)
+                unique_completed.append(aid)
+
         # 각 논문 데이터 수집
-        for arxiv_id in input.deep_completed:
+        for arxiv_id in unique_completed:
             skim = self._find_skim(arxiv_id, input.all_papers)
             if not skim:
                 continue

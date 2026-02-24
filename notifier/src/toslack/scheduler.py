@@ -18,9 +18,11 @@ async def _run_pipeline_job() -> None:
     """Job that triggers the pipeline run (reuses server-level runner)."""
     from .server import trigger_pipeline
 
-    from datetime import date
+    from datetime import datetime
+    from zoneinfo import ZoneInfo
 
-    today = date.today().isoformat()
+    tz = ZoneInfo(settings.scheduler_timezone)
+    today = datetime.now(tz).strftime("%Y-%m-%d")
     logger.info("Scheduler triggered pipeline for %s", today)
     trigger_pipeline(today)
 

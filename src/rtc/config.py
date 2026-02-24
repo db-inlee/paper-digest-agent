@@ -2,7 +2,7 @@
 
 import os
 from pathlib import Path
-from typing import Literal
+from typing import Literal, Optional
 
 from dotenv import load_dotenv
 from pydantic import Field
@@ -209,8 +209,12 @@ class Settings(BaseSettings):
         description="에이전트별 OpenAI 모델 설정",
     )
 
+    # Timezone
+    scheduler_timezone: str = Field(default="Asia/Seoul", alias="SCHEDULER_TIMEZONE")
+
     # Paths
     base_dir: Path = Field(default_factory=lambda: Path(__file__).parent.parent.parent)
+    report_base_dir: Optional[Path] = Field(default=None, alias="REPORT_BASE_DIR")
 
     @property
     def papers_dir(self) -> Path:
@@ -220,6 +224,8 @@ class Settings(BaseSettings):
     @property
     def reports_dir(self) -> Path:
         """reports/ 디렉토리 (딥 분석 결과 저장)."""
+        if self.report_base_dir is not None:
+            return self.report_base_dir
         return self.base_dir / "reports"
 
     @property
@@ -260,6 +266,7 @@ class Settings(BaseSettings):
     class Config:
         env_file = ".env"
         env_file_encoding = "utf-8"
+        extra = "ignore"
 
 
 settings = Settings()

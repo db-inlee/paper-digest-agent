@@ -10,6 +10,7 @@ import threading
 import time
 from contextlib import asynccontextmanager
 from datetime import date, datetime
+from zoneinfo import ZoneInfo
 from pathlib import Path
 from typing import Any, Literal
 
@@ -45,8 +46,8 @@ def _send_report_to_slack(target_date: str) -> None:
             return
 
         content = read_daily_report(target_date)
-        papers, _ = parse_report(content)
-        if not papers:
+        papers, skim_papers = parse_report(content)
+        if not papers and not skim_papers:
             logger.warning("No papers found in report for %s, skipping Slack send", target_date)
             return
 
@@ -59,7 +60,7 @@ def _send_report_to_slack(target_date: str) -> None:
                 "pass_count": votes["pass_count"],
             }
 
-        payload = to_slack_payload_interactive(papers, target_date, vote_counts)
+        payload = to_slack_payload_interactive(papers, target_date, vote_counts, skim_papers)
         from .sender import send_to_slack_sync
 
         send_to_slack_sync(payload)
@@ -83,6 +84,8 @@ def trigger_pipeline(target_date: str, send_slack: bool = True) -> bool:
                 text=True,
                 timeout=1800,
             )
+            logger.info("Pipeline stdout: %s", result.stdout[-2000:] if result.stdout else "(empty)")
+            logger.info("Pipeline stderr: %s", result.stderr[-2000:] if result.stderr else "(empty)")
             if result.returncode == 0:
                 pipeline_status.update(state="completed", error=None)
                 if send_slack:
@@ -831,7 +834,8 @@ class PipelineRunRequest(BaseModel):
 @app.post("/api/pipeline/run")
 async def api_pipeline_run(req: PipelineRunRequest | None = None):
     """Trigger the paper-digest pipeline."""
-    target = (req and req.date) or date.today().isoformat()
+    tz = ZoneInfo(settings.scheduler_timezone)
+    target = (req and req.date) or datetime.now(tz).strftime("%Y-%m-%d")
     ok = trigger_pipeline(target)
     if not ok:
         raise HTTPException(status_code=409, detail="Pipeline is already running")
@@ -914,22 +918,25 @@ def _extract_arxiv_id(url: str) -> str:
     raise ValueError(f"Cannot parse arXiv ID from: {url}")
 
 
-def _append_paper_to_daily_report(arxiv_id: str, title: str, run_date: str) -> None:
-    """Append a newly analyzed paper to the daily report markdown."""
+def _append_paper_to_daily_report(arxiv_id: str, title: str, run_date: str) -> bool:
+    """Append a newly analyzed paper to the daily report markdown.
+
+    Returns True if the paper was successfully appended, False otherwise.
+    """
     report_path = settings.daily_reports_dir / f"{run_date}.md"
 
     # Load analysis data
     detail = load_paper_detail(arxiv_id)
     if detail is None:
         logger.warning("No analysis data found for %s after deep pipeline", arxiv_id)
-        return
+        return False
 
     scoring = detail.get("scoring") or {}
     delta = detail.get("delta") or {}
     extraction = detail.get("extraction") or {}
 
-    # Build star emoji
-    total_score = scoring.get("total", 0)
+    # Build star emoji — total is computed from sub-scores
+    total_score = scoring.get("practicality", 0) + scoring.get("codeability", 0) + scoring.get("signal", 0)
     if total_score >= 13:
         stars = "⭐⭐⭐⭐⭐"
     elif total_score >= 11:
@@ -945,6 +952,10 @@ def _append_paper_to_daily_report(arxiv_id: str, title: str, run_date: str) -> N
     next_index = 1
     if report_path.exists():
         existing = report_path.read_text(encoding="utf-8")
+        # Skip if this arxiv_id is already in the report
+        if arxiv_id in existing:
+            logger.info("Paper %s already in daily report %s, skipping", arxiv_id, run_date)
+            return True
         # Count existing papers
         next_index = len(re.findall(r"^### \d+\.", existing, re.MULTILINE)) + 1
     else:
@@ -966,7 +977,7 @@ def _append_paper_to_daily_report(arxiv_id: str, title: str, run_date: str) -> N
     # Scoring section
     if scoring:
         lines.append("## 왜 이 논문인가?")
-        lines.append(f"총점: {scoring.get('total', 0)}/15")
+        lines.append(f"총점: {total_score}/15")
         lines.append("")
         lines.append("🎯 점수 상세:")
         lines.append(f"  - 실용성 (Practicality): {scoring.get('practicality', 0)}/5")
@@ -1013,7 +1024,7 @@ def _append_paper_to_daily_report(arxiv_id: str, title: str, run_date: str) -> N
     if components:
         lines.append("## 방법론")
         for comp in components:
-            lines.append(f"### {comp.get('name', '')}")
+            lines.append(f"**{comp.get('name', '')}**")
             lines.append(comp.get("description", ""))
             if comp.get("inputs"):
                 lines.append(f"- **입력**: {', '.join(comp['inputs'])}")
@@ -1057,6 +1068,7 @@ def _append_paper_to_daily_report(arxiv_id: str, title: str, run_date: str) -> N
     report_path.parent.mkdir(parents=True, exist_ok=True)
     report_path.write_text(new_content, encoding="utf-8")
     logger.info("Appended paper %s to daily report %s (paper #%d)", arxiv_id, run_date, next_index)
+    return True
 
 
 def _run_paper_add(arxiv_id: str, title: str, abstract: str, run_date: str) -> None:
@@ -1091,8 +1103,14 @@ def _run_paper_add(arxiv_id: str, title: str, abstract: str, run_date: str) -> N
             cwd=project_root,  # Use project root so rtc picks up root .env
         )
         if result.returncode == 0:
-            _append_paper_to_daily_report(arxiv_id, title, run_date)
-            paper_add_jobs[arxiv_id].update(state="completed", error=None)
+            appended = _append_paper_to_daily_report(arxiv_id, title, run_date)
+            if appended:
+                paper_add_jobs[arxiv_id].update(state="completed", error=None)
+            else:
+                paper_add_jobs[arxiv_id].update(
+                    state="error",
+                    error="Deep analysis succeeded but no output files found. Check report_base_dir configuration.",
+                )
         else:
             paper_add_jobs[arxiv_id].update(state="error", error=result.stderr[:500])
     except Exception as exc:
@@ -1112,13 +1130,19 @@ async def api_add_paper(req: PaperAddRequest):
     if existing and existing["state"] == "running":
         raise HTTPException(status_code=409, detail=f"Paper {arxiv_id} is already being analyzed")
 
+    # Check if already analyzed (has analysis files)
+    detail = load_paper_detail(arxiv_id)
+    if detail is not None:
+        raise HTTPException(status_code=409, detail=f"Paper {arxiv_id} has already been analyzed")
+
     # Fetch metadata from arXiv
     try:
         meta = await fetch_arxiv_abstract(arxiv_id)
     except Exception as e:
         raise HTTPException(status_code=400, detail=f"Failed to fetch arXiv metadata: {e}")
 
-    run_date = date.today().isoformat()
+    tz = ZoneInfo(settings.scheduler_timezone)
+    run_date = datetime.now(tz).strftime("%Y-%m-%d")
 
     paper_add_jobs[arxiv_id] = {
         "state": "running",

@@ -357,7 +357,7 @@ async def save_deep_node(state: DeepState) -> dict:
         return {"errors": [{"node": "save_deep", "error": "Missing paper_slug or extraction"}]}
 
     settings = get_settings()
-    store = DeepStore(settings.base_dir)
+    store = DeepStore(settings.base_dir, reports_dir=settings.reports_dir)
 
     try:
         # 각 아티팩트 저장

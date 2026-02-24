@@ -3,6 +3,7 @@
 import asyncio
 from dataclasses import dataclass
 from datetime import datetime
+from zoneinfo import ZoneInfo
 from typing import Optional
 
 from langsmith.run_helpers import traceable
@@ -55,7 +56,7 @@ class Orchestrator(BaseAgent[OrchestratorInput, OrchestratorOutput]):
     def __init__(self):
         self.settings = get_settings()
         self.skim_store = SkimStore(self.settings.base_dir)
-        self.deep_store = DeepStore(self.settings.base_dir)
+        self.deep_store = DeepStore(self.settings.base_dir, reports_dir=self.settings.reports_dir)
         self.index_store = IndexStore(self.settings.base_dir)
 
     async def run(self, input: OrchestratorInput) -> OrchestratorOutput:
@@ -67,7 +68,8 @@ class Orchestrator(BaseAgent[OrchestratorInput, OrchestratorOutput]):
         Returns:
             실행 결과
         """
-        run_date = input.run_date or datetime.now().strftime("%Y-%m-%d")
+        tz = ZoneInfo(self.settings.scheduler_timezone)
+        run_date = input.run_date or datetime.now(tz).strftime("%Y-%m-%d")
         errors: list[dict] = []
         deep_completed: list[str] = []
         code_generated: list[str] = []
@@ -158,7 +160,7 @@ class Orchestrator(BaseAgent[OrchestratorInput, OrchestratorOutput]):
             from rtc.pipeline.code import run_code_pipeline
             from rtc.storage.code_store import CodeStore
 
-            code_store = CodeStore(self.settings.base_dir)
+            code_store = CodeStore(self.settings.base_dir, reports_dir=self.settings.reports_dir)
 
             # GitHub 있는 논문 중 점수 높은 1개 선택
             github_paper = None
@@ -319,10 +321,25 @@ async def run_orchestrator(
     )
 
 
-# CLI 지원
-if __name__ == "__main__":
+def _print_result(result: OrchestratorOutput) -> None:
+    print(f"\n=== Orchestrator Results ===")
+    print(f"Date: {result.run_date}")
+    print(f"Collected: {result.total_collected}")
+    print(f"Skimmed: {result.total_skimmed}")
+    print(f"Deep Candidates: {result.deep_candidates}")
+    print(f"Deep Completed: {result.deep_completed}")
+    print(f"Code Generated: {result.code_generated}")
+    if result.daily_report_path:
+        print(f"Daily Report: {result.daily_report_path}")
+    if result.errors:
+        print(f"\nErrors ({len(result.errors)}):")
+        for err in result.errors[:5]:
+            print(f"  - {err}")
+
+
+def cli() -> None:
+    """CLI entry point (pyproject.toml [project.scripts])."""
     import argparse
-    import asyncio
 
     parser = argparse.ArgumentParser(description="Run Orchestrator")
     parser.add_argument("--date", type=str, help="Run date (YYYY-MM-DD)")
@@ -340,18 +357,8 @@ if __name__ == "__main__":
             force_rerun=args.force,
         )
     )
+    _print_result(result)
 
-    print(f"\n=== Orchestrator Results ===")
-    print(f"Date: {result.run_date}")
-    print(f"Collected: {result.total_collected}")
-    print(f"Skimmed: {result.total_skimmed}")
-    print(f"Deep Candidates: {result.deep_candidates}")
-    print(f"Deep Completed: {result.deep_completed}")
-    print(f"Code Generated: {result.code_generated}")
-    if result.daily_report_path:
-        print(f"Daily Report: {result.daily_report_path}")
 
-    if result.errors:
-        print(f"\nErrors ({len(result.errors)}):")
-        for err in result.errors[:5]:  # 처음 5개만
-            print(f"  - {err}")
+if __name__ == "__main__":
+    cli()

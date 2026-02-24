@@ -6,6 +6,7 @@ action generation:
 - '2602.09849'
 action prediction:
 - '2602.09856'
+- '2602.11865'
 activation steering:
 - '2602.04935'
 active exploration:
@@ -27,6 +28,7 @@ agent:
 - '2602.08253'
 - '2602.10975'
 - '2602.10999'
+- '2602.12628'
 agent evaluation:
 - '2601.20975'
 agent framework:
@@ -35,12 +37,18 @@ agentic frameworks:
 - '2602.07085'
 ai alignment:
 - '2602.09877'
+ai delegation:
+- '2602.12628'
 alignment:
 - '2602.07026'
 alpha mining:
 - '2602.07085'
+analysis:
+- '2602.11236'
 animation:
 - '2602.09713'
+architecture:
+- '2602.08683'
 asr:
 - '2601.21337'
 attention:
@@ -55,6 +63,8 @@ audio understanding:
 - '2601.21337'
 audio-visual:
 - '2602.08711'
+audiovisual:
+- '2602.13013'
 automation:
 - '2601.20833'
 - '2602.11089'
@@ -75,6 +85,7 @@ benchmark:
 - '2602.08543'
 - '2602.09082'
 - '2602.08711'
+- '2602.12783'
 benchmarking:
 - '2601.17883'
 - '2602.10975'
@@ -82,6 +93,8 @@ block-sparse:
 - '2602.08426'
 capability shaping:
 - '2601.21571'
+captioning:
+- '2602.13013'
 chain-of-thought:
 - '2601.21821'
 - '2601.21598'
@@ -89,6 +102,10 @@ chemical reasoning:
 - '2602.07075'
 cli:
 - '2602.10999'
+co-training:
+- '2602.12395'
+code generation:
+- '2602.11715'
 coding:
 - '2602.10975'
 cognitive mapping:
@@ -98,6 +115,8 @@ combinatorial problems:
 compression:
 - '2601.22069'
 - '2602.06694'
+- '2602.08683'
+- '2602.13191'
 compute allocation:
 - '2601.21420'
 context management:
@@ -106,12 +125,16 @@ continuous dynamics:
 - '2602.07075'
 contrastive learning:
 - '2602.07026'
+cuda:
+- '2602.11715'
 curriculum learning:
 - '2602.09443'
 cybersecurity:
 - '2601.21051'
 data curation:
 - '2602.11089'
+- '2602.11865'
+- '2602.13013'
 data engineering:
 - '2601.21639'
 data filtering:
@@ -120,6 +143,7 @@ data generation:
 - '2602.07153'
 dataset:
 - '2601.21821'
+- '2602.12617'
 decoding:
 - '2601.21181'
 decoding speed:
@@ -138,6 +162,7 @@ diffusion models:
 - '2601.22158'
 - '2602.07035'
 - '2602.09268'
+- '2602.11715'
 dynamic environments:
 - '2602.12056'
 dynamic manipulation:
@@ -153,8 +178,11 @@ efficiency:
 - '2602.08382'
 - '2602.10604'
 - '2602.10560'
+- '2602.13191'
 embedding:
 - '2601.21204'
+embodied intelligence:
+- '2602.11865'
 entropy dynamics:
 - '2602.08222'
 environment:
@@ -170,6 +198,8 @@ evaluation:
 - '2602.08543'
 - '2602.11124'
 - '2602.10975'
+- '2602.12783'
+- '2602.11236'
 evolutionary algorithms:
 - '2602.07085'
 - '2602.08253'
@@ -193,9 +223,13 @@ fine-tuning:
 - '2601.21821'
 flow-based:
 - '2601.22158'
+foundation model:
+- '2602.12705'
 foundation models:
 - '2601.17883'
 - '2602.07055'
+framework:
+- '2602.12628'
 gan:
 - '2601.22083'
 generalist agent:
@@ -204,6 +238,8 @@ generation speed:
 - '2602.08676'
 generative models:
 - '2601.22158'
+geolocation:
+- '2602.12617'
 gui:
 - '2602.09856'
 - '2602.09082'
@@ -273,6 +309,7 @@ large language models:
 - '2602.08222'
 - '2602.08543'
 - '2602.07075'
+- '2602.04163'
 latency:
 - '2602.07035'
 latency reduction:
@@ -322,13 +359,21 @@ long-horizon memory:
 - '2602.08990'
 low-rank factorization:
 - '2602.06694'
+machine learning:
+- '2602.13013'
+- '2602.04163'
+- '2602.11715'
 manipulation:
 - '2602.09849'
 mathematics:
 - '2602.10177'
+medical:
+- '2602.12705'
 memory:
 - '2602.08382'
 - '2602.10560'
+memory efficiency:
+- '2602.04163'
 memory management:
 - '2602.06025'
 meta-agent:
@@ -365,6 +410,8 @@ multimodal:
 - '2602.08794'
 - '2602.08439'
 - '2602.11124'
+- '2602.11858'
+- '2602.08683'
 multimodal models:
 - '2602.07055'
 multimodal reasoning:
@@ -389,6 +436,9 @@ optimization:
 - '2602.08222'
 - '2602.08847'
 - '2602.08253'
+- '2602.04163'
+perception:
+- '2602.11858'
 performance:
 - '2602.09268'
 - '2602.09823'
@@ -418,6 +468,7 @@ problem solving:
 - '2602.10063'
 quantization:
 - '2602.06694'
+- '2602.04163'
 query processing:
 - '2602.09901'
 query-aware:
@@ -436,6 +487,8 @@ reasoning:
 - '2602.08382'
 - '2602.10177'
 - '2602.10560'
+- '2602.12705'
+- '2602.12617'
 reasoning models:
 - '2602.06454'
 reinforcement learning:
@@ -463,6 +516,10 @@ reinforcement learning:
 - '2602.12125'
 - '2602.12099'
 - '2602.05548'
+- '2602.12617'
+- '2602.12395'
+- '2602.11236'
+- '2602.11715'
 report generation:
 - '2602.06540'
 representation engineering:
@@ -480,6 +537,10 @@ rigging:
 robotics:
 - '2602.07845'
 - '2602.10102'
+- '2602.12395'
+- '2602.11865'
+robustness:
+- '2602.12783'
 safety:
 - '2601.21343'
 - '2602.09877'
@@ -498,6 +559,8 @@ self-evolution:
 - '2602.09877'
 semantic understanding:
 - '2602.09901'
+sim-real:
+- '2602.12395'
 skill discovery:
 - '2602.08234'
 social network:
@@ -520,6 +583,8 @@ speech recognition:
 - '2601.21337'
 speech understanding:
 - '2602.09823'
+spoken query:
+- '2602.12783'
 stability:
 - '2602.10609'
 supervision:
@@ -528,6 +593,8 @@ synchronization:
 - '2602.08794'
 synthetic environments:
 - '2602.10090'
+task decomposition:
+- '2602.12628'
 task diversity:
 - '2602.07153'
 task generation:
@@ -536,6 +603,7 @@ task performance:
 - '2602.10102'
 temporal reasoning:
 - '2601.22153'
+- '2602.13191'
 text conditioning:
 - '2602.09268'
 text diffusion:
@@ -564,6 +632,8 @@ training:
 - '2602.11089'
 - '2602.10224'
 - '2602.10609'
+- '2602.12705'
+- '2602.11858'
 training-free:
 - '2601.21590'
 - '2601.21181'
@@ -581,8 +651,12 @@ video captioning:
 - '2602.08711'
 video generation:
 - '2602.08794'
+video language model:
+- '2602.13191'
 video understanding:
 - '2602.08439'
+- '2602.08683'
+- '2602.13013'
 vision-language:
 - '2601.22153'
 - '2601.21639'
@@ -595,10 +669,14 @@ vision-text:
 - '2601.22069'
 visual fidelity:
 - '2602.09856'
+visual reasoning:
+- '2602.11236'
 vla:
 - '2601.22153'
 vlm:
 - '2601.21821'
+vqa:
+- '2602.11858'
 weak agents:
 - '2602.08222'
 world models:

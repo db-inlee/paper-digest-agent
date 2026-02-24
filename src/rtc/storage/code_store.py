@@ -17,13 +17,14 @@ class CodeStore:
     - method_*.py: 개별 방법론 코드
     """
 
-    def __init__(self, base_dir: Path):
+    def __init__(self, base_dir: Path, *, reports_dir: Path | None = None):
         """초기화.
 
         Args:
-            base_dir: 프로젝트 베이스 디렉토리
+            base_dir: 프로젝트 베이스 디렉토리 (레거시)
+            reports_dir: reports 디렉토리 경로 (우선 사용)
         """
-        self.reports_dir = base_dir / "reports"
+        self.reports_dir = reports_dir if reports_dir is not None else base_dir / "reports"
 
     def get_code_dir(self, slug: str) -> Path:
         """코드 디렉토리 경로."""

@@ -6,6 +6,51 @@ from typing import Any
 from .models import PaperSummary, SkimPaper
 
 
+def _condense_methodology(raw: str) -> str:
+    """Condense verbose methodology into compact Slack-friendly format.
+
+    Extracts component names and descriptions only,
+    skipping inputs/outputs/implementation hints.
+    """
+    lines = raw.split("\n")
+    components: list[tuple[str, str]] = []
+    current_name: str | None = None
+    current_desc: list[str] = []
+
+    for line in lines:
+        stripped = line.strip()
+        # Component header: **Name**
+        bold_match = re.match(r"^\*\*(.+?)\*\*$", stripped)
+        if bold_match:
+            if current_name:
+                components.append((current_name, " ".join(current_desc).strip()))
+            current_name = bold_match.group(1)
+            current_desc = []
+            continue
+
+        # Skip detail lines
+        if stripped.startswith("- **입력**") or stripped.startswith("- **출력**") or stripped.startswith("- **구현 힌트**"):
+            continue
+
+        # Collect description (non-empty, non-bullet)
+        if current_name and stripped and not stripped.startswith("- "):
+            current_desc.append(stripped)
+
+    if current_name:
+        components.append((current_name, " ".join(current_desc).strip()))
+
+    if not components:
+        return raw[:300] + "…" if len(raw) > 300 else raw
+
+    result = []
+    for name, desc in components:
+        if desc:
+            result.append(f"• *{name}*: {desc}")
+        else:
+            result.append(f"• *{name}*")
+    return "\n".join(result)
+
+
 def parse_report(
     content: str,
 ) -> tuple[list[PaperSummary], list[SkimPaper]]:
@@ -301,13 +346,17 @@ def _paper_to_blocks(paper: PaperSummary, index: int) -> list[dict[str, Any]]:
             }
         })
 
-    # Methodology
+    # Methodology (condensed)
     if paper.methodology:
+        condensed = _condense_methodology(paper.methodology)
+        method_text = f"⚙️ *방법론:*\n{condensed}"
+        if len(method_text) > 2900:
+            method_text = method_text[:2900] + "…"
         blocks.append({
             "type": "section",
             "text": {
                 "type": "mrkdwn",
-                "text": f"⚙️ *방법론:*\n{paper.methodology}"
+                "text": method_text
             }
         })
 
@@ -441,13 +490,17 @@ def _paper_to_blocks_interactive(
             }
         })
 
-    # Methodology
+    # Methodology (condensed)
     if paper.methodology:
+        condensed = _condense_methodology(paper.methodology)
+        method_text = f"⚙️ *방법론:*\n{condensed}"
+        if len(method_text) > 2900:
+            method_text = method_text[:2900] + "…"
         blocks.append({
             "type": "section",
             "text": {
                 "type": "mrkdwn",
-                "text": f"⚙️ *방법론:*\n{paper.methodology}"
+                "text": method_text
             }
         })
 
@@ -481,7 +534,7 @@ def _paper_to_blocks_interactive(
     action_value = f"{report_date}|{paper.arxiv_id}|{paper.title}"
     blocks.append({
         "type": "actions",
-        "block_id": f"vote-{paper.arxiv_id}",
+        "block_id": f"vote-{index}-{paper.arxiv_id}",
         "elements": [
             {
                 "type": "button",
@@ -533,35 +586,47 @@ def _paper_to_blocks_interactive(
 
 
 def _skim_papers_to_blocks(skim_papers: list[SkimPaper]) -> list[dict[str, Any]]:
-    """스킴 요약 논문을 Slack context 블록으로 렌더링."""
+    """스킴 요약 논문을 Slack 블록으로 렌더링."""
     blocks: list[dict[str, Any]] = []
 
     blocks.append({"type": "divider"})
 
     blocks.append({
-        "type": "section",
+        "type": "header",
         "text": {
-            "type": "mrkdwn",
-            "text": f"📋 *기타 주목할 논문* ({len(skim_papers)}편)"
+            "type": "plain_text",
+            "text": f"📋 기타 주목할 논문 ({len(skim_papers)}편)",
+            "emoji": True,
         }
     })
 
-    # Slack context 블록은 elements 최대 10개 제한 → 5개씩 분할
-    batch_size = 5
-    for start in range(0, len(skim_papers), batch_size):
-        batch = skim_papers[start:start + batch_size]
-        elements = []
-        for paper in batch:
-            kw_text = " · ".join(f"`{kw}`" for kw in paper.matched_keywords) if paper.matched_keywords else ""
-            line = f"• <{paper.arxiv_url}|{paper.title}> — {paper.one_liner}"
-            if kw_text:
-                line += f" ({kw_text})"
-            elements.append({"type": "mrkdwn", "text": line})
+    for paper in skim_papers:
+        kw_text = " · ".join(f"`{kw}`" for kw in paper.matched_keywords) if paper.matched_keywords else ""
+
+        # 제목 + 요약을 section 블록으로
+        text = f"*<{paper.arxiv_url}|{paper.title}>*"
+        if paper.one_liner:
+            text += f"\n{paper.one_liner}"
 
         blocks.append({
-            "type": "context",
-            "elements": elements,
+            "type": "section",
+            "text": {
+                "type": "mrkdwn",
+                "text": text,
+            }
         })
+
+        # 키워드 + 카테고리를 context로
+        context_parts = []
+        if paper.category:
+            context_parts.append(f"📂 {paper.category}")
+        if kw_text:
+            context_parts.append(f"🏷️ {kw_text}")
+        if context_parts:
+            blocks.append({
+                "type": "context",
+                "elements": [{"type": "mrkdwn", "text": " | ".join(context_parts)}],
+            })
 
     return blocks
 
@@ -591,6 +656,7 @@ def to_slack_blocks_interactive(
     papers: list[PaperSummary],
     date: str,
     vote_counts: dict[str, dict[str, int]] | None = None,
+    skim_papers: list[SkimPaper] | None = None,
 ) -> list[dict[str, Any]]:
     """Convert paper summaries to Slack Block Kit format with voting buttons.
 
@@ -598,6 +664,7 @@ def to_slack_blocks_interactive(
         papers: List of parsed paper summaries.
         date: Report date string.
         vote_counts: Optional dict of arxiv_id -> {"applicable_count": N, "idea_count": M, "pass_count": K}
+        skim_papers: Optional list of skim-only papers.
 
     Returns:
         Slack Block Kit blocks list with interactive voting.
@@ -637,6 +704,9 @@ def to_slack_blocks_interactive(
             counts.get("pass_count", 0),
         ))
 
+    if skim_papers:
+        blocks.extend(_skim_papers_to_blocks(skim_papers))
+
     return blocks
 
 
@@ -644,18 +714,20 @@ def to_slack_payload_interactive(
     papers: list[PaperSummary],
     date: str,
     vote_counts: dict[str, dict[str, int]] | None = None,
+    skim_papers: list[SkimPaper] | None = None,
 ) -> dict[str, Any]:
     """Create Slack webhook payload with voting buttons.
 
     Args:
         papers: List of parsed paper summaries.
         date: Report date string.
-        vote_counts: Optional dict of arxiv_id -> {"keep_count": N, "drop_count": M}
+        vote_counts: Optional dict of arxiv_id -> {"applicable_count": N, "idea_count": M, "pass_count": K}
+        skim_papers: Optional list of skim-only papers.
 
     Returns:
         Complete Slack webhook payload with interactive voting.
     """
     return {
-        "blocks": to_slack_blocks_interactive(papers, date, vote_counts),
+        "blocks": to_slack_blocks_interactive(papers, date, vote_counts, skim_papers),
         "text": f"📚 Paper Digest - {date}: {len(papers)}편의 논문"
     }

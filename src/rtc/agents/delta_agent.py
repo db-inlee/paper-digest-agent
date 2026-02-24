@@ -132,7 +132,7 @@ Method Components: {method_components}
 
 Provide:
 1. **one_line_takeaway**: 위 유형에 맞는 한 줄 요약 (정확성이 가장 중요! 과장 금지!)
-2. **core_deltas**: 최소 1-3개의 핵심 구조적 변화
+2. **core_deltas**: 2-5개의 핵심 구조적 변화 (방법론 구성 요소가 많으면 더 많은 delta 추출)
    - baselines가 없으면 old_approach를 "일반적인 기존 접근" 또는 "해당 영역에 특화된 방법 없음"으로 작성
 3. **tradeoffs**: 이 접근법의 트레이드오프
 4. **when_to_use**: 언제 이 방법을 사용해야 하는지
@@ -173,10 +173,19 @@ class DeltaAgent(BaseAgent[ExtractionOutput, DeltaOutput]):
             for b in extraction.baselines
         ) or "명시된 베이스라인 없음"
 
-        method_text = "\n".join(
-            f"- {m.name}: {m.description}"
-            for m in extraction.method_components
-        ) or "명시된 방법론 구성 요소 없음"
+        method_parts = []
+        for m in extraction.method_components:
+            part = f"- {m.name}: {m.description}"
+            if m.inputs:
+                part += f"\n  입력: {', '.join(m.inputs)}"
+            if m.outputs:
+                part += f"\n  출력: {', '.join(m.outputs)}"
+            if m.implementation_hint:
+                part += f"\n  구현 힌트: {m.implementation_hint}"
+            if m.role:
+                part += f"\n  역할: {m.role}"
+            method_parts.append(part)
+        method_text = "\n".join(method_parts) or "명시된 방법론 구성 요소 없음"
 
         prompt = DELTA_PROMPT_TEMPLATE.format(
             title=extraction.title,
@@ -192,7 +201,7 @@ class DeltaAgent(BaseAgent[ExtractionOutput, DeltaOutput]):
                 output_schema=DeltaOutput,
                 system_prompt=DELTA_SYSTEM_PROMPT,
                 temperature=0.0,
-                max_tokens=4000,
+                max_tokens=6000,
             )
 
             return result

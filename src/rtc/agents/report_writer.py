@@ -170,16 +170,19 @@ class ReportWriter(BaseAgent[ReportInput, str]):
             inputs = ", ".join(m.inputs) if m.inputs else "N/A"
             outputs = ", ".join(m.outputs) if m.outputs else "N/A"
 
-            lines.append(
-                f"### {m.name}\n"
+            entry = (
+                f"**{m.name}**\n"
                 f"{m.description}\n"
                 f"- **입력**: {inputs}\n"
                 f"- **출력**: {outputs}"
             )
             if m.implementation_hint:
-                lines[-1] += f"\n- **구현 힌트**: {m.implementation_hint}"
+                entry += f"\n- **구현 힌트**: {m.implementation_hint}"
+            if m.role:
+                entry += f"\n- **역할**: {m.role}"
             if evidence:
-                lines[-1] += f" {evidence}"
+                entry += f" {evidence}"
+            lines.append(entry)
 
         return "\n\n".join(lines)
 

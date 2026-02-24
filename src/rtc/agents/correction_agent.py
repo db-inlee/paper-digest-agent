@@ -264,6 +264,7 @@ class CorrectionAgent(BaseAgent[CorrectionInput, CorrectionOutput]):
             baselines=extraction.baselines,
             method_components=extraction.method_components,
             benchmark=extraction.benchmark,
+            benchmarks=extraction.benchmarks if hasattr(extraction, 'benchmarks') else [],
             claims=new_claims,
             extraction_mode=extraction.extraction_mode,
         )

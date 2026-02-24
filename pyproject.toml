@@ -34,7 +34,7 @@ dev = [
 ]
 
 [project.scripts]
-rtc = "rtc.pipeline.run_daily:app"
+rtc = "rtc.agents.orchestrator:cli"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/rtc"]

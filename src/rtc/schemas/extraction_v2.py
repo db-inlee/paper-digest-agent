@@ -48,12 +48,20 @@ class BaselineWithEvidence(BaseModel):
 class MethodComponent(BaseModel):
     """방법론 구성 요소."""
 
-    name: str = Field(..., description="구성 요소 이름")
-    description: str = Field(..., description="설명")
-    inputs: list[str] = Field(default_factory=list, description="입력")
-    outputs: list[str] = Field(default_factory=list, description="출력")
+    name: str = Field(..., description="구성 요소 이름 (예: Multi-Head Attention)")
+    description: str = Field(
+        ...,
+        description="상세 설명 - 이 구성 요소가 무엇이고 어떻게 작동하는지 2-3문장으로 기술",
+    )
+    inputs: list[str] = Field(default_factory=list, description="입력 (예: Query, Key, Value)")
+    outputs: list[str] = Field(default_factory=list, description="출력 (예: 어텐션 가중치 적용된 Value)")
     implementation_hint: Optional[str] = Field(
-        default=None, description="구현 힌트"
+        default=None,
+        description="구현 힌트 - 핵심 수식이나 알고리즘 단계 요약",
+    )
+    role: Optional[str] = Field(
+        default=None,
+        description="이 구성 요소의 역할 (novel: 새로운 기여, adapted: 기존 기법 변형, standard: 표준 기법 활용)",
     )
     evidence: list[Evidence] = Field(default_factory=list)
 
@@ -77,7 +85,10 @@ class ClaimWithEvidence(BaseModel):
 
     claim_id: str = Field(..., description="클레임 ID")
     text: str = Field(..., description="클레임 내용")
-    claim_type: Literal["method", "result", "comparison", "limitation"] = Field(
+    claim_type: Literal[
+        "method", "result", "comparison", "limitation",
+        "architecture", "efficiency", "ablation",
+    ] = Field(
         ..., description="클레임 유형"
     )
     confidence: float = Field(
@@ -96,10 +107,16 @@ class ExtractionOutput(BaseModel):
         default_factory=list, description="베이스라인 목록"
     )
     method_components: list[MethodComponent] = Field(
-        default_factory=list, description="방법론 구성 요소"
+        default_factory=list,
+        min_length=2,
+        description="방법론 구성 요소 (최소 2개 이상, 각 모듈/기법을 개별 항목으로 분리)",
     )
+    benchmarks: list[BenchmarkInfo] = Field(
+        default_factory=list, description="벤치마크 정보 목록 (여러 벤치마크 지원)"
+    )
+    # 하위 호환성: 기존 단일 benchmark 필드도 허용
     benchmark: Optional[BenchmarkInfo] = Field(
-        default=None, description="벤치마크 정보"
+        default=None, description="(deprecated) 단일 벤치마크 - benchmarks 사용 권장",
     )
     claims: list[ClaimWithEvidence] = Field(
         default_factory=list, description="주요 클레임"
@@ -107,6 +124,14 @@ class ExtractionOutput(BaseModel):
     extraction_mode: Literal["full", "lite"] = Field(
         default="full", description="추출 모드"
     )
+
+    @property
+    def all_benchmarks(self) -> list[BenchmarkInfo]:
+        """모든 벤치마크 반환 (benchmarks + 레거시 benchmark 통합)."""
+        result = list(self.benchmarks)
+        if self.benchmark and self.benchmark not in result:
+            result.append(self.benchmark)
+        return result
 
     @property
     def total_claims(self) -> int:

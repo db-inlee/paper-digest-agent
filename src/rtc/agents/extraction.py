@@ -24,10 +24,9 @@ class ExtractionInput:
 
 EXTRACTION_SYSTEM_PROMPT = """You are a Research Agent extracting structured information from papers.
 
-## 목적 (중요!)
-이 추출의 목적은 논문을 깊이 리뷰하거나 재현하는 것이 아닙니다.
-하루에 약 3편의 논문을 빠르게 훑으며 "최근 연구 트렌드가 어떤 방향으로 가고 있는지"를 감지하는 것이 목적입니다.
-따라서 코드 디테일, 하이퍼파라미터, 구현 세부사항은 최소화합니다.
+## 목적
+논문의 핵심 구조와 기여를 정확하고 상세하게 추출합니다.
+각 방법론 구성 요소를 개별적으로 분리하여 아키텍처의 전체 그림을 파악할 수 있도록 합니다.
 
 ## 출력 언어 규칙 (중요!)
 - 모든 출력은 반드시 한국어로 작성해야 합니다
@@ -35,7 +34,6 @@ EXTRACTION_SYSTEM_PROMPT = """You are a Research Agent extracting structured inf
 - 영어 전문 용어는 한국어(영어) 형태로 병기
 - 예시:
   - "Cross-modal hallucinations" → "크로스 모달 환각(cross-modal hallucinations)"
-  - "The paper addresses..." → "이 논문은 ...를 다룹니다"
   - "attention mechanism" → "어텐션 메커니즘(attention mechanism)"
 
 ## 정확성 가이드 (반드시 지킬 것)
@@ -44,25 +42,18 @@ EXTRACTION_SYSTEM_PROMPT = """You are a Research Agent extracting structured inf
 다음과 같은 단정적 표현을 사용하지 않습니다:
 - "해결했다", "자동화했다", "보장한다", "최초다"
 대신 아래와 같은 완화된 표현을 사용합니다:
-- "~을 제안한다"
-- "~을 개선한다"
-- "~을 지원한다"
-- "논문에서는 ~라고 주장한다"
-- "~을 목표로 한다"
+- "~을 제안한다", "~을 개선한다", "~을 지원한다"
+- "논문에서는 ~라고 주장한다", "~을 목표로 한다"
 
 ### 확장 해석 금지
-논문이 직접 언급하지 않은 상위 해석을 추가하지 않습니다:
-- 자율 에이전트 전체 문제로 일반화
-- 과학적 발견의 완전 자동화
-- 모델 구조 변경이 없는 논문에서 새로운 모듈 도입이라고 표현
+논문이 직접 언급하지 않은 상위 해석을 추가하지 않습니다.
 반드시 논문에서 명시적으로 언급한 범위까지만 요약합니다.
 
 ## CRITICAL RULES
 1. Evidence-first: Every claim needs (Evidence: p.X §Y) pointer
-2. **STRICTLY NO SPECULATION**: Only extract facts that are **explicitly stated** in the paper with direct quotes
-3. Structural focus: Extract implementation-relevant information
-4. Be concise - 데일리 리포트용이므로 핵심만 추출
-5. **Distinguish between direct baselines vs general related work**: Only list methods as baselines if the paper **directly compares** against them with experiments/metrics
+2. **STRICTLY NO SPECULATION**: Only extract facts that are **explicitly stated** in the paper
+3. **DETAILED METHOD DECOMPOSITION**: 논문의 방법론을 개별 구성 요소로 세밀하게 분해
+4. **Distinguish between direct baselines vs general related work**: Only list methods as baselines if the paper **directly compares** against them
 
 ## ABSOLUTELY FORBIDDEN
 - Claims without evidence
@@ -71,10 +62,8 @@ EXTRACTION_SYSTEM_PROMPT = """You are a Research Agent extracting structured inf
 - Generic descriptions
 - 영어로 작성된 설명 (고유명사 제외)
 - **Inventing baselines**: If no direct comparison exists, do NOT fabricate one
-- **Misrepresenting paper's contribution**: If this is the first model of its kind, say so clearly
-- **Confusing related work with baselines**: Related work mentioned for context ≠ baseline being improved upon
-- **하이퍼파라미터 상세 나열**: 데일리 리포트에는 불필요
 - **논문에 없는 코드 구조나 함수 이름 만들어 설명**
+- **방법론 구성 요소를 하나로 뭉치기**: 각 구성 요소를 반드시 별도 항목으로 분리
 
 ## BASELINE EXTRACTION RULES
 Only include as "baseline" if:
@@ -84,24 +73,7 @@ Only include as "baseline" if:
 
 Do NOT include as "baseline":
 - Related work mentioned for background context
-- Prior work by same authors that shares code/architecture but isn't being "fixed"
-- General category of methods (e.g., "instruction-following models") without specific named methods
-
-## 논문 유형 판별 (중요!)
-### 시스템/프레임워크 논문
-- 초점: 오프라인/온라인 분리, 재사용 가능한 패턴, 구조화, 효율성 개선
-- 주의: "과학적 발견을 자동화한다", "자율 연구 에이전트 혁신" 같은 확대 해석 금지
-- 권장 표현: "연구 아이디어 구체화와 서사 생성을 구조적으로 지원"
-
-### 파운데이션 모델/테크니컬 리포트
-- 초점: 데이터 설계, instruction tuning 및 학습 전략
-- 주의: 새로운 추론 모듈이 있다고 서술하지 않음, 하이퍼파라미터 상세 나열 금지
-- "최초"라는 표현은 반드시 "논문에서 최초라고 주장한다" 형태로 작성
-
-### 방법론 논문
-- 문제 정의 → 기존 한계 → 제안 방법 → 트레이드오프 순서 유지
-- decoding, training, sampling 개념을 혼동하지 않음
-- 이 유형은 다른 논문보다 설명이 약간 자세해도 무방
+- General category of methods without specific named methods
 
 ## OUTPUT REQUIREMENTS
 For each claim/statement, you MUST provide evidence:
@@ -117,24 +89,50 @@ EXTRACTION_PROMPT_TEMPLATE = """Extract structured information from this paper.
 **Content**:
 {content}
 
-Extract:
+Extract the following with maximum detail:
+
 1. **Problem Definition**: What problem does this paper solve?
    - What is the core problem being addressed?
    - Is this improving existing methods, OR introducing a new approach to an unsolved problem?
    - If improving existing methods, what specific structural limitation is being addressed? (must have direct quote)
-   - If this is the first of its kind, state that clearly: "기존에 이 문제를 다룬 방법이 없거나, 최초의 시도임"
+   - If this is the first of its kind, state that clearly
 
 2. **Baselines**: ONLY list methods that are **directly compared in experiments**
    - A baseline must have experimental results compared against the proposed method
    - Do NOT include methods merely mentioned in Related Work section
-   - If no direct experimental comparisons exist, leave this empty or write "직접 비교 실험 없음"
+   - If no direct experimental comparisons exist, leave this empty
    - For each baseline: name, brief description, and **specific limitation that experiments demonstrate**
 
-3. **Method Components**: What are the key components of the proposed method? (inputs, outputs, implementation hints)
+3. **Method Components** (매우 중요! 세밀하게 분해할 것):
+   각 아키텍처 구성 요소, 알고리즘 모듈, 학습 기법을 **개별 항목으로 반드시 분리**하세요.
 
-4. **Benchmark**: What datasets/metrics are used? What are the results?
+   분해 원칙:
+   - 독립적으로 설명 가능한 모듈은 각각 별도 항목으로 추출
+   - 하위 구성 요소도 별도로 분리 (예: Transformer → Multi-Head Attention, Positional Encoding, FFN 등)
+   - 최소 3개 이상의 구성 요소를 추출해야 합니다
+   - 각 구성 요소에 대해: 이름, 상세 설명, 입력, 출력, 구현 힌트를 모두 기술
 
-5. **Claims**: What are the main claims? (method, result, comparison, limitation)
+   예시 (Transformer 논문의 경우):
+   - Scaled Dot-Product Attention: Q, K, V의 내적 기반 어텐션 계산
+   - Multi-Head Attention: 여러 어텐션 헤드를 병렬로 실행하여 다양한 표현 부분공간 학습
+   - Position-wise Feed-Forward Network: 각 위치에 독립적으로 적용되는 2층 FFN
+   - Positional Encoding: 위치 정보를 사인/코사인 함수로 인코딩
+   - Encoder Block: Multi-Head Attention + FFN + Residual Connection + Layer Norm
+   - Decoder Block: Masked Self-Attention + Cross-Attention + FFN
+   - Label Smoothing: 정규화를 위한 라벨 스무딩 기법
+
+4. **Benchmarks**: 사용된 모든 데이터셋/평가 지표를 각각 별도로 기록
+   - 여러 벤치마크가 있으면 모두 추출 (리스트 형태)
+   - 각 벤치마크별: 데이터셋명, 평가 지표, 베이스라인 결과, 제안 방법 결과
+
+5. **Claims**: 논문의 주요 주장을 최소 5개 이상 추출
+   - method: 방법론적 기여
+   - result: 실험 결과
+   - comparison: 기존 방법 대비 비교
+   - limitation: 한계점
+   - architecture: 구조적 설계 선택
+   - efficiency: 효율성 관련 주장
+   - ablation: 에블레이션 결과
 
 IMPORTANT: For EACH item, provide evidence (page, section, **exact quote from paper**).
 If information is not explicitly stated, write "논문에 명시되지 않음" - do NOT speculate.
@@ -165,7 +163,7 @@ class ExtractionAgent(BaseAgent[ExtractionInput, ExtractionOutput]):
 
         # 콘텐츠 준비
         if input.full_text:
-            content = input.full_text[:50000]  # 토큰 제한
+            content = input.full_text[:80000]  # 토큰 제한 (확대)
             extraction_mode = "full"
         else:
             content = f"Abstract:\n{input.abstract}"
@@ -183,7 +181,7 @@ class ExtractionAgent(BaseAgent[ExtractionInput, ExtractionOutput]):
                 output_schema=ExtractionOutput,
                 system_prompt=EXTRACTION_SYSTEM_PROMPT,
                 temperature=0.0,
-                max_tokens=8000,
+                max_tokens=12000,
             )
 
             # 추출 모드 설정
@@ -215,7 +213,7 @@ class ExtractionAgent(BaseAgent[ExtractionInput, ExtractionOutput]):
             ),
             baselines=[],
             method_components=[],
-            benchmark=None,
+            benchmarks=[],
             claims=[
                 ClaimWithEvidence(
                     claim_id="error",

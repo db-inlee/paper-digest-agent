@@ -45,7 +45,7 @@ async def run_code_pipeline(
         )
 
         # 결과 저장
-        store = CodeStore(settings.base_dir)
+        store = CodeStore(settings.base_dir, reports_dir=settings.reports_dir)
         store.save_github_method(paper_slug, result)
 
         return {
@@ -114,7 +114,7 @@ if __name__ == "__main__":
     from rtc.storage.deep_store import DeepStore
 
     settings = get_settings()
-    deep_store = DeepStore(settings.base_dir)
+    deep_store = DeepStore(settings.base_dir, reports_dir=settings.reports_dir)
 
     extraction = deep_store.load_extraction(args.slug)
 

@@ -12,13 +12,17 @@ class ReportStore:
     - reports/daily/2026-01-31.md: 일일 통합 리포트
     """
 
-    def __init__(self, base_dir: Path):
+    def __init__(self, base_dir: Path, *, reports_dir: Path | None = None):
         """초기화.
 
         Args:
-            base_dir: 프로젝트 베이스 디렉토리
+            base_dir: 프로젝트 베이스 디렉토리 (레거시)
+            reports_dir: reports 디렉토리 경로 (우선 사용)
         """
-        self.daily_dir = base_dir / "reports" / "daily"
+        if reports_dir is not None:
+            self.daily_dir = reports_dir / "daily"
+        else:
+            self.daily_dir = base_dir / "reports" / "daily"
         self.daily_dir.mkdir(parents=True, exist_ok=True)
 
     def get_report_path(self, date: str) -> Path:

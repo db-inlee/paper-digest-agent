@@ -20,8 +20,10 @@ Docker만 있으면 바로 시작할 수 있습니다.
 git clone https://github.com/db-inlee/paper-digest-agent.git
 cd paper-digest-agent
 cp .env.example .env   # API 키 입력
-docker-compose up --build
+docker-compose up -d --build paper-digest
 ```
+
+> 최초 실행 시 `--build`로 이미지를 빌드하고, 이후에는 `docker-compose up -d paper-digest`로 시작합니다.
 
 `.env` 파일에 LLM API 키를 입력합니다.
 
@@ -32,6 +34,17 @@ ANTHROPIC_API_KEY=sk-ant-...
 ```
 
 http://localhost:8000 에서 웹 대시보드에 접속할 수 있습니다.
+
+```bash
+# 실행
+docker-compose up -d paper-digest
+
+# 중지
+docker-compose down
+
+# 로그 확인
+docker-compose logs -f paper-digest
+```
 
 > API 키는 `.env` 파일에만 저장되며, `.gitignore`에 포함되어 Git에 커밋되지 않습니다.
 
