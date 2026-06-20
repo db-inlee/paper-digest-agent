@@ -59,6 +59,9 @@ reports/.corpus/
 reports/.reextract/
 reports/.reextract_backup/
 
+# Obsidian vault export (work artifact, never commit)
+vault/
+
 # notifier (Slack/Web)
 notifier/web/node_modules/
 notifier/web/.svelte-kit/
