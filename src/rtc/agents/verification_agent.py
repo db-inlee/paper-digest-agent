@@ -196,22 +196,31 @@ class VerificationAgent(BaseAgent[VerificationInput, VerificationOutput]):
                 max_tokens=4000,
             )
 
+            # A successful run means verification actually ran: never let the
+            # model hallucinate this flag True (which would skip correction).
+            result.verification_error = False
             return result
 
         except Exception as e:
-            # 실패 시 기본값 반환 (통과 처리)
+            # On failure, fail closed: mark as low + verification_error.
             return self._create_fallback_output(input.arxiv_id, str(e))
 
     def _create_fallback_output(self, arxiv_id: str, error: str) -> VerificationOutput:
-        """실패 시 폴백 출력 생성 (통과 처리)."""
+        """Fallback output when verification could not run.
+
+        Fail-closed: report "low" (not "high") and set verification_error so the
+        failure is not disguised as a high-quality verdict, and is distinct from
+        a genuine low-quality verdict.
+        """
         return VerificationOutput(
             arxiv_id=arxiv_id,
             total_claims=0,
             verified_count=0,
             unverified_count=0,
             contradicted_count=0,
-            overall_reliability="high",  # 검증 실패 시 통과 처리
+            overall_reliability="low",  # verification failed: do not pass as high
             results=[],
-            summary=f"검증 실패로 인한 자동 통과: {error}",
+            summary=f"검증 실패 (자동 통과 아님): {error}",
             corrections_needed=[],
+            verification_error=True,
         )

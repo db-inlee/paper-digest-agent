@@ -352,6 +352,12 @@ def should_retry_or_proceed(state: DeepState) -> str:
     if verification.overall_reliability == "high":
         return "report"
 
+    # Verification could not run (infra/LLM error): correction would just hit
+    # the same error and waste tokens. Skip to report; the verification_error
+    # flag remains in the data to track that verification did not run.
+    if getattr(verification, "verification_error", False):
+        return "report"
+
     # 재시도 가능 → 교정
     if retry_count < max_retries:
         return "correction"
