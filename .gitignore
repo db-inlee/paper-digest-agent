@@ -52,6 +52,9 @@ reports/votes.json
 reports/comments.json
 reports/topics.json
 
+# Corpus vector store (LanceDB binaries - never commit)
+reports/.corpus/
+
 # notifier (Slack/Web)
 notifier/web/node_modules/
 notifier/web/.svelte-kit/
