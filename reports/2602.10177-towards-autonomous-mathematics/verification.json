@@ -1,48 +1,58 @@
 {
   "arxiv_id": "2602.10177",
-  "total_claims": 4,
-  "verified_count": 3,
+  "total_claims": 5,
+  "verified_count": 4,
   "unverified_count": 1,
   "contradicted_count": 0,
   "overall_reliability": "high",
   "results": [
     {
-      "claim_id": "claim_1",
-      "claim_text": "Aletheia는 자연어로 수학적 솔루션을 생성, 검증, 수정할 수 있는 에이전트입니다.",
+      "claim_id": "C1",
+      "claim_text": "Aletheia는 자연어로 솔루션을 생성, 검증, 수정하는 수학 연구 에이전트이다.",
       "status": "verified",
       "confidence": 1.0,
-      "evidence_found": "Aletheia는 자연어로 솔루션을 생성하고 검증하며 수정하는 기능을 갖춘 수학 연구 에이전트로 설명됩니다.",
-      "notes": "논문 1페이지에서 Aletheia의 기능이 명확히 설명됨.",
+      "evidence_found": "논문 본문에서 Aletheia의 기능에 대한 설명이 있음.",
+      "notes": "Aletheia의 기능이 명확히 설명됨.",
       "correction_hint": null
     },
     {
-      "claim_id": "claim_2",
-      "claim_text": "Aletheia는 IMO-ProofBench Advanced에서 95.1%의 정확도를 달성했습니다.",
+      "claim_id": "C2",
+      "claim_text": "Aletheia는 FirstProof에서 10개의 문제 중 6개를 정확하게 해결했다.",
       "status": "verified",
       "confidence": 1.0,
-      "evidence_found": "Aletheia는 IMO-ProofBench Advanced에서 95.1%의 정확도를 달성했다고 명시되어 있습니다.",
-      "notes": "논문 2페이지에서 Aletheia의 성능이 언급됨.",
+      "evidence_found": "논문에서 Aletheia의 FirstProof 성과에 대한 구체적인 언급이 있음.",
+      "notes": "Aletheia의 성과가 명확히 기술됨.",
       "correction_hint": null
     },
     {
-      "claim_id": "claim_3",
-      "claim_text": "Aletheia는 연구 수준의 수학 문제 해결에 있어 기존 모델보다 우수한 성능을 보입니다.",
+      "claim_id": "C3",
+      "claim_text": "Aletheia는 연구 수준의 수학 문제를 해결하기 위해 도구 사용을 통합한다.",
+      "status": "verified",
+      "confidence": 1.0,
+      "evidence_found": "논문 본문에서 Aletheia의 도구 사용에 대한 설명이 있음.",
+      "notes": "도구 사용의 중요성이 강조됨.",
+      "correction_hint": null
+    },
+    {
+      "claim_id": "C4",
+      "claim_text": "Aletheia는 IMO-ProofBench Advanced에서 93%의 점수를 기록했다.",
+      "status": "verified",
+      "confidence": 1.0,
+      "evidence_found": "논문에서 Aletheia의 IMO-ProofBench 성과에 대한 언급이 있음.",
+      "notes": "성능이 구체적으로 언급됨.",
+      "correction_hint": null
+    },
+    {
+      "claim_id": "C5",
+      "claim_text": "Aletheia는 연구 수준의 수학 문제를 해결하기 위해 자연어로 작동한다.",
       "status": "unverified",
       "confidence": 0.8,
       "evidence_found": null,
-      "notes": "기존 모델과의 직접적인 비교가 명시되어 있지 않음.",
-      "correction_hint": null
-    },
-    {
-      "claim_id": "claim_4",
-      "claim_text": "Aletheia는 수학 연구에서 자율적인 결과를 생성할 수 있는 중요한 이정표를 세웠습니다.",
-      "status": "verified",
-      "confidence": 1.0,
-      "evidence_found": "Aletheia가 자율적으로 수학적 결과를 생성할 수 있는 이정표를 세웠다고 논문에서 언급됨.",
-      "notes": "논문 3페이지에서 Aletheia의 성과가 설명됨.",
+      "notes": "자연어로 작동한다는 언급은 있으나, 구체적인 실험적 증거는 부족함.",
       "correction_hint": null
     }
   ],
-  "summary": "대부분의 클레임이 논문에서 확인되었으며, Aletheia의 성능과 기능에 대한 주장이 지지됩니다.",
-  "corrections_needed": []
+  "summary": "대부분의 클레임이 논문에서 지지되며, Aletheia의 기능과 성능에 대한 주장이 정확하게 반영됨.",
+  "corrections_needed": [],
+  "verification_error": false
 }

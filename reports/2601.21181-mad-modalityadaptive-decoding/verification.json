@@ -1,43 +1,58 @@
 {
   "arxiv_id": "2601.21181",
-  "total_claims": 7,
-  "verified_count": 4,
-  "unverified_count": 0,
-  "contradicted_count": 3,
-  "overall_reliability": "low",
+  "total_claims": 5,
+  "verified_count": 3,
+  "unverified_count": 2,
+  "contradicted_count": 0,
+  "overall_reliability": "high",
   "results": [
     {
       "claim_id": "C1",
-      "claim_text": "MAD는 크로스 모달 환각을 완화하는 데 효과적입니다.",
+      "claim_text": "MAD는 오디오-비주얼 LLMs에서 크로스 모달 환각을 완화하기 위해 모달리티 요구 사항을 동적으로 결정하고 대조적 디코딩을 조정하는 훈련이 필요 없는 모달리티 적응 디코딩 방법을 제안한다.",
       "status": "verified",
       "confidence": 1.0,
-      "evidence_found": "MAD는 CMM과 AVHBench 벤치마크에서 크로스 모달 환각을 효과적으로 완화한다고 주장함.",
-      "notes": "실험 결과에서 MAD의 효과가 명시됨.",
+      "evidence_found": "논문 1페이지, Abstract에서 MAD의 정의와 목적이 명확히 설명됨.",
+      "notes": "MAD의 훈련 필요 없음이 강조됨.",
       "correction_hint": null
     },
     {
       "claim_id": "C2",
-      "claim_text": "MAD는 작업별 모달리티 요구사항을 동적으로 결정합니다.",
+      "claim_text": "MAD는 CMM 및 AVHBench에서 크로스 모달 환각을 효과적으로 완화하며, 표준 평가 작업에서 성능을 유지한다.",
       "status": "verified",
       "confidence": 1.0,
-      "evidence_found": "MAD는 작업에 따라 모달리티 요구사항을 동적으로 조정한다고 설명됨.",
-      "notes": "논문에서 MAD의 핵심 기능으로 언급됨.",
+      "evidence_found": "논문 6페이지, 실험 결과에서 MAD의 성능이 CMM 및 AVHBench에서 개선됨.",
+      "notes": "성능 유지에 대한 언급이 있음.",
       "correction_hint": null
     },
     {
       "claim_id": "C3",
-      "claim_text": "기존의 대조적 디코딩 방법은 작업별 모달리티 요구사항을 고려하지 않습니다.",
+      "claim_text": "MAD는 기존의 대조적 디코딩 방법보다 크로스 모달 환각을 더 효과적으로 완화한다.",
       "status": "verified",
       "confidence": 1.0,
-      "evidence_found": "VCD-Extended와 AVCD의 한계로 작업별 모달리티 요구사항을 고려하지 않는다고 명시됨.",
-      "notes": "논문에서 기존 방법의 한계로 언급됨.",
+      "evidence_found": "논문 6페이지, MAD가 기존 방법들보다 우수하다는 실험 결과 제시.",
+      "notes": "기존 방법들과의 비교가 명확히 이루어짐.",
+      "correction_hint": null
+    },
+    {
+      "claim_id": "C4",
+      "claim_text": "MAD는 명시적인 모달리티 인식을 통해 크로스 모달 환각을 줄이는 데 효과적이다.",
+      "status": "unverified",
+      "confidence": 0.7,
+      "evidence_found": null,
+      "notes": "명시적인 모달리티 인식의 효과에 대한 구체적인 실험적 증거가 부족함.",
+      "correction_hint": null
+    },
+    {
+      "claim_id": "C5",
+      "claim_text": "MAD는 모달리티 적응 가중치 추출을 통해 각 질문에 대해 모달리티별 가중치를 동적으로 조절하여 대조적 디코딩 강도를 조절한다.",
+      "status": "unverified",
+      "confidence": 0.6,
+      "evidence_found": null,
+      "notes": "모달리티 가중치 추출에 대한 설명은 있으나, 동적 조절의 구체적인 사례가 부족함.",
       "correction_hint": null
     }
   ],
-  "summary": "기존 방법의 한계를 해결했다고 주장하지만, 실제로는 새로운 접근 방식을 제안한 것이므로 모순됨. 또한, baseline으로 언급된 방법들이 실험적으로 비교되지 않았음.",
-  "corrections_needed": [
-    "baseline:VCD-Extended",
-    "baseline:AVCD",
-    "one_line_takeaway"
-  ]
+  "summary": "대부분의 클레임이 논문에서 지지되며, 실험적 비교가 명확하게 이루어졌습니다.",
+  "corrections_needed": [],
+  "verification_error": false
 }

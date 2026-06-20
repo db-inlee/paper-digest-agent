@@ -1,16 +1,40 @@
 {
   "arxiv_id": "2602.08711",
-  "one_line_takeaway": "이 논문은 Omni Dense Captioning 작업을 위해 TimeChat-Captioner라는 새로운 접근법을 제안하여, 연속적이고 세밀한 구조의 오디오-비주얼 내러티브를 명시적인 타임스탬프와 함께 생성한다.",
+  "one_line_takeaway": "이 논문은 OmniDenseCaptioning이라는 새로운 작업을 통해 연속적이고 세밀한 오디오-비주얼 내러티브 생성을 위한 TimeChat-Captioner를 제안한다.",
   "core_deltas": [
     {
-      "axis": "캡셔닝 전략",
-      "old_approach": "상업적 시스템인 Gemini-2.5-Pro를 사용하여 시간 인식 캡셔닝 품질을 평가",
-      "new_approach": "TimeChat-Captioner를 사용하여 다중 장면 타임스탬프 예측과 각 세그먼트에 대한 세밀하고 구조화된 설명을 생성",
-      "why_better": "TimeChat-Captioner는 기존 상업적 시스템보다 더 나은 성능을 보이며, 명시적인 타임스탬프와 함께 세밀한 구조의 내러티브를 생성할 수 있다.",
+      "axis": "모델 구조",
+      "old_approach": "일반적인 기존 접근",
+      "new_approach": "Qwen2.5-Omni Backbone을 사용하여 다중 장면 타임스탬프와 6차원 캡션을 생성",
+      "why_better": "오디오와 비주얼 토큰을 시간적으로 교차 배열하여 동기화된 크로스 모달 이해를 가능하게 함",
       "evidence": {
         "page": null,
         "section": null,
-        "quote": "TimeChat-Captioner가 이 모델을 능가하는 성능을 보입니다.",
+        "quote": "Qwen2.5-Omni Backbone: 오디오-비주얼 인식을 위한 Thinker 모듈을 활용하여 다중 장면 타임스탬프와 6차원 캡션을 생성.",
+        "type": "quote"
+      }
+    },
+    {
+      "axis": "위치 인코딩",
+      "old_approach": "각 모달리티를 개별적으로 처리",
+      "new_approach": "Multimodal Rotary Position Embedding (M-RoPE)을 사용하여 절대적인 시간적 위치를 인코딩",
+      "why_better": "정확한 장면 경계 위치 지정과 연속적인 타임스탬프 예측을 촉진",
+      "evidence": {
+        "page": null,
+        "section": null,
+        "quote": "Multimodal Rotary Position Embedding (M-RoPE): 절대적인 시간적 위치를 인코딩하여 정확한 장면 경계 위치 지정과 연속적인 타임스탬프 예측을 촉진.",
+        "type": "quote"
+      }
+    },
+    {
+      "axis": "강화 학습",
+      "old_approach": "해당 영역에 특화된 강화 학습 방법 없음",
+      "new_approach": "Group Relative Policy Optimization (GRPO)을 사용하여 시간 인식 캡션 품질을 향상",
+      "why_better": "별도의 비평가 모델이 필요 없는 강화 학습 알고리즘을 사용하여 정책을 최적화",
+      "evidence": {
+        "page": null,
+        "section": null,
+        "quote": "Group Relative Policy Optimization (GRPO): 시간 인식 캡션 품질을 향상시키기 위해 강화 학습 알고리즘을 사용하여 정책을 최적화.",
         "type": "quote"
       }
     }
@@ -18,9 +42,9 @@
   "tradeoffs": [
     {
       "aspect": "복잡성",
-      "benefit": "세밀하고 구조화된 설명을 생성할 수 있음",
-      "cost": "모델의 복잡성이 증가할 수 있음",
-      "when_acceptable": "정확한 타임스탬프와 세밀한 설명이 중요한 경우",
+      "benefit": "정확한 시간 인식 캡션 생성",
+      "cost": "모델의 복잡성과 계산 비용 증가",
+      "when_acceptable": "정확한 시간 인식이 중요한 경우",
       "evidence": {
         "page": null,
         "section": null,
@@ -29,6 +53,7 @@
       }
     }
   ],
-  "when_to_use": "연속적이고 세밀한 오디오-비주얼 내러티브가 필요한 경우",
-  "when_not_to_use": "단순한 캡셔닝이 필요한 경우 또는 모델 복잡성을 줄여야 하는 경우"
+  "when_to_use": "연속적이고 세밀한 오디오-비주얼 내러티브 생성을 필요로 하는 경우",
+  "when_not_to_use": "단순한 이벤트 식별이나 간결한 요약이 필요한 경우",
+  "grounded_on": []
 }

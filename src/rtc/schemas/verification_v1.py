@@ -43,6 +43,13 @@ class VerificationOutput(BaseModel):
     corrections_needed: list[str] = Field(
         default_factory=list, description="교정 필요한 항목 목록"
     )
+    verification_error: bool = Field(
+        default=False,
+        description=(
+            "True if verification could not run (error), "
+            "distinct from a low-quality verdict"
+        ),
+    )
 
     @property
     def verification_rate(self) -> float:

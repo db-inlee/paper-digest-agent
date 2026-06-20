@@ -1,30 +1,58 @@
 {
   "arxiv_id": "2602.08711",
-  "total_claims": 2,
-  "verified_count": 2,
-  "unverified_count": 0,
+  "total_claims": 5,
+  "verified_count": 4,
+  "unverified_count": 1,
   "contradicted_count": 0,
   "overall_reliability": "high",
   "results": [
     {
-      "claim_id": "claim_1",
-      "claim_text": "TimeChat-Captioner는 OmniDCBench에서 SOTA 성능을 달성합니다.",
+      "claim_id": "C1",
+      "claim_text": "OmniDenseCaptioning이라는 새로운 작업을 제안하여, 연속적이고 세밀한 구조의 오디오-비주얼 내러티브를 명시적인 타임스탬프와 함께 생성하는 문제를 해결하고자 한다.",
       "status": "verified",
       "confidence": 1.0,
-      "evidence_found": "논문 5.2절에서 TimeChat-Captioner가 OmniDCBench에서 SOTA 성능을 달성했다고 명시되어 있습니다.",
-      "notes": "TimeChat-Captioner는 OmniDCBench에서 높은 성능을 기록했습니다.",
+      "evidence_found": "논문 본문 1페이지, Abstract 및 Introduction에서 Omni Dense Captioning 작업의 정의와 목적이 명시됨.",
+      "notes": "",
       "correction_hint": null
     },
     {
-      "claim_id": "claim_2",
-      "claim_text": "TimeChat-Captioner는 Gemini-2.5-Pro를 능가하는 성능을 보입니다.",
+      "claim_id": "C2",
+      "claim_text": "TimeChat-Captioner는 OmniDCBench에서 State-of-the-Art 성능을 달성하며, Gemini-2.5-Pro를 능가한다.",
       "status": "verified",
       "confidence": 1.0,
-      "evidence_found": "논문 5.2절에서 TimeChat-Captioner가 Gemini-2.5-Pro를 능가하는 성능을 보인다고 언급되어 있습니다.",
-      "notes": "TimeChat-Captioner는 Gemini-2.5-Pro보다 우수한 성능을 보여주었습니다.",
+      "evidence_found": "논문 본문 5페이지, Table 1에서 TimeChat-Captioner의 성능이 Gemini-2.5-Pro를 초과함을 보여줌.",
+      "notes": "",
+      "correction_hint": null
+    },
+    {
+      "claim_id": "C3",
+      "claim_text": "TimeChat-Captioner는 Daily-Omni와 World-Sense 벤치마크에서 모든 오픈 소스 베이스라인을 능가한다.",
+      "status": "verified",
+      "confidence": 1.0,
+      "evidence_found": "논문 본문 5페이지, Table 2에서 TimeChat-Captioner의 성능이 모든 오픈 소스 모델을 초과함을 보여줌.",
+      "notes": "",
+      "correction_hint": null
+    },
+    {
+      "claim_id": "C4",
+      "claim_text": "TimeChat-Captioner는 강화 학습을 통해 정확한 장면 분할과 세밀한 캡셔닝을 개선한다.",
+      "status": "verified",
+      "confidence": 1.0,
+      "evidence_found": "논문 본문 5페이지, 4.3.2절에서 GRPO를 통한 강화 학습의 효과가 설명됨.",
+      "notes": "",
+      "correction_hint": null
+    },
+    {
+      "claim_id": "C5",
+      "claim_text": "OmniDenseCaptioning 작업은 기존의 밀집 비디오 캡셔닝 작업과 달리 모든 중요한 장면을 포괄하는 연속적이고 세밀한 멀티-씬 내러티브를 생성한다.",
+      "status": "unverified",
+      "confidence": 0.8,
+      "evidence_found": null,
+      "notes": "기존 밀집 비디오 캡셔닝 작업과의 비교가 명확히 언급되지 않음.",
       "correction_hint": null
     }
   ],
-  "summary": "모든 클레임이 논문에서 지지되며, TimeChat-Captioner는 OmniDCBench에서 SOTA 성능을 달성하고 Gemini-2.5-Pro를 능가하는 성능을 보입니다.",
-  "corrections_needed": []
+  "summary": "대부분의 클레임이 논문에서 지지되며, 특히 TimeChat-Captioner의 성능과 OmniDenseCaptioning 작업의 정의가 명확하게 설명됨.",
+  "corrections_needed": [],
+  "verification_error": false
 }

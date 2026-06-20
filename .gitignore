@@ -55,6 +55,13 @@ reports/topics.json
 # Corpus vector store (LanceDB binaries - never commit)
 reports/.corpus/
 
+# Re-extraction working artifacts (never commit)
+reports/.reextract/
+reports/.reextract_backup/
+
+# Obsidian vault export (work artifact, never commit)
+vault/
+
 # notifier (Slack/Web)
 notifier/web/node_modules/
 notifier/web/.svelte-kit/

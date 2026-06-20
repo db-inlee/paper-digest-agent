@@ -2,9 +2,9 @@
   "arxiv_id": "2602.07055",
   "title": "Theory of Space: Can Foundation Models Construct Spatial Beliefs through Active Exploration?",
   "problem_definition": {
-    "statement": "이 논문은 부분 관찰 환경에서 에이전트가 능동적으로 정보를 수집하여 공간적 신념을 구축하고 수정하며 활용할 수 있는지 평가하는 문제를 다룹니다.",
+    "statement": "공간적 구현 지능은 부분 관찰 가능성 하에서 작동하며, 에이전트는 누락된 정보를 획득하기 위해 행동해야 한다. 이러한 설정에서 진전은 불확실성을 줄이고 공간적 이해를 구축하는 데 도움이 되는 정보성 있는 행동을 적극적으로 선택하는 데 달려 있다.",
     "baseline_methods": [],
-    "structural_limitation": "기존의 멀티모달 파운데이션 모델들은 수동적인 멀티모달 인식 및 추론 작업에서 강력한 성능을 보였으나, 부분 관찰 환경에서 능동적으로 탐색할 수 있는 능력은 체계적으로 연구되지 않았습니다.",
+    "structural_limitation": "기존의 멀티모달 기반 모델들은 수동적인 멀티모달 인식 및 추론 작업에서 강력한 성능을 보였으나, 부분 관찰 가능성 하에서 능동적이고 자기 주도적인 탐색을 지원할 수 있는 능력은 체계적으로 연구되지 않았다.",
     "evidence": [
       {
         "page": 1,
@@ -18,87 +18,159 @@
   "method_components": [
     {
       "name": "Spatial Belief Probing",
-      "description": "에이전트의 내부 공간 신념을 인지 지도(cognitive map)로 드러내어 그 품질을 측정합니다.",
+      "description": "에이전트의 내부 공간적 믿음을 인지 지도(cognitive map)로 드러내어 각 단계에서 그 기저 공간 모델의 품질을 측정할 수 있게 한다.",
       "inputs": [
-        "부분 관찰 환경에서의 에이전트의 행동 및 관찰 기록"
+        "에이전트의 행동",
+        "관찰"
       ],
       "outputs": [
-        "인지 지도(cognitive map)"
+        "인지 지도"
       ],
-      "implementation_hint": null,
+      "implementation_hint": "인지 지도는 공간의 숨겨진 구조의 표준 표현으로 사용된다.",
+      "role": "novel",
       "evidence": [
         {
-          "page": 1,
+          "page": 2,
           "section": "ABSTRACT",
           "quote": "A core innovation is spatial belief probing: we prompt it to reveal its internal spatial belief as a cognitive map at each step, letting us measure the quality of its underlying spatial model.",
           "type": "quote"
         }
       ]
+    },
+    {
+      "name": "False Belief Paradigm",
+      "description": "환경을 변경하여 에이전트가 이전의 공간적 믿음을 수정할 수 있는지 테스트한다.",
+      "inputs": [
+        "환경 변화 후의 관찰"
+      ],
+      "outputs": [
+        "수정된 공간적 믿음"
+      ],
+      "implementation_hint": "객체의 위치나 방향을 변경하여 에이전트가 이를 탐지하고 수정할 수 있는지 평가한다.",
+      "role": "novel",
+      "evidence": [
+        {
+          "page": 3,
+          "section": "ABSTRACT",
+          "quote": "Finally, using a false belief paradigm to test belief revision, we uncover Belief Inertia where agents fail to overwrite obsolete priors.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "name": "Task-Agonistic Active Exploration",
+      "description": "에이전트가 스스로 행동을 선택하여 공간적 믿음을 구축하는 능력을 평가한다.",
+      "inputs": [
+        "부분 관찰 가능한 환경"
+      ],
+      "outputs": [
+        "내부 공간적 모델"
+      ],
+      "implementation_hint": "에이전트는 이동, 회전, 관찰, 종료 등의 행동을 스스로 선택해야 한다.",
+      "role": "novel",
+      "evidence": [
+        {
+          "page": 4,
+          "section": "2.1 A PARADIGM FOR ASSESSING THEORY OF SPACE OF LARGE FOUNDATION MODELS",
+          "quote": "Evaluating THEORY OF SPACE requires a shift from downstream tasks to exploration, i.e., how an agent explores and decides 'what to see next'.",
+          "type": "quote"
+        }
+      ]
     }
   ],
-  "benchmark": {
-    "dataset": "ThreeDWorld, Objaverse",
-    "metrics": [
-      "Exploration Efficiency",
-      "Belief Quality",
-      "Task Success"
-    ],
-    "baseline_results": {
-      "GPT-5.2": "57.1 (passive) → 46.0 (active)",
-      "GEMINI-3 PRO": "60.5 (passive) → 57.3 (active)"
-    },
-    "proposed_results": {
-      "GEMINI-3 PRO": "81.5 (text-based active)",
-      "GPT-5.2": "72.0 (text-based active)"
-    },
-    "evidence": [
-      {
-        "page": 8,
-        "section": "Active Exploration Results",
-        "quote": "Table 2 presents the active performance of the models, providing a holistic view of their ability to translate curiosity into knowledge.",
-        "type": "quote"
-      }
-    ]
-  },
+  "benchmarks": [
+    {
+      "dataset": "ThreeDWorld, Objaverse",
+      "metrics": [
+        "Exploration Efficiency",
+        "Belief Exploitation Success"
+      ],
+      "baseline_results": {
+        "GPT-5.2": "57.1",
+        "GEMINI-3 PRO": "60.5"
+      },
+      "proposed_results": {
+        "GPT-5.2": "46.0",
+        "GEMINI-3 PRO": "57.3"
+      },
+      "evidence": [
+        {
+          "page": 8,
+          "section": "EVALUATION AND ANALYSIS",
+          "quote": "Active exploration remains a primary bottleneck. Models perform reasonablely well in passive setting, but degrade when they must actively gather information (e.g., GPT-5.2: 57.1 →46.0; GEMINI-3 PRO: 60.5 →57.3; Figure. 2).",
+          "type": "quote"
+        }
+      ]
+    }
+  ],
+  "benchmark": null,
   "claims": [
     {
-      "claim_id": "claim_1",
-      "text": "THEORY OF SPACE는 에이전트가 능동적으로 정보를 수집하여 공간적 신념을 구축하고 수정하며 활용할 수 있는지를 평가하는 프레임워크입니다.",
+      "claim_id": "C1",
+      "text": "THEORY OF SPACE는 에이전트가 능동적으로 정보를 획득하고 내부 공간적 믿음을 구축, 수정, 활용할 수 있는 능력을 평가한다.",
       "claim_type": "method",
       "confidence": 1.0,
       "evidence": [
         {
           "page": 2,
-          "section": "THEORY OF SPACE",
+          "section": "INTRODUCTION",
           "quote": "We propose THEORY OF SPACE as a framework that explicitly treats exploration as a first-class decision-making problem, decoupled from any single downstream task, focusing on opening the box of the agent’s internal spatial belief.",
           "type": "quote"
         }
       ]
     },
     {
-      "claim_id": "claim_2",
-      "text": "능동적 탐색은 주요 병목 현상으로, 모델들은 수동적 환경에서는 잘 수행하지만 능동적으로 정보를 수집해야 할 때 성능이 저하됩니다.",
+      "claim_id": "C2",
+      "text": "능동적 탐색은 주요 병목 현상으로, 모델의 성능은 수동적 설정에서 합리적이지만 능동적으로 정보를 수집해야 할 때 저하된다.",
       "claim_type": "result",
       "confidence": 1.0,
       "evidence": [
         {
-          "page": 2,
-          "section": "INTRODUCTION",
+          "page": 8,
+          "section": "EVALUATION AND ANALYSIS",
           "quote": "Active exploration remains a primary bottleneck. Models perform reasonablely well in passive setting, but degrade when they must actively gather information.",
           "type": "quote"
         }
       ]
     },
     {
-      "claim_id": "claim_3",
-      "text": "비전 기반 모델에서 신념 관성(Belief Inertia) 현상이 두드러지며, 에이전트가 이전의 잘못된 선입견을 덮어쓰지 못하는 문제가 있습니다.",
+      "claim_id": "C3",
+      "text": "비전 기반 모델은 특히 객체의 방향을 추론하는 데 어려움을 겪으며, 이는 공간적 추론의 중요한 병목 현상이다.",
       "claim_type": "limitation",
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "page": 11,
+          "section": "COGNITIVE MAP PROBING",
+          "quote": "Perception remains a key limitation for state-of-the-art models in visual world settings. In particular, recognizing an object’s facing direction is especially challenging.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "claim_id": "C4",
+      "text": "THEORY OF SPACE는 에이전트의 내부 공간적 믿음을 인지 지도 형태로 외부화하여 평가한다.",
+      "claim_type": "architecture",
       "confidence": 1.0,
       "evidence": [
         {
           "page": 2,
           "section": "INTRODUCTION",
-          "quote": "Despite directly observing the new configuration, models persist in their initial, now incorrect coordinates. This reveals a critical failure in spatial memory revision, where foundational models lack the plasticity to revise their internal cognitive maps in response to physical changes.",
+          "quote": "We require the agent to explicitly represent its spatial belief by probing its cognitive map at any point of exploration.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "claim_id": "C5",
+      "text": "THEORY OF SPACE는 에이전트가 불확실성을 줄이기 위해 능동적으로 탐색할 수 있는지를 평가한다.",
+      "claim_type": "efficiency",
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "page": 4,
+          "section": "2.1 A PARADIGM FOR ASSESSING THEORY OF SPACE OF LARGE FOUNDATION MODELS",
+          "quote": "Success requires balancing two goals: maximizing coverage of unknown relations while minimizing action cost.",
           "type": "quote"
         }
       ]
