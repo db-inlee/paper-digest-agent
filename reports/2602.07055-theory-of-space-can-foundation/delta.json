@@ -1,21 +1,46 @@
 {
   "arxiv_id": "2602.07055",
-  "one_line_takeaway": "이 논문은 부분 관찰 환경에서 에이전트가 공간적 신념을 구축하고 수정할 수 있는지 평가하는 문제에 대해 Spatial Belief Probing 접근법을 제안한다.",
+  "one_line_takeaway": "이 논문은 공간적 구현 지능 문제에 대해 에이전트의 능동적 탐사를 통한 공간적 믿음 구축을 제안한다.",
   "core_deltas": [
     {
-      "axis": "신념 구축 방법",
-      "old_approach": "해당 영역에 특화된 방법 없음",
-      "new_approach": "에이전트의 내부 공간 신념을 인지 지도(cognitive map)로 드러내어 그 품질을 측정하는 Spatial Belief Probing",
-      "why_better": "에이전트가 능동적으로 정보를 수집하여 공간적 신념을 구축하고 수정할 수 있는지를 평가할 수 있는 새로운 방법을 제공함",
+      "axis": "인지 지도 생성",
+      "old_approach": "해당 영역에 특화된 해결책 없음",
+      "new_approach": "에이전트의 내부 공간적 믿음을 인지 지도(cognitive map)로 드러내어 각 단계에서 그 기저 공간 모델의 품질을 측정",
+      "why_better": "에이전트의 공간적 이해를 명시적으로 평가할 수 있어, 공간적 믿음의 품질을 개선하는 데 도움을 줄 수 있음",
       "evidence": {
         "page": null,
         "section": null,
-        "quote": "Spatial Belief Probing: 에이전트의 내부 공간 신념을 인지 지도(cognitive map)로 드러내어 그 품질을 측정합니다.",
+        "quote": "Spatial Belief Probing: 에이전트의 내부 공간적 믿음을 인지 지도(cognitive map)로 드러내어 각 단계에서 그 기저 공간 모델의 품질을 측정할 수 있게 한다.",
+        "type": "quote"
+      }
+    },
+    {
+      "axis": "거짓 믿음 패러다임",
+      "old_approach": "해당 영역에 특화된 해결책 없음",
+      "new_approach": "환경을 변경하여 에이전트가 이전의 공간적 믿음을 수정할 수 있는지 테스트",
+      "why_better": "에이전트가 환경 변화에 적응하고 공간적 믿음을 수정하는 능력을 평가할 수 있어, 더 유연한 공간적 이해를 지원",
+      "evidence": {
+        "page": null,
+        "section": null,
+        "quote": "False Belief Paradigm: 환경을 변경하여 에이전트가 이전의 공간적 믿음을 수정할 수 있는지 테스트한다.",
+        "type": "quote"
+      }
+    },
+    {
+      "axis": "능동적 탐사",
+      "old_approach": "해당 영역에 특화된 해결책 없음",
+      "new_approach": "에이전트가 스스로 행동을 선택하여 공간적 믿음을 구축하는 능력을 평가",
+      "why_better": "에이전트가 자율적으로 탐사하여 더 나은 공간적 모델을 구축할 수 있도록 지원",
+      "evidence": {
+        "page": null,
+        "section": null,
+        "quote": "Task-Agonistic Active Exploration: 에이전트가 스스로 행동을 선택하여 공간적 믿음을 구축하는 능력을 평가한다.",
         "type": "quote"
       }
     }
   ],
   "tradeoffs": [],
-  "when_to_use": "부분 관찰 환경에서 에이전트의 공간적 신념 구축 능력을 평가하고자 할 때",
-  "when_not_to_use": "명확한 베이스라인과의 성능 비교가 필요한 경우"
+  "when_to_use": "에이전트가 부분 관찰 가능한 환경에서 공간적 이해를 구축해야 할 때",
+  "when_not_to_use": "에이전트가 이미 완전한 환경 정보를 가지고 있는 경우",
+  "grounded_on": []
 }

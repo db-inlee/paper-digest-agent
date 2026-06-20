@@ -2,23 +2,20 @@
   "arxiv_id": "2601.21181",
   "title": "MAD: Modality-Adaptive Decoding for Mitigating Cross-Modal Hallucinations in Multimodal Large Language Models",
   "problem_definition": {
-    "statement": "크로스 모달 환각(cross-modal hallucinations)을 해결하기 위한 문제를 다룹니다. 이는 한 모달리티가 다른 모달리티의 콘텐츠 생성에 부적절하게 영향을 미치는 문제입니다.",
-    "baseline_methods": [
-      "Contrastive Decoding",
-      "Audio-Visual Contrastive Decoding (AVCD)"
-    ],
-    "structural_limitation": "기존의 멀티모달 CD 방법은 단일 모달리티 시나리오에 맞춰 설계되어, 시각적 손상에서 주로 발생하는 환각을 가정합니다. AVCD는 여러 모달리티에 대해 대조적 디코딩을 확장하지만, 주어진 작업에 실제로 관련된 모달리티를 고려하지 않고 모든 모달리티에 균일한 왜곡을 적용합니다.",
+    "statement": "멀티모달 대형 언어 모델(MLLMs)에서 발생하는 크로스 모달 환각(cross-modal hallucinations)을 해결하기 위한 문제를 다루고 있다. 이는 한 모달리티가 다른 모달리티에 부적절하게 영향을 미쳐 잘못된 출력을 생성하는 문제이다.",
+    "baseline_methods": [],
+    "structural_limitation": "기존의 멀티모달 CD 방법은 단일 모달리티 시나리오를 위해 설계되어, 주로 시각적 손상에서 발생하는 환각에 초점을 맞추고 있다. 그러나 이러한 방법은 모든 모달리티에 대해 균일한 왜곡을 적용하여 주어진 작업에 실제로 관련된 모달리티를 고려하지 않는다.",
     "evidence": [
       {
-        "page": null,
+        "page": 1,
         "section": "Introduction",
-        "quote": "cross-modal hallucinations reveal a deeper failure of modality separation-where information inappropriately influences and corrupts the understanding of another.",
+        "quote": "Multimodal Large Language Models (MLLMs) suffer from cross-modal hallucinations, where one modality inappropriately influences generation about another, leading to fabricated output.",
         "type": "quote"
       },
       {
-        "page": null,
+        "page": 2,
         "section": "Introduction",
-        "quote": "This uniform, non-adaptive approach is insufficient for tackling cross-modal interference.",
+        "quote": "Existing multimodal CD methods, designed for single-modality scenarios, assume hallucinations primarily stem from visual corruption.",
         "type": "quote"
       }
     ]
@@ -26,26 +23,26 @@
   "baselines": [
     {
       "name": "VCD-Extended",
-      "description": "Visual Contrastive Decoding의 원리를 멀티모달 설정에 적용하여 모든 가능한 모달리티 왜곡에 대해 대조합니다.",
-      "limitation": "모든 모달리티에 균일한 왜곡을 적용하여 작업별 모달리티 요구사항을 고려하지 않습니다.",
+      "description": "Visual Contrastive Decoding(VCD)을 멀티모달 설정으로 확장하여 모든 가능한 모달리티 왜곡에 대해 대조하는 방법.",
+      "limitation": "모든 모달리티에 대해 균일한 왜곡을 적용하여 주어진 작업에 실제로 관련된 모달리티를 고려하지 않는다.",
       "evidence": [
         {
-          "page": null,
-          "section": "Baselines",
-          "quote": "VCD-Extended applies the Visual Contrastive Decoding principle to the multimodal setting by contrasting against all possible modality distortions.",
+          "page": 6,
+          "section": "4.1.3. Baselines",
+          "quote": "VCD-Extended applies the Visual Contrastive Decoding [24] principle to the multimodal setting by contrasting against all possible modality distortions.",
           "type": "quote"
         }
       ]
     },
     {
       "name": "AVCD",
-      "description": "오디오-비주얼 설정으로 대조적 디코딩을 확장하지만, 쿼리별 적응 없이 균일한 왜곡을 적용합니다.",
-      "limitation": "쿼리별 적응 없이 균일한 왜곡을 적용하여 작업별 모달리티 요구사항을 고려하지 않습니다.",
+      "description": "오디오-비주얼 설정으로 대조적 디코딩을 확장하여 주의(attention)를 통해 덜 지배적인 모달리티를 식별하고 선택적으로 방해하는 방법.",
+      "limitation": "질문별 적응 없이 균일한 왜곡을 적용한다.",
       "evidence": [
         {
-          "page": null,
-          "section": "Baselines",
-          "quote": "AVCD extends contrastive decoding to audio-visual settings but applies uniform distortion without query-specific adaptation.",
+          "page": 6,
+          "section": "4.1.3. Baselines",
+          "quote": "AVCD [30] extends contrastive decoding to audio-visual settings but applies uniform distortion without query-specific adaptation.",
           "type": "quote"
         }
       ]
@@ -53,90 +50,203 @@
   ],
   "method_components": [
     {
-      "name": "Modality-Adaptive Decoding (MAD)",
-      "description": "작업별 모달리티 요구사항을 동적으로 결정하고 대조적 디코딩을 조정하여 크로스 모달 환각을 완화하는 방법입니다.",
+      "name": "Modality-Adaptive Weight Extraction",
+      "description": "모델이 주어진 작업에 대해 가장 관련 있는 모달리티를 스스로 결정하도록 하여 모달리티별 가중치를 추정하는 메커니즘.",
       "inputs": [
-        "비디오 시퀀스",
-        "오디오 웨이브폼",
-        "텍스트 질문"
+        "Xv",
+        "Xa",
+        "Xq",
+        "Xm"
       ],
       "outputs": [
-        "디코딩된 출력 시퀀스"
+        "wav",
+        "wv",
+        "wa"
       ],
-      "implementation_hint": null,
+      "implementation_hint": "모델의 예측을 통해 모달리티별 가중치를 추출하고, 이를 통해 각 모달리티 분기의 대조적 디코딩 강도를 적응적으로 조절한다.",
+      "role": "novel",
       "evidence": [
         {
-          "page": null,
-          "section": "Method",
-          "quote": "MAD is the first approach to explicitly determine the modality requirements of each task and dynamically adapt the contrastive decoding strategy to mitigate cross-modal hallucinations.",
+          "page": 4,
+          "section": "3.2.2. Modality-Adaptive Weight Extraction",
+          "quote": "A key idea of MAD is to let the multimodal model itself determine which modalities are most relevant to a given task.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "name": "Weighted Contrastive Decoding",
+      "description": "모달리티별로 대조적 신호를 측정하여 각 모달리티의 기여도를 평가하고, 작업에 따라 가중치를 조절하여 대조적 디코딩을 수행하는 방법.",
+      "inputs": [
+        "Xm",
+        "Xq",
+        "y<t"
+      ],
+      "outputs": [
+        "logit(m)_WCD(yt)"
+      ],
+      "implementation_hint": "각 모달리티의 중요성에 비례하여 대조적 강도를 조절하는 모달리티 적응 가중치 스킴을 도입한다.",
+      "role": "novel",
+      "evidence": [
+        {
+          "page": 4,
+          "section": "3.2.1. Weighted Contrastive Decoding",
+          "quote": "The contrastive strength αm should be proportional to the importance of modality m for the given task.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "name": "Modality-Adaptive Generation",
+      "description": "오디오-비디오 멀티모달 입력에 대해 가중 대조적 공식화를 기반으로 전체 생성 프로세스를 수행하는 방법.",
+      "inputs": [
+        "Xm1",
+        "Xm2",
+        "Xq",
+        "y<t"
+      ],
+      "outputs": [
+        "logitMAD(yt)"
+      ],
+      "implementation_hint": "모달리티 구성에 따라 로짓 항목을 정의하고, 각 모달리티의 중요성에 따라 대조적 강도를 적응적으로 조절한다.",
+      "role": "novel",
+      "evidence": [
+        {
+          "page": 5,
+          "section": "3.2.3. Modality-Adaptive Generation",
+          "quote": "By adaptively scaling the contrastive strength for each modality according to question-specific importance, MAD more precisely suppresses hallucinations.",
           "type": "quote"
         }
       ]
     }
   ],
-  "benchmark": {
-    "dataset": "CMM, AVHBench",
-    "metrics": [
-      "accuracy"
-    ],
-    "baseline_results": {
-      "VideoLLaMA2-AV + VCD Extended": "76.4%",
-      "VideoLLaMA2-AV + AVCD": "75.8%",
-      "Qwen2.5-Omni-7B + VCD Extended": "72.8%",
-      "Qwen2.5-Omni-7B + AVCD": "73.3%"
+  "benchmarks": [
+    {
+      "dataset": "AVHBench",
+      "metrics": [
+        "Overall Accuracy",
+        "Video-Driven Audio Hallucination",
+        "Audio-Driven Video Hallucination"
+      ],
+      "baseline_results": {
+        "VideoLLaMA2-AV": "75.7",
+        "VideoLLaMA2-AV + VCDExtended": "66.0",
+        "VideoLLaMA2-AV + AVCD": "78.3",
+        "Qwen2.5-Omni-7B": "73.0",
+        "Qwen2.5-Omni-7B + VCDExtended": "70.3",
+        "Qwen2.5-Omni-7B + AVCD": "75.8"
+      },
+      "proposed_results": {
+        "VideoLLaMA2-AV + MAD": "79.7",
+        "Qwen2.5-Omni-7B + MAD": "78.7"
+      },
+      "evidence": [
+        {
+          "page": 6,
+          "section": "4.2. Main Results",
+          "quote": "MAD also delivers substantial improvements on AVHBench.",
+          "type": "quote"
+        }
+      ]
     },
-    "proposed_results": {
-      "VideoLLaMA2-AV + MAD": "81.3%",
-      "Qwen2.5-Omni-7B + MAD": "81.4%"
-    },
-    "evidence": [
-      {
-        "page": null,
-        "section": "Main Results",
-        "quote": "MAD consistently outperforms existing decoding methods, demonstrating its effectiveness in mitigating cross-modal hallucinations.",
-        "type": "quote"
-      }
-    ]
-  },
+    {
+      "dataset": "CMM",
+      "metrics": [
+        "Visual Dominance",
+        "Audio Dominance",
+        "Language Dominance",
+        "Overall Accuracy"
+      ],
+      "baseline_results": {
+        "VideoLLaMA2-AV": "71.8",
+        "VideoLLaMA2-AV + VCDExtended": "71.3",
+        "VideoLLaMA2-AV + AVCD": "71.8",
+        "Qwen2.5-Omni-7B": "64.5",
+        "Qwen2.5-Omni-7B + VCDExtended": "62.5",
+        "Qwen2.5-Omni-7B + AVCD": "66.3"
+      },
+      "proposed_results": {
+        "VideoLLaMA2-AV + MAD": "82.3",
+        "Qwen2.5-Omni-7B + MAD": "76.8"
+      },
+      "evidence": [
+        {
+          "page": 6,
+          "section": "4.2. Main Results",
+          "quote": "MAD achieves clear gains across all three dominance categories.",
+          "type": "quote"
+        }
+      ]
+    }
+  ],
+  "benchmark": null,
   "claims": [
     {
       "claim_id": "C1",
-      "text": "MAD는 크로스 모달 환각을 완화하는 데 효과적입니다.",
-      "claim_type": "result",
+      "text": "MAD는 오디오-비주얼 LLMs에서 크로스 모달 환각을 완화하기 위해 모달리티 요구 사항을 동적으로 결정하고 대조적 디코딩을 조정하는 훈련이 필요 없는 모달리티 적응 디코딩 방법을 제안한다.",
+      "claim_type": "method",
       "confidence": 1.0,
       "evidence": [
         {
-          "page": null,
-          "section": "Main Results",
-          "quote": "MAD consistently outperforms existing decoding methods, demonstrating its effectiveness in mitigating cross-modal hallucinations.",
+          "page": 2,
+          "section": "Introduction",
+          "quote": "We propose a training-free, modality-adaptive decoding method that dynamically determines modality requirements for each task and adjusts contrastive decoding accordingly to mitigate cross-modal hallucinations in audio-visual LLMs.",
           "type": "quote"
         }
       ]
     },
     {
       "claim_id": "C2",
-      "text": "MAD는 작업별 모달리티 요구사항을 동적으로 결정합니다.",
-      "claim_type": "method",
+      "text": "MAD는 CMM 및 AVHBench에서 크로스 모달 환각을 효과적으로 완화하며, 표준 평가 작업에서 성능을 유지한다.",
+      "claim_type": "result",
       "confidence": 1.0,
       "evidence": [
         {
-          "page": null,
-          "section": "Method",
-          "quote": "MAD is the first approach to explicitly determine the modality requirements of each task and dynamically adapt the contrastive decoding strategy to mitigate cross-modal hallucinations.",
+          "page": 2,
+          "section": "Abstract",
+          "quote": "Extensive experiments on CMM and AVHBench demonstrate that MAD significantly reduces cross-modal hallucinations across multiple audio-visual language models.",
           "type": "quote"
         }
       ]
     },
     {
       "claim_id": "C3",
-      "text": "기존의 대조적 디코딩 방법은 작업별 모달리티 요구사항을 고려하지 않습니다.",
-      "claim_type": "limitation",
+      "text": "MAD는 기존의 대조적 디코딩 방법보다 크로스 모달 환각을 더 효과적으로 완화한다.",
+      "claim_type": "comparison",
       "confidence": 1.0,
       "evidence": [
         {
-          "page": null,
-          "section": "Introduction",
-          "quote": "This uniform, non-adaptive approach is insufficient for tackling cross-modal interference.",
+          "page": 6,
+          "section": "4.2. Main Results",
+          "quote": "MAD consistently outperforms existing decoding methods, demonstrating its effectiveness in mitigating cross-modal hallucinations.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "claim_id": "C4",
+      "text": "MAD는 명시적인 모달리티 인식을 통해 크로스 모달 환각을 줄이는 데 효과적이다.",
+      "claim_type": "architecture",
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "page": 2,
+          "section": "Abstract",
+          "quote": "Our approach demonstrates that explicit modality awareness through self-assessment is crucial for robust multimodal reasoning.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "claim_id": "C5",
+      "text": "MAD는 모달리티 적응 가중치 추출을 통해 각 질문에 대해 모달리티별 가중치를 동적으로 조절하여 대조적 디코딩 강도를 조절한다.",
+      "claim_type": "method",
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "page": 4,
+          "section": "3.2.2. Modality-Adaptive Weight Extraction",
+          "quote": "To estimate the modality-specific weights wm in Eq. (5), we leverage the model’s inherent ability to self-assess modality relevance through the model prediction.",
           "type": "quote"
         }
       ]

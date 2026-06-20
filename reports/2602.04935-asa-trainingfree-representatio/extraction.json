@@ -1,45 +1,42 @@
 {
   "arxiv_id": "2602.04935",
-  "title": "ASA: Training-Free Representation Engineering for Tool-Calling Agents",
+  "title": "ASA: Backbone-Training-Free Representation Engineering for Tool-Calling Agents",
   "problem_definition": {
-    "statement": "도구 호출 에이전트를 위한 도메인 적응이 진화하는 인터페이스 하에서 취약한 문제를 해결하고자 합니다.",
-    "baseline_methods": [
-      "Prompt and schema engineering",
-      "Parameter-efficient fine-tuning"
-    ],
-    "structural_limitation": "기존 방법들은 분포 변화와 엄격한 파서 하에서 취약하며, 지속적인 파라미터 효율적 미세 조정은 신뢰성을 개선하지만 훈련, 유지보수 및 잠재적 망각의 비용이 듭니다.",
+    "statement": "도구 호출 에이전트에서 실행 가능한 스키마 준수를 보장하기 위한 문제를 해결하고자 한다. 특히, 도구 사용 증거가 경계 진입을 예측할 수 있지만 형식, 도구 이름, 인수 및 시퀀스 제약을 초과하여 실행 가능한 스키마 실현을 보장하지 못하는 문제를 다룬다.",
+    "baseline_methods": [],
+    "structural_limitation": "도구 사용 증거가 경계 진입을 예측할 수 있지만 형식, 도구 이름, 인수 및 시퀀스 제약을 초과하여 실행 가능한 스키마 실현을 보장하지 못한다.",
     "evidence": [
       {
         "page": null,
         "section": "Abstract",
-        "quote": "Prompt and schema engineering is easy to deploy but often fragile under distribution shift and strict parsers, while continual parameter-efficient fine-tuning improves reliability at the cost of training, maintenance, and potential forgetting.",
+        "quote": "tool-use evidence can predict boundary entry but does not guarantee executable schema realization across format, tool-name, argument, and sequence constraints.",
         "type": "quote"
       }
     ]
   },
   "baselines": [
     {
-      "name": "Prompt-only",
-      "description": "입력 측에서 프롬프트와 스키마 제약을 사용하여 도구 호출을 유도하는 방법",
-      "limitation": "문구나 컨텍스트 변화에 취약하여 높은 거짓 양성률을 초래할 수 있습니다.",
+      "name": "Probe&Preﬁll",
+      "description": "프리픽스 제어를 통해 경계 진입을 개선하는 방법.",
+      "limitation": "단순한 도구-정체성 증폭만으로는 ASA의 첫 호출/시퀀스 트레이드오프를 맞출 수 없다.",
       "evidence": [
         {
           "page": null,
-          "section": "4.2. Main Results on Two Models",
-          "quote": "On Qwen2.5-1.5B, prompt-only baselines either under-trigger (e.g., the system-free setting collapses tool calling) or trade higher recall for substantially more false alarms, underscoring the brittleness of prompt engineering under strict interfaces.",
+          "section": "6.2 Main Results",
+          "quote": "Probe&Preﬁll improves boundary entry through probe-triggered preﬁx control, and Tool-identity steering reduces missing-tool failures through ungated mean-difference steering, but neither matches ASA’s first-call/sequence trade-off.",
           "type": "quote"
         }
       ]
     },
     {
-      "name": "LoRA",
-      "description": "파라미터 효율적 미세 조정 방법으로, 도메인 적응을 위해 모델 파라미터를 조정",
-      "limitation": "훈련 및 배포 비용이 크고, 도메인과 인터페이스가 증가함에 따라 유지보수 부담이 증가합니다.",
+      "name": "Tool-identity steering",
+      "description": "도구-정체성 증폭을 통해 누락된 도구 실패를 줄이는 방법.",
+      "limitation": "단순한 도구-정체성 증폭만으로는 ASA의 첫 호출/시퀀스 트레이드오프를 맞출 수 없다.",
       "evidence": [
         {
           "page": null,
-          "section": "4.2. Main Results on Two Models",
-          "quote": "LoRA can attain strong triggering metrics by updating model weights, but incur non-trivial training/storage overhead and often amplify false triggers.",
+          "section": "6.2 Main Results",
+          "quote": "Probe&Preﬁll improves boundary entry through probe-triggered preﬁx control, and Tool-identity steering reduces missing-tool failures through ungated mean-difference steering, but neither matches ASA’s first-call/sequence trade-off.",
           "type": "quote"
         }
       ]
@@ -48,85 +45,210 @@
   "method_components": [
     {
       "name": "Activation Steering Adapter (ASA)",
-      "description": "훈련 없이 추론 시점에서 도구 호출을 제어하는 메커니즘",
+      "description": "백본 학습 없이 추론 시점에서 스키마 제약 도구 호출을 제어하는 컨트롤러. 공유 경계 방향을 사용하여 도구 모드 진입을 조정하고, 도메인-로컬 잔여 방향을 통해 스키마-특정 실현을 지원하며, 서명된 게이트를 통해 개입 여부를 결정한다.",
       "inputs": [
-        "중간 레이어 활성화"
+        "도구 사용 증거",
+        "도메인-로컬 잔여 방향"
       ],
       "outputs": [
-        "도구 호출 모드 전환"
+        "도구 모드 진입",
+        "스키마-특정 실현"
       ],
-      "implementation_hint": "단일 샷 중간 레이어 개입을 통해 도구 도메인을 타겟팅",
+      "implementation_hint": "백본을 동결한 상태에서 추론 시점에 공유 경계 방향과 도메인-로컬 잔여 방향을 사용하여 개입.",
+      "role": "novel",
       "evidence": [
         {
           "page": null,
-          "section": "Abstract",
-          "quote": "We propose Activation Steering Adapter (ASA), a training-free, inference-time controller that performs a single-shot mid-layer intervention and targets tool domains via a router-conditioned mixture of steering vectors with a probe-guided signed gate.",
+          "section": "5 Proposed Method",
+          "quote": "ASA addresses this gap with a backbone-training-free controller over a frozen model: a shared boundary direction calibrates tool-mode entry, domain-local residual directions support schema-specific realization, and a signed gate decides when to open, suppress, or abstain from intervention.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "name": "Shared Boundary Direction",
+      "description": "도구 모드 진입을 위한 공유 경계 방향을 추정하여 채팅 또는 비도구 행동에서 도구 모드로의 진입을 조정한다.",
+      "inputs": [
+        "최종 토큰 잔여 표현"
+      ],
+      "outputs": [
+        "도구 모드 진입"
+      ],
+      "implementation_hint": "도구 모드 진입을 위한 공유 변위 추정.",
+      "role": "novel",
+      "evidence": [
+        {
+          "page": null,
+          "section": "5.1 Boundary and domain-local directions",
+          "quote": "This direction approximates the shared displacement needed for boundary entry (entering tool mode) from chat or non-tool behavior.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "name": "Domain-local Residual Directions",
+      "description": "도메인-로컬 잔여 방향을 추정하여 스키마-특정 실현을 지원한다.",
+      "inputs": [
+        "도메인-로컬 잔여 방향"
+      ],
+      "outputs": [
+        "스키마-특정 실현"
+      ],
+      "implementation_hint": "공유 경계 구성 요소를 제거하고 잔여를 유지.",
+      "role": "novel",
+      "evidence": [
+        {
+          "page": null,
+          "section": "5.1 Boundary and domain-local directions",
+          "quote": "Here v(d) s is the domain-local residual direction. It is an operational linear estimate of schema-local variation, not a claim of perfect semantic factorization.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "name": "Signed Abstention Gate",
+      "description": "현재 표현에서 세 가지 스칼라 신호를 계산하여 도구 경계를 열거나, 잘못된 경계 교차를 억제하거나, 개입을 보류한다.",
+      "inputs": [
+        "도메인 예측기",
+        "도메인-특정 프로브"
+      ],
+      "outputs": [
+        "개입 여부 결정"
+      ],
+      "implementation_hint": "도구 필요성, 경계 준비 상태, 도메인 신뢰성을 기반으로 개입 여부 결정.",
+      "role": "novel",
+      "evidence": [
+        {
+          "page": null,
+          "section": "5.2 Signed abstention gate",
+          "quote": "The schema-local action as(x) ∈{0, 1} activates only when the model is already boundary-ready and the domain estimate is reliable.",
           "type": "quote"
         }
       ]
     }
   ],
-  "benchmark": {
-    "dataset": "MTU-Bench",
-    "metrics": [
-      "Strict tool-use F1",
-      "False positive rate"
-    ],
-    "baseline_results": {
-      "Prompt-only": "F1: 0.6238, FPR: 0.0829",
-      "LoRA": "F1: 0.5759, FPR: 0.0839"
+  "benchmarks": [
+    {
+      "dataset": "NESTFUL",
+      "metrics": [
+        "First-call accuracy",
+        "Sequence accuracy",
+        "Missing-tool rate"
+      ],
+      "baseline_results": {
+        "First-call accuracy": "24.46%",
+        "Sequence accuracy": "16.94%",
+        "Missing-tool rate": "59.14%"
+      },
+      "proposed_results": {
+        "First-call accuracy": "41.94%",
+        "Sequence accuracy": "25.00%",
+        "Missing-tool rate": "6.72%"
+      },
+      "evidence": [
+        {
+          "page": null,
+          "section": "6.2 Main Results",
+          "quote": "ASA raises overall first-call accuracy from 24.46% to 41.94% and sequence accuracy from 16.94% to 25.00%, while reducing missing-tool failures from 59.14% to 6.72%.",
+          "type": "quote"
+        }
+      ]
     },
-    "proposed_results": {
-      "ASA": "F1: 0.8023, FPR: 0.0700"
-    },
-    "evidence": [
-      {
-        "page": null,
-        "section": "4.2. Main Results on Two Models",
-        "quote": "ASA consistently improves the trigger-quality trade-off over both Prompt-only and Baseline across the two evaluated models.",
-        "type": "quote"
-      }
-    ]
-  },
+    {
+      "dataset": "BFCL",
+      "metrics": [
+        "Multi-turn Prompt Success",
+        "Single non-live AST accuracy",
+        "Live single-turn AST accuracy"
+      ],
+      "baseline_results": {
+        "Multi-turn Prompt Success": "32.50%",
+        "Single non-live AST accuracy": "89.40%",
+        "Live single-turn AST accuracy": "72.50%"
+      },
+      "proposed_results": {
+        "Multi-turn Prompt Success": "38.75%",
+        "Single non-live AST accuracy": "95.60%",
+        "Live single-turn AST accuracy": "77.00%"
+      },
+      "evidence": [
+        {
+          "page": null,
+          "section": "6.2 Main Results",
+          "quote": "ASA improves BFCL multi-turn success from 32.50% to 38.75%, single-turn non-live AST accuracy from 89.40% to 95.60%, and live single-turn AST accuracy from 72.50% to 77.00%.",
+          "type": "quote"
+        }
+      ]
+    }
+  ],
+  "benchmark": null,
   "claims": [
     {
       "claim_id": "C1",
-      "text": "ASA는 도구 호출 적응에서 표현-행동 간의 격차를 해결합니다.",
+      "text": "ASA는 백본 학습 없이 추론 시점에서 스키마 제약 도구 호출을 제어하는 컨트롤러를 제안한다.",
       "claim_type": "method",
       "confidence": 1.0,
       "evidence": [
         {
           "page": null,
-          "section": "5. Conclusion",
-          "quote": "ASA provides a training-free, inference-time control layer for tool-calling domain adaptation, bridging the representation–behavior gap where tool intent is decodable but fails to trigger under strict interfaces.",
+          "section": "5 Proposed Method",
+          "quote": "ASA addresses this gap with a backbone-training-free controller over a frozen model.",
           "type": "quote"
         }
       ]
     },
     {
       "claim_id": "C2",
-      "text": "ASA는 MTU-Bench에서 도구 사용 F1 점수를 향상시킵니다.",
+      "text": "ASA는 NESTFUL에서 첫 호출 정확도를 24.46%에서 41.94%로, 시퀀스 정확도를 16.94%에서 25.00%로 개선하며, 누락된 도구 실패를 59.14%에서 6.72%로 줄인다.",
       "claim_type": "result",
       "confidence": 1.0,
       "evidence": [
         {
           "page": null,
-          "section": "Abstract",
-          "quote": "On MTU-Bench with Qwen2.5-1.5B, ASA improves strict tool-use F1 from 0.18 to 0.50 while reducing the false positive rate from 0.15 to 0.05.",
+          "section": "6.2 Main Results",
+          "quote": "ASA raises overall first-call accuracy from 24.46% to 41.94% and sequence accuracy from 16.94% to 25.00%, while reducing missing-tool failures from 59.14% to 6.72%.",
           "type": "quote"
         }
       ]
     },
     {
       "claim_id": "C3",
-      "text": "ASA는 훈련 없이 도구 호출을 제어할 수 있습니다.",
-      "claim_type": "method",
+      "text": "ASA는 BFCL에서 멀티턴 성공률을 32.50%에서 38.75%로, 싱글턴 비라이브 AST 정확도를 89.40%에서 95.60%로, 라이브 싱글턴 AST 정확도를 72.50%에서 77.00%로 개선한다.",
+      "claim_type": "result",
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "page": null,
+          "section": "6.2 Main Results",
+          "quote": "ASA improves BFCL multi-turn success from 32.50% to 38.75%, single-turn non-live AST accuracy from 89.40% to 95.60%, and live single-turn AST accuracy from 72.50% to 77.00%.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "claim_id": "C4",
+      "text": "ASA는 경계 진입과 궤적 지속 실패를 주로 개선하며, 세부적인 스키마 실현과 중첩된 인수 바인딩은 여전히 주요 잔여 병목으로 남아 있다.",
+      "claim_type": "limitation",
       "confidence": 1.0,
       "evidence": [
         {
           "page": null,
           "section": "Abstract",
-          "quote": "We propose Activation Steering Adapter (ASA), a training-free, inference-time controller.",
+          "quote": "Error analysis further shows that ASA mainly improves boundary entry and trajectory continuation, while fine-grained schema realization and nested argument binding remain the main bottlenecks.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "claim_id": "C5",
+      "text": "ASA는 공유 경계 방향, 도메인-로컬 잔여 방향, 서명된 게이트를 결합하여 백본 학습 없이 추론 컨트롤러를 제안한다.",
+      "claim_type": "architecture",
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "page": null,
+          "section": "5 Proposed Method",
+          "quote": "We propose ASA, a backbone-training-free inference controller that combines shared boundary steering, local residual steering, and a probe-guided abstention gate.",
           "type": "quote"
         }
       ]

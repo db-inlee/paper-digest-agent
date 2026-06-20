@@ -1,39 +1,58 @@
 {
   "arxiv_id": "2602.06454",
-  "total_claims": 7,
+  "total_claims": 5,
   "verified_count": 5,
-  "unverified_count": 2,
+  "unverified_count": 0,
   "contradicted_count": 0,
   "overall_reliability": "high",
   "results": [
     {
       "claim_id": "C1",
-      "claim_text": "RelayGen은 대규모 모델의 대부분의 정확성을 유지하면서 추론 지연 시간을 크게 줄입니다.",
+      "claim_text": "RelayGen은 긴 추론 생성 내에서 난이도 변동을 활용하여 세그먼트 수준에서 모델 전환을 수행한다.",
       "status": "verified",
       "confidence": 1.0,
-      "evidence_found": "RelayGen은 여러 추론 벤치마크에서 대규모 모델의 정확성을 유지하면서 추론 지연 시간을 줄이는 성능을 보여줍니다.",
-      "notes": "논문 6페이지, 7페이지에서 RelayGen의 성능을 설명하고 있습니다.",
+      "evidence_found": "RelayGen은 세그먼트 수준에서 모델 전환을 수행하며, 난이도 변동을 활용하는 방법을 제시하고 있습니다.",
+      "notes": "논문 4페이지, RelayGen 개요에서 설명됨.",
       "correction_hint": null
     },
     {
       "claim_id": "C2",
-      "claim_text": "RelayGen은 학습된 라우터나 추가적인 감독 없이 세그먼트 수준의 런타임 모델 전환을 수행합니다.",
+      "claim_text": "RelayGen은 대규모 모델의 대부분의 정확도를 유지하면서 추론 지연 시간을 크게 줄인다.",
       "status": "verified",
       "confidence": 1.0,
-      "evidence_found": "RelayGen은 학습된 라우터 없이 세그먼트 수준의 모델 전환을 수행한다고 명시되어 있습니다.",
-      "notes": "논문 4페이지에서 RelayGen의 구조를 설명하고 있습니다.",
+      "evidence_found": "RelayGen은 여러 벤치마크에서 정확도를 유지하면서 추론 지연 시간을 줄이는 성능을 보여줍니다.",
+      "notes": "논문 6페이지, 실험 결과에서 확인됨.",
       "correction_hint": null
     },
     {
       "claim_id": "C3",
-      "claim_text": "RelayGen은 추론 지연 시간을 줄이면서도 추론의 대부분을 대규모 모델에 유지하여 안정적인 지연 시간 감소를 우선시합니다.",
+      "claim_text": "RelayGen은 세분화된 학습 라우팅 없이도 긴 형식의 추론에 대한 난이도 인식 추론을 가능하게 한다.",
       "status": "verified",
       "confidence": 1.0,
-      "evidence_found": "RelayGen은 대규모 모델의 성능을 유지하면서 지연 시간을 줄이는 데 중점을 두고 있습니다.",
-      "notes": "논문 5페이지에서 RelayGen의 효율성을 설명하고 있습니다.",
+      "evidence_found": "RelayGen은 학습된 라우터 없이도 난이도 인식 추론을 수행할 수 있음을 명시하고 있습니다.",
+      "notes": "논문 4페이지, RelayGen의 기여에서 설명됨.",
+      "correction_hint": null
+    },
+    {
+      "claim_id": "C4",
+      "claim_text": "RelayGen은 학습된 라우터나 추가적인 감독 없이도 작동하며, 기존 추론 추적에서 추출한 경험적 생성 통계를 사용한다.",
+      "status": "verified",
+      "confidence": 1.0,
+      "evidence_found": "RelayGen은 학습된 라우터 없이 경험적 생성 통계를 사용하여 작동한다고 명시하고 있습니다.",
+      "notes": "논문 4페이지, RelayGen의 작동 방식에서 확인됨.",
+      "correction_hint": null
+    },
+    {
+      "claim_id": "C5",
+      "claim_text": "RelayGen은 추론 단계 후의 답변 생성이 높은 토큰당 주의 비용에도 불구하고 매우 안정적임을 보여준다.",
+      "status": "verified",
+      "confidence": 1.0,
+      "evidence_found": "RelayGen은 답변 생성이 안정적임을 보여주는 실험 결과를 포함하고 있습니다.",
+      "notes": "논문 6페이지, 실험 결과에서 확인됨.",
       "correction_hint": null
     }
   ],
-  "summary": "RelayGen은 대규모 모델의 정확성을 유지하면서 추론 지연 시간을 줄이는 세그먼트 수준의 런타임 모델 전환 프레임워크로, 기존 방법들의 한계를 해결하고 실험적으로 검증된 성능을 보여줍니다.",
-  "corrections_needed": []
+  "summary": "모든 클레임이 논문에서 지지되며, 제시된 baseline과의 비교도 정확하게 이루어졌습니다.",
+  "corrections_needed": [],
+  "verification_error": false
 }
