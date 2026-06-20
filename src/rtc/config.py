@@ -212,6 +212,22 @@ class Settings(BaseSettings):
     # Timezone
     scheduler_timezone: str = Field(default="Asia/Seoul", alias="SCHEDULER_TIMEZONE")
 
+    # Corpus (vector search + delta grounding)
+    corpus_enabled: bool = Field(default=True, alias="CORPUS_ENABLED")
+    corpus_db_path: str = Field(
+        default=".corpus",
+        alias="CORPUS_DB_PATH",
+        description=(
+            "LanceDB 디렉토리. 상대 경로면 reports_dir 기준으로 resolve된다 "
+            "(REPORT_BASE_DIR/Docker 볼륨을 따라감)."
+        ),
+    )
+    embedding_model: str = Field(default="BAAI/bge-m3", alias="EMBEDDING_MODEL")
+    delta_grounding_top_k: int = Field(default=3, alias="DELTA_GROUNDING_TOP_K")
+    delta_grounding_min_score: float = Field(
+        default=0.5, alias="DELTA_GROUNDING_MIN_SCORE"
+    )
+
     # Paths
     base_dir: Path = Field(default_factory=lambda: Path(__file__).parent.parent.parent)
     report_base_dir: Optional[Path] = Field(default=None, alias="REPORT_BASE_DIR")
@@ -232,6 +248,18 @@ class Settings(BaseSettings):
     def index_dir(self) -> Path:
         """index/ 디렉토리 (인덱스 저장)."""
         return self.base_dir / "index"
+
+    @property
+    def corpus_db_dir(self) -> Path:
+        """코퍼스 벡터 DB 디렉토리 (LanceDB).
+
+        corpus_db_path가 절대 경로면 그대로, 상대 경로면 reports_dir 기준으로
+        resolve한다 (REPORT_BASE_DIR override / Docker 볼륨을 따라감).
+        """
+        path = Path(self.corpus_db_path)
+        if path.is_absolute():
+            return path
+        return self.reports_dir / path
 
     def get_effective_hf_keywords(self) -> list[str]:
         """topics.json 반영: disabled 제외 + custom 추가 + 중복 제거."""

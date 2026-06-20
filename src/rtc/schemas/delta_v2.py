@@ -51,6 +51,10 @@ class DeltaOutput(BaseModel):
     )
     when_to_use: str = Field(..., description="언제 이 방법을 사용해야 하는지")
     when_not_to_use: str = Field(..., description="언제 사용하지 말아야 하는지")
+    grounded_on: list[str] = Field(
+        default_factory=list,
+        description="arxiv_ids of corpus papers this delta is grounded on",
+    )
 
     @property
     def delta_count(self) -> int:

@@ -1,5 +1,6 @@
 """Deep Pipeline - 논문 심층 분석 파이프라인."""
 
+import logging
 from datetime import datetime
 from typing import Annotated, Optional, TypedDict
 
@@ -7,7 +8,7 @@ from langgraph.graph import END, StateGraph
 from langsmith.run_helpers import traceable
 
 from rtc.agents.correction_agent import CorrectionAgent, CorrectionInput
-from rtc.agents.delta_agent import DeltaAgent
+from rtc.agents.delta_agent import DeltaAgent, DeltaInput
 from rtc.agents.extraction import ExtractionAgent, ExtractionInput
 from rtc.agents.report_writer import ReportInput, ReportWriter
 from rtc.agents.scoring_agent import ScoringAgent, ScoringInput
@@ -22,6 +23,18 @@ from rtc.schemas.scoring_v2 import ScoringOutput
 from rtc.schemas.skim import SkimSummary
 from rtc.schemas.verification_v1 import VerificationOutput
 from rtc.storage.deep_store import DeepStore, create_paper_slug
+
+logger = logging.getLogger(__name__)
+
+
+def _build_corpus(settings):
+    """LanceDB store + embedder를 구성. 실패 시 (None, None)을 반환(fail-soft)."""
+    from rtc.corpus.embedder import get_embedder
+    from rtc.corpus.vector_store import LanceDBVectorStore
+
+    store = LanceDBVectorStore(settings.corpus_db_dir)
+    embedder = get_embedder(settings.embedding_model)
+    return store, embedder
 
 
 def merge_errors(left: list[dict], right: list[dict]) -> list[dict]:
@@ -44,6 +57,7 @@ class DeepState(TypedDict, total=False):
     parsed_pdf: Optional[ParsedPDF]
     parse_mode: str  # "full", "pymupdf", "lite"
     extraction: Optional[ExtractionOutput]
+    related_papers: list  # list[SearchHit] - 코퍼스 grounding용 검색 결과
     delta: Optional[DeltaOutput]
     scoring: Optional[ScoringOutput]
     verification: Optional[VerificationOutput]
@@ -141,6 +155,45 @@ async def extraction_node(state: DeepState) -> dict:
         }
 
 
+async def corpus_search_node(state: DeepState) -> dict:
+    """코퍼스 검색 노드 (delta grounding용).
+
+    fail-soft: corpus_enabled=False이거나 검색 실패 시 related_papers=[]를 반환해
+    이후 delta가 기존(grounding 이전)과 동일하게 동작하게 한다.
+    """
+    settings = get_settings()
+    if not settings.corpus_enabled:
+        return {"related_papers": []}
+
+    extraction = state.get("extraction")
+    if extraction is None:
+        return {"related_papers": []}
+
+    arxiv_id = state.get("arxiv_id", "") or extraction.arxiv_id
+    title = state.get("title", "") or extraction.title
+    abstract = state.get("abstract", "")
+
+    # 질의 텍스트: 제목 + 초록 + 주요 claim 요약
+    claim_texts = [c.text for c in extraction.claims[:5] if c.text]
+    query_text = "\n".join([title, abstract, *claim_texts]).strip()
+
+    try:
+        from rtc.corpus.search import CorpusSearch
+
+        store, embedder = _build_corpus(settings)
+        search = CorpusSearch(store, embedder)
+        related = search.search_related_papers(
+            query_text=query_text,
+            top_k=settings.delta_grounding_top_k,
+            min_score=settings.delta_grounding_min_score,
+            exclude_arxiv_id=arxiv_id,
+        )
+        return {"related_papers": related}
+    except Exception as e:
+        logger.warning("corpus_search skipped (fail-soft): %s", e)
+        return {"related_papers": []}
+
+
 async def delta_node(state: DeepState) -> dict:
     """Delta 노드."""
     extraction = state.get("extraction")
@@ -154,7 +207,12 @@ async def delta_node(state: DeepState) -> dict:
     agent = DeltaAgent()
 
     try:
-        delta = await agent.run(extraction)
+        delta = await agent.run(
+            DeltaInput(
+                extraction=extraction,
+                related_papers=state.get("related_papers", []) or [],
+            )
+        )
         return {"delta": delta}
 
     except Exception as e:
@@ -382,6 +440,41 @@ async def save_deep_node(state: DeepState) -> dict:
         return {"errors": [{"node": "save_deep", "error": str(e)}]}
 
 
+async def corpus_index_node(state: DeepState) -> dict:
+    """현재 논문을 코퍼스에 인덱싱 (delta 이후라 자기 자신이 grounding에 안 잡힘).
+
+    fail-soft: corpus_enabled=False이거나 인덱싱 실패 시 조용히 스킵.
+    """
+    settings = get_settings()
+    if not settings.corpus_enabled:
+        return {}
+
+    extraction = state.get("extraction")
+    delta = state.get("delta")
+    if extraction is None or delta is None:
+        return {}
+
+    try:
+        from rtc.corpus.indexer import CorpusIndexer
+
+        store, embedder = _build_corpus(settings)
+        indexer = CorpusIndexer(store, embedder)
+        n = indexer.index_paper(
+            arxiv_id=extraction.arxiv_id,
+            extraction=extraction,
+            delta=delta,
+            extra_metadata={
+                "title": extraction.title,
+                "slug": state.get("paper_slug", ""),
+            },
+        )
+        logger.info("Indexed %s into corpus: %d chunks", extraction.arxiv_id, n)
+    except Exception as e:
+        logger.warning("corpus_index skipped (fail-soft): %s", e)
+
+    return {}
+
+
 def should_continue_after_parse(state: DeepState) -> str:
     """parse 후 계속 진행 여부."""
     # 항상 extraction으로 진행 (lite mode도 가능)
@@ -392,7 +485,8 @@ def build_deep_pipeline() -> StateGraph:
     """Deep Pipeline 빌드.
 
     파이프라인 구조:
-    parse → extraction → delta → scoring → verification → [조건 분기]
+    parse → extraction → corpus_search → delta → scoring → verification → [조건 분기]
+    (통과/최대재시도 경로의 끝: report → save_deep → corpus_index → END)
                                                               │
                                         ┌─────────────────────┼─────────────────────┐
                                         │                     │                     │
@@ -421,19 +515,22 @@ def build_deep_pipeline() -> StateGraph:
     # 노드 추가
     graph.add_node("parse", parse_node)
     graph.add_node("extraction", extraction_node)
+    graph.add_node("corpus_search", corpus_search_node)
     graph.add_node("delta", delta_node)
     graph.add_node("scoring", scoring_node)
     graph.add_node("verification", verification_node)
     graph.add_node("correction", correction_node)
     graph.add_node("report", report_node)
     graph.add_node("save_deep", save_deep_node)
+    graph.add_node("corpus_index", corpus_index_node)
 
     # 엔트리 포인트
     graph.set_entry_point("parse")
 
     # 기본 엣지
     graph.add_edge("parse", "extraction")
-    graph.add_edge("extraction", "delta")
+    graph.add_edge("extraction", "corpus_search")
+    graph.add_edge("corpus_search", "delta")
     graph.add_edge("delta", "scoring")
     graph.add_edge("scoring", "verification")
 
@@ -450,9 +547,10 @@ def build_deep_pipeline() -> StateGraph:
     # 교정 후 → 다시 extraction부터 (수정된 컨텍스트로)
     graph.add_edge("correction", "extraction")
 
-    # 마무리
+    # 마무리: 저장 후 코퍼스 인덱싱 (delta 이후라 자기 자신은 grounding에 안 잡힘)
     graph.add_edge("report", "save_deep")
-    graph.add_edge("save_deep", END)
+    graph.add_edge("save_deep", "corpus_index")
+    graph.add_edge("corpus_index", END)
 
     return graph
 

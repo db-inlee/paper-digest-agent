@@ -108,8 +108,8 @@ class ExtractionOutput(BaseModel):
     )
     method_components: list[MethodComponent] = Field(
         default_factory=list,
-        min_length=2,
-        description="방법론 구성 요소 (최소 2개 이상, 각 모듈/기법을 개별 항목으로 분리)",
+        min_length=1,
+        description="방법론 구성 요소 (가능하면 2개 이상, 각 모듈/기법을 개별 항목으로 분리)",
     )
     benchmarks: list[BenchmarkInfo] = Field(
         default_factory=list, description="벤치마크 정보 목록 (여러 벤치마크 지원)"

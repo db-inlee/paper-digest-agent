@@ -163,7 +163,11 @@ class CandidateFetcher(BaseAgent[FetchInput, FetchOutput]):
             return processed_ids
 
         for paper_dir in reports_dir.iterdir():
-            if paper_dir.is_dir() and paper_dir.name != "daily":
+            if (
+                paper_dir.is_dir()
+                and paper_dir.name != "daily"
+                and not paper_dir.name.startswith(".")
+            ):
                 # 폴더명에서 arxiv_id 추출 (예: 2601.20833-paper-title)
                 parts = paper_dir.name.split("-")
                 if parts:

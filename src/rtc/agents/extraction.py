@@ -199,6 +199,7 @@ class ExtractionAgent(BaseAgent[ExtractionInput, ExtractionOutput]):
         """실패 시 폴백 출력 생성."""
         from rtc.schemas.extraction_v2 import (
             ClaimWithEvidence,
+            MethodComponent,
             ProblemDefinition,
         )
 
@@ -212,7 +213,12 @@ class ExtractionAgent(BaseAgent[ExtractionInput, ExtractionOutput]):
                 evidence=[],
             ),
             baselines=[],
-            method_components=[],
+            method_components=[
+                MethodComponent(
+                    name="추출 실패",
+                    description=f"추출 중 오류 발생: {error}",
+                )
+            ],
             benchmarks=[],
             claims=[
                 ClaimWithEvidence(

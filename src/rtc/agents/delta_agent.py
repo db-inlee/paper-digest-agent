@@ -1,10 +1,25 @@
 """DeltaAgent - 구조적 차이 분석 (LLM)."""
 
+from dataclasses import dataclass, field
+
 from rtc.agents.base import BaseAgent
 from rtc.config import get_settings
+from rtc.corpus.vector_store import SearchHit
 from rtc.llm import get_llm_client
 from rtc.schemas.delta_v2 import CoreDelta, DeltaOutput, TradeoffWithEvidence
 from rtc.schemas.extraction_v2 import Evidence, ExtractionOutput
+
+
+@dataclass
+class DeltaInput:
+    """Delta 입력.
+
+    related_papers가 비어 있으면 grounding을 적용하지 않고 기존(grounding 이전)
+    프롬프트로 동작한다 (corpus_enabled=False와 동일한 출력 보장).
+    """
+
+    extraction: ExtractionOutput
+    related_papers: list[SearchHit] = field(default_factory=list)
 
 DELTA_SYSTEM_PROMPT = """You are a Research Agent explaining research DELTAS (not summaries).
 
@@ -145,8 +160,34 @@ Provide:
 
 한국어로 작성하되, 전문 용어는 영어를 병기하세요."""
 
+GROUNDING_PROMPT_BLOCK = """
 
-class DeltaAgent(BaseAgent[ExtractionOutput, DeltaOutput]):
+## 코퍼스 grounding (중요!)
+다음은 내 코퍼스에서 검색된 관련 선행 논문들이다:
+{related_papers}
+
+위 선행 논문들 중 **실제로 관련된 것에 근거**하여 old_approach를 기술하라.
+근거가 된 논문의 arxiv_id를 `grounded_on` 필드에 명시하라.
+- 위 목록과 실제로 관련이 없으면 억지로 엮지 마라.
+- **위 목록에 없는 arxiv_id를 지어내지 마라.** grounded_on에는 위에 제시된 arxiv_id만 허용된다.
+- 관련된 선행이 하나도 없다고 판단되면 grounded_on은 빈 리스트로 두고,
+  old_approach를 일반적 접근 수준으로만 기술하라."""
+
+
+def _format_related_papers(related_papers: list[SearchHit]) -> str:
+    """검색된 관련 논문을 프롬프트용 텍스트로 변환."""
+    lines = []
+    for hit in related_papers:
+        title = hit.metadata.get("title", "")
+        title_part = f" — {title}" if title else ""
+        lines.append(
+            f"- [{hit.arxiv_id}{title_part}] ({hit.chunk_type}, "
+            f"score={hit.score:.2f}): {hit.text}"
+        )
+    return "\n".join(lines)
+
+
+class DeltaAgent(BaseAgent[DeltaInput, DeltaOutput]):
     """구조적 차이 분석 에이전트 (LLM)."""
 
     name = "delta"
@@ -155,15 +196,17 @@ class DeltaAgent(BaseAgent[ExtractionOutput, DeltaOutput]):
     def __init__(self):
         self.settings = get_settings()
 
-    async def run(self, extraction: ExtractionOutput) -> DeltaOutput:
+    async def run(self, input: DeltaInput) -> DeltaOutput:
         """Extraction 결과로부터 Delta 분석.
 
         Args:
-            extraction: 추출된 정보
+            input: extraction + (옵셔널) 코퍼스에서 검색된 관련 선행 논문
 
         Returns:
             Delta 분석 결과
         """
+        extraction = input.extraction
+        related_papers = input.related_papers
         model = self.settings.agent_models.get("delta", "gpt-4o")
         llm = get_llm_client(provider="openai", model=model)
 
@@ -195,6 +238,13 @@ class DeltaAgent(BaseAgent[ExtractionOutput, DeltaOutput]):
             method_components=method_text,
         )
 
+        # Grounding은 related_papers가 있을 때만 활성화한다. 비어 있으면
+        # 기존(grounding 이전) 프롬프트 그대로 사용 → corpus_enabled=False와 동일.
+        if related_papers:
+            prompt += GROUNDING_PROMPT_BLOCK.format(
+                related_papers=_format_related_papers(related_papers)
+            )
+
         try:
             result = await llm.generate_structured(
                 prompt=prompt,
@@ -204,11 +254,29 @@ class DeltaAgent(BaseAgent[ExtractionOutput, DeltaOutput]):
                 max_tokens=6000,
             )
 
+            # 모델이 지어낸 ID 제거: 실제 검색된 arxiv_id 집합과의 교집합만 허용.
+            result.grounded_on = self._filter_grounded_on(
+                result.grounded_on, related_papers
+            )
             return result
 
         except Exception as e:
-            # 실패 시 기본값 반환
+            # 실패 시 기본값 반환 (fail-soft: grounded_on=[])
             return self._create_fallback_output(extraction, str(e))
+
+    @staticmethod
+    def _filter_grounded_on(
+        grounded_on: list[str], related_papers: list[SearchHit]
+    ) -> list[str]:
+        """grounded_on을 실제 검색된 arxiv_id 집합과의 교집합으로 후처리."""
+        allowed = {hit.arxiv_id for hit in related_papers}
+        seen: set[str] = set()
+        result: list[str] = []
+        for aid in grounded_on:
+            if aid in allowed and aid not in seen:
+                seen.add(aid)
+                result.append(aid)
+        return result
 
     def _create_fallback_output(
         self, extraction: ExtractionOutput, error: str
@@ -234,4 +302,5 @@ class DeltaAgent(BaseAgent[ExtractionOutput, DeltaOutput]):
             tradeoffs=[],
             when_to_use="분석 실패로 판단 불가",
             when_not_to_use="분석 실패로 판단 불가",
+            grounded_on=[],
         )
