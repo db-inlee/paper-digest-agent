@@ -1,0 +1,57 @@
+{
+  "arxiv_id": "2602.11865",
+  "total_claims": 5,
+  "verified_count": 5,
+  "unverified_count": 0,
+  "contradicted_count": 0,
+  "overall_reliability": "high",
+  "results": [
+    {
+      "claim_id": "claim_1",
+      "claim_text": "지능형 AI 위임 프레임워크는 동적 평가, 적응 실행, 구조적 투명성, 확장 가능한 시장 조정, 시스템적 회복력을 중심으로 한다.",
+      "status": "verified",
+      "confidence": 1.0,
+      "evidence_found": "논문 4장에서는 지능형 위임 프레임워크의 다섯 가지 요구 사항을 명시하고 있음.",
+      "notes": "프레임워크의 핵심 요소가 명확히 정의됨.",
+      "correction_hint": null
+    },
+    {
+      "claim_id": "claim_2",
+      "claim_text": "현재의 위임 시스템은 대규모 불확실한 환경에서 역량, 신뢰성, 의도를 동적으로 평가할 수 있는 견고한 메커니즘이 부족하다.",
+      "status": "verified",
+      "confidence": 1.0,
+      "evidence_found": "논문 4.1장에서 현재 위임 시스템의 한계를 설명하며, 동적 평가 메커니즘의 필요성을 강조함.",
+      "notes": "현재 시스템의 한계가 명확히 언급됨.",
+      "correction_hint": null
+    },
+    {
+      "claim_id": "claim_3",
+      "claim_text": "위임 결정은 환경 변화, 자원 제약, 하위 시스템의 실패에 적응해야 한다.",
+      "status": "verified",
+      "confidence": 1.0,
+      "evidence_found": "논문 4.3장에서 위임 결정의 적응 필요성을 설명하고 있음.",
+      "notes": "적응 실행의 중요성이 강조됨.",
+      "correction_hint": null
+    },
+    {
+      "claim_id": "claim_4",
+      "claim_text": "현재 AI-AI 위임의 하위 작업 실행은 너무 불투명하여 지능형 작업 위임을 위한 견고한 감독을 지원할 수 없다.",
+      "status": "verified",
+      "confidence": 1.0,
+      "evidence_found": "논문 4.2장에서 AI-AI 위임의 불투명성을 지적하고, 감독의 필요성을 언급함.",
+      "notes": "하위 작업 실행의 투명성 부족이 명확히 언급됨.",
+      "correction_hint": null
+    },
+    {
+      "claim_id": "claim_5",
+      "claim_text": "지능형 위임 프레임워크는 계약 우선 분해를 포함하여 작업 위임이 정확한 검증을 갖추도록 한다.",
+      "status": "verified",
+      "confidence": 1.0,
+      "evidence_found": "논문 4.1장에서 계약 우선 분해의 중요성을 설명하고 있음.",
+      "notes": "정확한 검증을 위한 계약 우선 분해가 명확히 언급됨.",
+      "correction_hint": null
+    }
+  ],
+  "summary": "모든 클레임이 논문에서 지지되며, 제안된 지능형 AI 위임 프레임워크의 주요 요소와 한계가 명확히 설명됨.",
+  "corrections_needed": []
+}

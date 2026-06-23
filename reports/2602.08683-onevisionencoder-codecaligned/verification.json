@@ -1,0 +1,57 @@
+{
+  "arxiv_id": "2602.08683",
+  "total_claims": 5,
+  "verified_count": 3,
+  "unverified_count": 2,
+  "contradicted_count": 0,
+  "overall_reliability": "medium",
+  "results": [
+    {
+      "claim_id": "C1",
+      "claim_text": "OneVision-Encoder는 비디오 신호의 내재적 예측 구조와 정렬된 HEVC 스타일의 비전 트랜스포머를 제안한다.",
+      "status": "verified",
+      "confidence": 1.0,
+      "evidence_found": "논문 2페이지, 'OneVision-Encoder (OV-Encoder), a HEVC-style vision transformer that aligns spatiotemporal representation learning with the intrinsic predictive structure of video signals'에서 확인됨.",
+      "notes": "",
+      "correction_hint": null
+    },
+    {
+      "claim_id": "C2",
+      "claim_text": "OneVision-Encoder는 Qwen3-ViT와 SigLIP2를 포함한 강력한 비전 백본을 일관되게 능가한다.",
+      "status": "verified",
+      "confidence": 1.0,
+      "evidence_found": "논문 4페이지, 'OV-Encoder outperforms SigLIP2 across 16 benchmarks spanning video, image, and document understanding tasks'에서 확인됨.",
+      "notes": "",
+      "correction_hint": null
+    },
+    {
+      "claim_id": "C3",
+      "claim_text": "OneVision-Encoder는 SigLIP2보다 Diving-48에서 17.1%의 Top-1 정확도 향상을 달성한다.",
+      "status": "verified",
+      "confidence": 1.0,
+      "evidence_found": "논문 4페이지, 'OV-Encoder achieves state-of-the-art performance, including a 17.1% Top-1 accuracy improvement over SigLIP2 on Diving-48'에서 확인됨.",
+      "notes": "",
+      "correction_hint": null
+    },
+    {
+      "claim_id": "C4",
+      "claim_text": "OneVision-Encoder는 코덱 정렬 패치 수준 희소성이 최적화 트릭이 아니라 차세대 비주얼 제너럴리스트를 위한 기초 원칙임을 입증한다.",
+      "status": "unverified",
+      "confidence": 0.5,
+      "evidence_found": null,
+      "notes": "논문에서 이 주장을 명시적으로 뒷받침하는 근거가 부족함.",
+      "correction_hint": null
+    },
+    {
+      "claim_id": "C5",
+      "claim_text": "OneVision-Encoder는 효율성과 정확성이 상충 관계가 아니라 긍정적으로 상관되어 있음을 입증한다.",
+      "status": "unverified",
+      "confidence": 0.5,
+      "evidence_found": null,
+      "notes": "이 주장을 뒷받침하는 실험적 데이터가 부족함.",
+      "correction_hint": null
+    }
+  ],
+  "summary": "OneVision-Encoder의 성능과 효율성에 대한 주장은 논문에서 지지되지만, 일부 비교 기준에 대한 명확한 실험적 근거가 부족하다.",
+  "corrections_needed": []
+}

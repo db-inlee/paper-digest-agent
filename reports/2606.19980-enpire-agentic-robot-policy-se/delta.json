@@ -1,0 +1,46 @@
+{
+  "arxiv_id": "2606.19980",
+  "one_line_takeaway": "이 논문은 자동화된 로봇 정책 개선을 위한 피드백 루프를 통해 실제 환경에서의 로봇 조작 기술을 향상시키는 문제에 대해 새로운 접근법을 제안한다.",
+  "core_deltas": [
+    {
+      "axis": "환경 구성",
+      "old_approach": "해당 영역에 특화된 방법 없음",
+      "new_approach": "자동화된 리셋 및 검증 메커니즘을 통해 환경을 구성하고, 안전 경계를 설정하며, 특정 작업에 대한 절차적 도구 호출을 최적화",
+      "why_better": "환경의 안전성과 효율성을 높이며, 작업 수행의 자동화를 지원함",
+      "evidence": {
+        "page": null,
+        "section": null,
+        "quote": "Environment Module (EN): 자동화된 리셋 및 검증 메커니즘을 통해 환경을 구성하고, 안전 경계를 설정하며, 특정 작업에 대한 절차적 도구 호출을 최적화한다.",
+        "type": "quote"
+      }
+    },
+    {
+      "axis": "정책 개선",
+      "old_approach": "해당 영역에 특화된 방법 없음",
+      "new_approach": "실제 환경에서의 피드백을 기반으로 정책을 개선하며, 다양한 방법론을 탐색하고 최적화",
+      "why_better": "실제 환경에서의 피드백을 활용하여 정책의 적응성과 성능을 향상시킴",
+      "evidence": {
+        "page": null,
+        "section": null,
+        "quote": "Policy Improvement Module (PI): 실제 환경에서의 피드백을 기반으로 정책을 개선하며, 다양한 방법론을 탐색하고 최적화한다.",
+        "type": "quote"
+      }
+    },
+    {
+      "axis": "훈련 인프라 개선",
+      "old_approach": "해당 영역에 특화된 방법 없음",
+      "new_approach": "코딩 에이전트가 로그를 분석하고, 문헌을 참조하며, 실패 모드를 해결하기 위해 훈련 인프라 및 알고리즘 코드를 개선",
+      "why_better": "훈련 인프라의 효율성과 적응성을 높여 실패 모드 해결을 지원함",
+      "evidence": {
+        "page": null,
+        "section": null,
+        "quote": "Evolution Module (E): 코딩 에이전트가 로그를 분석하고, 문헌을 참조하며, 실패 모드를 해결하기 위해 훈련 인프라 및 알고리즘 코드를 개선한다.",
+        "type": "quote"
+      }
+    }
+  ],
+  "tradeoffs": [],
+  "when_to_use": "실제 환경에서 로봇의 정책을 자동으로 개선하고자 할 때",
+  "when_not_to_use": "정적 환경에서의 단순한 로봇 제어 작업을 수행할 때",
+  "grounded_on": []
+}

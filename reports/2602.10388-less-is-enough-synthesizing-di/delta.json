@@ -1,0 +1,58 @@
+{
+  "arxiv_id": "2602.10388",
+  "one_line_takeaway": "이 논문은 MAGPIE의 데이터 요구량 문제를 Feature Activation Coverage(FAC) 기반 데이터 합성을 통해 개선한다.",
+  "core_deltas": [
+    {
+      "axis": "데이터 다양성 측정",
+      "old_approach": "텍스트 기반 다양성 측정",
+      "new_approach": "Feature Activation Coverage(FAC)를 통한 다양성 정량화",
+      "why_better": "작업 관련 기능을 더 잘 포착하여 데이터의 다양성을 효과적으로 측정할 수 있음",
+      "evidence": {
+        "page": null,
+        "section": null,
+        "quote": "Feature Activation Coverage (FAC): 모델의 내부 기능 공간에서 데이터 다양성을 정량화하는 메트릭입니다.",
+        "type": "quote"
+      }
+    },
+    {
+      "axis": "데이터 합성 방법",
+      "old_approach": "MAGPIE의 대량 데이터 사용",
+      "new_approach": "FAC 기반 데이터 합성",
+      "why_better": "적은 데이터로도 높은 성능을 달성할 수 있어 데이터 효율성을 높임",
+      "evidence": {
+        "page": null,
+        "section": null,
+        "quote": "FAC Synthesis: FAC를 기반으로 데이터 합성을 통해 후속 학습 데이터를 개선하는 프레임워크입니다.",
+        "type": "quote"
+      }
+    },
+    {
+      "axis": "잠재 기능 해석",
+      "old_approach": "해당 없음",
+      "new_approach": "Sparse Autoencoder(SAE)를 사용하여 해석 가능한 잠재 기능 획득",
+      "why_better": "모델의 내부 기능 공간에서 해석 가능성을 높임",
+      "evidence": {
+        "page": null,
+        "section": null,
+        "quote": "Sparse Autoencoder (SAE): 모델의 내부 기능 공간에서 해석 가능한 잠재 기능을 얻기 위해 사용됩니다.",
+        "type": "quote"
+      }
+    }
+  ],
+  "tradeoffs": [
+    {
+      "aspect": "데이터 효율성",
+      "benefit": "적은 데이터로도 높은 성능을 달성",
+      "cost": "FAC 및 SAE 구현의 복잡성 증가",
+      "when_acceptable": "데이터 수집 비용이 높은 경우",
+      "evidence": {
+        "page": null,
+        "section": null,
+        "quote": "MAGPIE: 기존의 SOTA 데이터 합성 방법으로, 300K 샘플을 사용하여 성능을 달성합니다. (한계: 150배 더 많은 데이터를 필요로 합니다.)",
+        "type": "quote"
+      }
+    }
+  ],
+  "when_to_use": "데이터 수집 비용이 높고, 데이터 다양성이 중요한 경우",
+  "when_not_to_use": "데이터 수집이 용이하고, 복잡한 구현이 부담이 되는 경우"
+}

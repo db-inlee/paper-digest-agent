@@ -1,0 +1,58 @@
+{
+  "arxiv_id": "2606.15133",
+  "total_claims": 5,
+  "verified_count": 4,
+  "unverified_count": 1,
+  "contradicted_count": 0,
+  "overall_reliability": "high",
+  "results": [
+    {
+      "claim_id": "C1",
+      "claim_text": "DragMesh-2는 다관절 객체와의 상호작용을 손-핸들 접촉을 통해 물리적으로 타당하게 수행하는 프레임워크를 제안한다.",
+      "status": "verified",
+      "confidence": 1.0,
+      "evidence_found": "논문에서 DragMesh-2의 정의와 목적이 명확히 설명됨.",
+      "notes": "DragMesh-2의 목적과 기능이 논문에서 잘 설명됨.",
+      "correction_hint": null
+    },
+    {
+      "claim_id": "C2",
+      "claim_text": "PICA는 물리적 신호를 정책 학습에 주입하여 접촉 하중 변화에 대한 강건성을 향상시킨다.",
+      "status": "verified",
+      "confidence": 1.0,
+      "evidence_found": "PICA의 기능과 효과가 논문에서 명확히 설명됨.",
+      "notes": "PICA의 기여가 논문에서 잘 설명됨.",
+      "correction_hint": null
+    },
+    {
+      "claim_id": "C3",
+      "claim_text": "DragMesh-2는 접촉 하중 변화에 대한 강건성을 유지하면서 높은 작업 성공률을 달성한다.",
+      "status": "verified",
+      "confidence": 1.0,
+      "evidence_found": "DragMesh-2의 성능이 다양한 실험을 통해 입증됨.",
+      "notes": "성능 평가 결과가 논문에 명시됨.",
+      "correction_hint": null
+    },
+    {
+      "claim_id": "C4",
+      "claim_text": "기존의 강화 학습 방법은 고정된 동역학 하에서만 훈련되어, 접촉 하중이 변할 때 성능이 저하될 수 있다.",
+      "status": "verified",
+      "confidence": 1.0,
+      "evidence_found": "기존 방법의 한계가 논문에서 명확히 언급됨.",
+      "notes": "기존 방법의 한계가 잘 설명됨.",
+      "correction_hint": null
+    },
+    {
+      "claim_id": "C5",
+      "claim_text": "DragMesh-2는 물리적 신호와 시간적 접촉 반응 모델링을 통해 정책 표현을 개선한다.",
+      "status": "unverified",
+      "confidence": 0.7,
+      "evidence_found": null,
+      "notes": "정확한 증거가 부족하여 unverified로 분류됨.",
+      "correction_hint": null
+    }
+  ],
+  "summary": "대부분의 클레임이 논문에서 지지되며, 실험적 비교가 명확하게 이루어졌습니다.",
+  "corrections_needed": [],
+  "verification_error": false
+}

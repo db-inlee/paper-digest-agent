@@ -26,43 +26,35 @@ wheels/
 env/
 venv/
 ENV/
-
 # IDE
 .idea/
 .vscode/
 *.swp
 *.swo
 *~
-
 # Testing
 .pytest_cache/
 .coverage
 htmlcov/
 .tox/
 .nox/
-
 # Jupyter
 .ipynb_checkpoints/
-
 # macOS
 .DS_Store
-
 # Project specific - user data (votes, comments, topics)
 reports/votes.json
 reports/comments.json
 reports/topics.json
-
 # Corpus vector store (LanceDB binaries - never commit)
 reports/.corpus/
-
 # Re-extraction working artifacts (never commit)
 reports/.reextract/
 reports/.reextract_backup/
-
 # Obsidian vault export (work artifact, never commit)
 vault/
-
 # notifier (Slack/Web)
 notifier/web/node_modules/
 notifier/web/.svelte-kit/
 notifier/web/build/
+Obsidian-1.12.7.dmg

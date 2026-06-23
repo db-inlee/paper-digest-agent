@@ -1,0 +1,45 @@
+{
+  "arxiv_id": "2602.08683",
+  "one_line_takeaway": "이 논문은 Qwen3-ViT와 SigLIP2의 구조적 한계를 Codec Patchification, 3D Rotary Position Embedding, Self-supervised Cluster Discrimination Objective를 통해 개선한다.",
+  "core_deltas": [
+    {
+      "axis": "입력 데이터 처리",
+      "old_approach": "밀집한 픽셀 그리드를 균일하게 처리",
+      "new_approach": "Codec Patchification을 통해 정보가 풍부한 시각 패치를 선택적으로 인코딩",
+      "why_better": "정적 배경에 대한 불필요한 계산을 줄이고, 정보가 풍부한 부분에 집중하여 효율성을 높인다.",
+      "evidence": {
+        "page": null,
+        "section": null,
+        "quote": "Codec Patchification: 비디오 코덱에서 유래한 입력 형식을 사용하여 밀집한 비디오에서 정보가 풍부한 시각 패치를 선택적으로 인코딩.",
+        "type": "quote"
+      }
+    },
+    {
+      "axis": "위치 인코딩",
+      "old_approach": "2D 위치 인코딩",
+      "new_approach": "3D Rotary Position Embedding (RoPE)을 사용하여 공간적 및 시간적 위치를 공동으로 인코딩",
+      "why_better": "불규칙한 시공간 레이아웃에서 일관된 어텐션을 지원하여 더 나은 공간적, 시간적 이해를 가능하게 한다.",
+      "evidence": {
+        "page": null,
+        "section": null,
+        "quote": "3D Rotary Position Embedding (RoPE): 공간적 및 시간적 위치를 공동으로 인코딩하여 불규칙한 시공간 레이아웃에서 일관된 어텐션을 지원.",
+        "type": "quote"
+      }
+    },
+    {
+      "axis": "학습 목표",
+      "old_approach": "전통적인 지도 학습 목표",
+      "new_approach": "Self-supervised Cluster Discrimination Objective를 통해 객체 수준의 영속성과 운동 역학을 포착",
+      "why_better": "대규모 개념 은행을 기반으로 한 클러스터 차별화 목표를 통해 더 구조적이고 모달리티에 구애받지 않는 시각 표현을 학습할 수 있다.",
+      "evidence": {
+        "page": null,
+        "section": null,
+        "quote": "Self-supervised Cluster Discrimination Objective: 대규모 개념 은행을 기반으로 객체 수준의 영속성과 운동 역학을 공동으로 포착하는 클러스터 차별화 목표.",
+        "type": "quote"
+      }
+    }
+  ],
+  "tradeoffs": [],
+  "when_to_use": "비디오 이해에서 정보가 풍부한 부분에 집중하여 효율성을 높이고자 할 때.",
+  "when_not_to_use": "정적 배경이 많고 정보가 균일하게 분포된 비디오에서는 선택적 인코딩의 이점이 적을 수 있다."
+}

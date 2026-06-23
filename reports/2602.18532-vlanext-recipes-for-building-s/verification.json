@@ -1,0 +1,57 @@
+{
+  "arxiv_id": "2602.18532",
+  "total_claims": 5,
+  "verified_count": 3,
+  "unverified_count": 2,
+  "contradicted_count": 0,
+  "overall_reliability": "medium",
+  "results": [
+    {
+      "claim_id": "claim_1",
+      "claim_text": "VLANeXt는 LIBERO 및 LIBERO-plus 벤치마크에서 이전 최첨단 방법보다 우수한 성능을 보인다.",
+      "status": "verified",
+      "confidence": 1.0,
+      "evidence_found": "논문에서 VLANeXt가 LIBERO 및 LIBERO-plus 벤치마크에서 이전 방법들보다 높은 성공률을 기록했다고 명시되어 있음.",
+      "notes": "성능 비교 결과가 명확히 제시됨.",
+      "correction_hint": null
+    },
+    {
+      "claim_id": "claim_2",
+      "claim_text": "VLANeXt는 소프트 VLM-정책 모듈 연결을 통해 성능을 향상시킨다.",
+      "status": "verified",
+      "confidence": 1.0,
+      "evidence_found": "논문에서 소프트 연결 전략이 성능 향상에 기여한다고 명시되어 있음.",
+      "notes": "정확한 근거가 논문에 제시됨.",
+      "correction_hint": null
+    },
+    {
+      "claim_id": "claim_3",
+      "claim_text": "VLANeXt는 다중 뷰 입력과 VLM 측면의 고유 수용 조건을 통해 성능을 개선한다.",
+      "status": "verified",
+      "confidence": 1.0,
+      "evidence_found": "논문에서 다중 뷰 입력과 VLM 측면의 고유 수용 조건이 성능 향상에 기여한다고 명시되어 있음.",
+      "notes": "명확한 근거가 논문에 제시됨.",
+      "correction_hint": null
+    },
+    {
+      "claim_id": "claim_4",
+      "claim_text": "VLANeXt는 주파수 도메인 보조 손실을 추가하여 액션 생성 성능을 향상시킨다.",
+      "status": "unverified",
+      "confidence": 0.5,
+      "evidence_found": null,
+      "notes": "주파수 도메인 보조 손실에 대한 언급은 있으나, 그 효과에 대한 명확한 실험적 근거가 부족함.",
+      "correction_hint": null
+    },
+    {
+      "claim_id": "claim_5",
+      "claim_text": "VLANeXt는 실세계 실험에서 강력한 성능을 보이며, 제안된 레시피가 강력한 VLA 모델을 구축하는 데 효과적임을 입증한다.",
+      "status": "unverified",
+      "confidence": 0.5,
+      "evidence_found": null,
+      "notes": "실세계 실험에 대한 언급은 있으나, 구체적인 성능 수치나 비교가 부족함.",
+      "correction_hint": null
+    }
+  ],
+  "summary": "VLANeXt는 LIBERO 및 LIBERO-plus 벤치마크에서 이전 최첨단 방법보다 우수한 성능을 보이며, 소프트 VLM-정책 모듈 연결과 다중 뷰 입력을 통해 성능을 개선한다. 그러나 주파수 도메인 보조 손실과 실세계 실험에 대한 주장은 명확한 근거가 부족하다.",
+  "corrections_needed": []
+}

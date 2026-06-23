@@ -1,0 +1,70 @@
+{
+  "arxiv_id": "1706.03762",
+  "one_line_takeaway": "이 논문은 기존의 RNN 및 CNN 기반 시퀀스 변환 모델의 복잡성을 줄이고, 어텐션 메커니즘만을 사용하여 더 효율적이고 병렬화 가능한 모델을 제안한다.",
+  "core_deltas": [
+    {
+      "axis": "모델 구조",
+      "old_approach": "RNN 및 CNN 기반의 시퀀스 변환 모델",
+      "new_approach": "어텐션 메커니즘만을 사용한 Transformer 모델",
+      "why_better": "병렬화가 가능하여 연산 효율성을 높이고, 복잡성을 줄인다.",
+      "evidence": {
+        "page": null,
+        "section": null,
+        "quote": "기존의 순환 신경망(RNN)이나 합성곱 신경망(CNN) 기반의 시퀀스 변환 모델의 복잡성을 줄이고, 어텐션 메커니즘만을 사용하여 더 효율적이고 병렬화 가능한 모델을 제안한다.",
+        "type": "quote"
+      }
+    },
+    {
+      "axis": "어텐션 메커니즘",
+      "old_approach": "단일 어텐션 메커니즘",
+      "new_approach": "Multi-Head Attention",
+      "why_better": "다양한 표현 부분공간에서 정보를 동시에 수집하여 모델의 표현력을 향상시킨다.",
+      "evidence": {
+        "page": null,
+        "section": null,
+        "quote": "Multi-Head Attention: 여러 개의 어텐션 헤드를 병렬로 실행하여 다양한 표현 부분공간에서 정보를 동시에 수집하는 메커니즘",
+        "type": "quote"
+      }
+    },
+    {
+      "axis": "위치 정보 인코딩",
+      "old_approach": "위치 정보 인코딩 없음",
+      "new_approach": "Positional Encoding",
+      "why_better": "시퀀스의 위치 정보를 사인 및 코사인 함수로 인코딩하여 입력 임베딩에 추가함으로써 순서 정보를 보존한다.",
+      "evidence": {
+        "page": null,
+        "section": null,
+        "quote": "Positional Encoding: 시퀀스의 위치 정보를 사인 및 코사인 함수로 인코딩하여 입력 임베딩에 추가",
+        "type": "quote"
+      }
+    },
+    {
+      "axis": "모듈 구성",
+      "old_approach": "단일 모듈 구성",
+      "new_approach": "Encoder-Decoder 구조",
+      "why_better": "인코더와 디코더의 모듈화된 구조를 통해 다양한 시퀀스 변환 작업에 유연하게 적용 가능하다.",
+      "evidence": {
+        "page": null,
+        "section": null,
+        "quote": "Encoder Block: 6개의 동일한 레이어로 구성된 인코더 스택으로, 각 레이어는 멀티헤드 셀프 어텐션과 위치별 피드포워드 네트워크로 구성",
+        "type": "quote"
+      }
+    }
+  ],
+  "tradeoffs": [
+    {
+      "aspect": "복잡성",
+      "benefit": "병렬화 가능으로 인한 연산 효율성 증가",
+      "cost": "어텐션 메커니즘의 계산 비용 증가",
+      "when_acceptable": "병렬화로 인한 성능 향상이 중요한 경우",
+      "evidence": {
+        "page": null,
+        "section": null,
+        "quote": "어텐션 메커니즘만을 사용하여 더 효율적이고 병렬화 가능한 모델을 제안한다.",
+        "type": "quote"
+      }
+    }
+  ],
+  "when_to_use": "병렬화가 가능한 환경에서 시퀀스 변환 작업을 수행할 때",
+  "when_not_to_use": "단일 장치에서의 계산 비용이 중요한 경우"
+}
