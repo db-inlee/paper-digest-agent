@@ -1,0 +1,203 @@
+{
+  "arxiv_id": "2602.08683",
+  "title": "OneVision-Encoder: Codec-Aligned Sparsity as a Foundational Principle for Multimodal Intelligence",
+  "problem_definition": {
+    "statement": "비디오 이해를 위한 아키텍처는 정보 이론적 구조와 정렬되어야 한다. 현재의 비디오 모델은 밀집한 픽셀 그리드를 균일하게 처리하여 정적 배경에 많은 계산을 낭비하고 있다.",
+    "baseline_methods": [],
+    "structural_limitation": "현재의 비디오 모델은 밀집한 픽셀 그리드를 균일하게 처리하여 정적 배경에 많은 계산을 낭비하고 있다.",
+    "evidence": [
+      {
+        "page": null,
+        "section": "Introduction",
+        "quote": "Current models process dense pixel grids uniformly, wasting vast compute on static background rather than focusing on the predictive residuals that define motion and meaning.",
+        "type": "quote"
+      }
+    ]
+  },
+  "baselines": [
+    {
+      "name": "Qwen3-ViT",
+      "description": "강력한 비전 백본으로, 다양한 이미지, 비디오, 문서 이해 벤치마크에서 사용됨.",
+      "limitation": "OneVision-Encoder가 Qwen3-ViT보다 16개의 이해 벤치마크에서 일관되게 더 나은 성능을 보임.",
+      "evidence": [
+        {
+          "page": null,
+          "section": "Evidence",
+          "quote": "When integrated into large multimodal models, it consistently outperforms strong vision backbones such as Qwen3-ViT and SigLIP2 across 16 image, video, and document understanding benchmarks.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "name": "SigLIP2",
+      "description": "비전 백본으로, 다양한 이미지, 비디오, 문서 이해 벤치마크에서 사용됨.",
+      "limitation": "OneVision-Encoder가 SigLIP2보다 Diving-48에서 17.1%의 Top-1 정확도 향상을 보임.",
+      "evidence": [
+        {
+          "page": null,
+          "section": "Evidence",
+          "quote": "Under attentive probing, it achieves state-of-the-art representation quality, with 17.1% and 8.1% Top-1 accuracy improvements over SigLIP2 and DINOv3, respectively, on Diving-48 under identical patch budgets.",
+          "type": "quote"
+        }
+      ]
+    }
+  ],
+  "method_components": [
+    {
+      "name": "Codec Patchification",
+      "description": "비디오 코덱에서 유래한 입력 형식을 사용하여 밀집한 비디오에서 정보가 풍부한 시각 패치를 선택적으로 인코딩.",
+      "inputs": [
+        "Dense video inputs"
+      ],
+      "outputs": [
+        "Informative visual patches"
+      ],
+      "implementation_hint": "3.1%-25%의 영역만 선택적으로 인코딩.",
+      "role": "novel",
+      "evidence": [
+        {
+          "page": null,
+          "section": "Method",
+          "quote": "By adopting Codec Patchification, OneVision-Encoder abandons uniform computation to focus exclusively on the 3.1%-25% of regions rich in signal entropy.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "name": "3D Rotary Position Embedding (RoPE)",
+      "description": "공간적 및 시간적 위치를 공동으로 인코딩하여 불규칙한 시공간 레이아웃에서 일관된 어텐션을 지원.",
+      "inputs": [
+        "Irregular token layouts"
+      ],
+      "outputs": [
+        "Coherent attention"
+      ],
+      "implementation_hint": "3D RoPE를 사용하여 공간 및 시간적 위치를 인코딩.",
+      "role": "novel",
+      "evidence": [
+        {
+          "page": null,
+          "section": "Method",
+          "quote": "To unify spatial and temporal reasoning under irregular token layouts, OneVision-Encoder employs a shared 3D RoPE.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "name": "Self-supervised Cluster Discrimination Objective",
+      "description": "대규모 개념 은행을 기반으로 객체 수준의 영속성과 운동 역학을 공동으로 포착하는 클러스터 차별화 목표.",
+      "inputs": [
+        "Semantic concepts"
+      ],
+      "outputs": [
+        "Structured and modality-agnostic visual representation"
+      ],
+      "implementation_hint": "백만 개 이상의 클러스터를 사용하여 대규모 개념 은행에서 클러스터 차별화 목표를 채택.",
+      "role": "novel",
+      "evidence": [
+        {
+          "page": null,
+          "section": "Method",
+          "quote": "We adopt a self-supervised cluster discrimination objective based on large-scale semantic clustering over a concept bank with more than one million clusters.",
+          "type": "quote"
+        }
+      ]
+    }
+  ],
+  "benchmarks": [
+    {
+      "dataset": "Diving-48",
+      "metrics": [
+        "Top-1 Accuracy"
+      ],
+      "baseline_results": {
+        "SigLIP2": "50.1%"
+      },
+      "proposed_results": {
+        "OneVision-Encoder": "67.2%"
+      },
+      "evidence": [
+        {
+          "page": null,
+          "section": "Evidence",
+          "quote": "Under attentive probing, it achieves state-of-the-art representation quality, with 17.1% and 8.1% Top-1 accuracy improvements over SigLIP2 and DINOv3, respectively, on Diving-48 under identical patch budgets.",
+          "type": "quote"
+        }
+      ]
+    }
+  ],
+  "benchmark": null,
+  "claims": [
+    {
+      "claim_id": "C1",
+      "text": "OneVision-Encoder는 비디오 신호의 내재적 예측 구조와 정렬된 HEVC 스타일의 비전 트랜스포머를 제안한다.",
+      "claim_type": "method",
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "page": null,
+          "section": "Introduction",
+          "quote": "In this work, we present OneVision-Encoder (OV-Encoder), a HEVC-style Vision Transformer that aligns spatiotemporal representation learning with the intrinsic predictive structure of video signals.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "claim_id": "C2",
+      "text": "OneVision-Encoder는 Qwen3-ViT와 SigLIP2를 포함한 강력한 비전 백본을 일관되게 능가한다.",
+      "claim_type": "comparison",
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "page": null,
+          "section": "Evidence",
+          "quote": "When integrated into large multimodal models, it consistently outperforms strong vision backbones such as Qwen3-ViT and SigLIP2 across 16 image, video, and document understanding benchmarks.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "claim_id": "C3",
+      "text": "OneVision-Encoder는 SigLIP2보다 Diving-48에서 17.1%의 Top-1 정확도 향상을 달성한다.",
+      "claim_type": "result",
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "page": null,
+          "section": "Evidence",
+          "quote": "Under attentive probing, it achieves state-of-the-art representation quality, with 17.1% and 8.1% Top-1 accuracy improvements over SigLIP2 and DINOv3, respectively, on Diving-48 under identical patch budgets.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "claim_id": "C4",
+      "text": "OneVision-Encoder는 코덱 정렬 패치 수준 희소성이 최적화 트릭이 아니라 차세대 비주얼 제너럴리스트를 위한 기초 원칙임을 입증한다.",
+      "claim_type": "architecture",
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "page": null,
+          "section": "Evidence",
+          "quote": "These results demonstrate that codec-aligned, patch-level sparsity is not an optimization trick, but a foundational principle for next-generation visual generalists.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "claim_id": "C5",
+      "text": "OneVision-Encoder는 효율성과 정확성이 상충 관계가 아니라 긍정적으로 상관되어 있음을 입증한다.",
+      "claim_type": "efficiency",
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "page": null,
+          "section": "Evidence",
+          "quote": "The results validate our core hypothesis: efficiency and accuracy are not a trade-off; they are positively correlated.",
+          "type": "quote"
+        }
+      ]
+    }
+  ],
+  "extraction_mode": "full"
+}

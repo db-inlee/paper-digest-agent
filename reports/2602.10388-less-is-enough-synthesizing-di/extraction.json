@@ -1,0 +1,159 @@
+{
+  "arxiv_id": "2602.10388",
+  "title": "Less is Enough: Synthesizing Diverse Data in Feature Space of LLMs",
+  "problem_definition": {
+    "statement": "대규모 언어 모델(LLM)의 후속 학습 데이터의 다양성은 다운스트림 성능에 중요합니다. 기존의 텍스트 기반 다양성 측정은 작업 관련 기능을 충분히 포착하지 못합니다.",
+    "baseline_methods": [],
+    "structural_limitation": "기존의 다양성 메트릭은 주로 텍스트 공간이나 일반적인 임베딩 공간에서 정의되어 있으며, 모델의 학습 과정과 다운스트림 작업의 관련성을 충분히 반영하지 못합니다.",
+    "evidence": [
+      {
+        "page": 1,
+        "section": "Abstract",
+        "quote": "Many existing approaches to constructing post-training data quantify diversity using text-based metrics that capture linguistic variation, but such metrics provide only weak signals for the task-relevant features that determine downstream performance.",
+        "type": "quote"
+      }
+    ]
+  },
+  "baselines": [
+    {
+      "name": "MAGPIE",
+      "description": "기존의 SOTA 데이터 합성 방법으로, 300K 샘플을 사용하여 성능을 달성합니다.",
+      "limitation": "150배 더 많은 데이터를 필요로 합니다.",
+      "evidence": [
+        {
+          "page": 1,
+          "section": "Abstract",
+          "quote": "Our FAC Synthesis method achieves comparable performance to prior SOTA MAGPIE using only 2,000 synthetic samples (MAGPIE requires 150× more data).",
+          "type": "quote"
+        }
+      ]
+    }
+  ],
+  "method_components": [
+    {
+      "name": "Feature Activation Coverage (FAC)",
+      "description": "모델의 내부 기능 공간에서 데이터 다양성을 정량화하는 메트릭입니다.",
+      "inputs": [
+        "모델의 내부 기능 공간"
+      ],
+      "outputs": [
+        "다양성 정량화 값"
+      ],
+      "implementation_hint": null,
+      "evidence": [
+        {
+          "page": 2,
+          "section": "Introduction",
+          "quote": "We propose Feature Activation Coverage (FAC) to quantify data diversity in a model’s internal feature space.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "name": "FAC Synthesis",
+      "description": "FAC를 기반으로 데이터 합성을 통해 후속 학습 데이터를 개선하는 프레임워크입니다.",
+      "inputs": [
+        "시드 데이터셋"
+      ],
+      "outputs": [
+        "합성된 샘플"
+      ],
+      "implementation_hint": null,
+      "evidence": [
+        {
+          "page": 2,
+          "section": "Introduction",
+          "quote": "We then design FAC Synthesis, a coverage-guided data synthesis framework that improves post-training data by generating examples that increase FAC.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "name": "Sparse Autoencoder (SAE)",
+      "description": "모델의 내부 기능 공간에서 해석 가능한 잠재 기능을 얻기 위해 사용됩니다.",
+      "inputs": [
+        "모델의 내부 기능 공간"
+      ],
+      "outputs": [
+        "잠재 기능"
+      ],
+      "implementation_hint": null,
+      "evidence": [
+        {
+          "page": 3,
+          "section": "Preliminaries",
+          "quote": "This work constructs the feature space using Sparse Autoencoders (SAEs), which extract interpretable features from the internal activations of LLMs.",
+          "type": "quote"
+        }
+      ]
+    }
+  ],
+  "benchmark": {
+    "dataset": "Toxicity Detection, Reward Modeling, Behavior Steering, Instruction Following",
+    "metrics": [
+      "AUPRC",
+      "Accuracy",
+      "SCR",
+      "Win Rate"
+    ],
+    "baseline_results": {
+      "MAGPIE": "44.18±4.61 (Toxicity Detection), 72.75±2.19 (Reward Modeling)"
+    },
+    "proposed_results": {
+      "Ours": "62.60±4.41 (Toxicity Detection), 76.22±1.03 (Reward Modeling)"
+    },
+    "evidence": [
+      {
+        "page": 5,
+        "section": "7 Experiments",
+        "quote": "Table 1: Performance comparison on Toxicity Detection, Reward Modeling, Behavior Steering, and Instruction Following tasks.",
+        "type": "quote"
+      }
+    ]
+  },
+  "claims": [
+    {
+      "claim_id": "claim_1",
+      "text": "FAC Synthesis는 기존의 SOTA 방법인 MAGPIE와 비교하여 150배 적은 데이터로 유사한 성능을 달성합니다.",
+      "claim_type": "comparison",
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "page": 1,
+          "section": "Abstract",
+          "quote": "Our FAC Synthesis method achieves comparable performance to prior SOTA MAGPIE using only 2,000 synthetic samples (MAGPIE requires 150× more data).",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "claim_id": "claim_2",
+      "text": "FAC는 다운스트림 작업 성능과 강한 양의 상관관계를 보입니다.",
+      "claim_type": "result",
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "page": 2,
+          "section": "Introduction",
+          "quote": "Experimental results demonstrate that FAC serves as an effective diversity metric, exhibiting a strong positive correlation with downstream task performance (Pearson r = 0.95, Spearman ρ = 0.90).",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "claim_id": "claim_3",
+      "text": "SAE로 식별된 누락된 기능은 다른 언어 모델 간에 전이 가능합니다.",
+      "claim_type": "result",
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "page": 1,
+          "section": "Abstract",
+          "quote": "Interestingly, we identify a shared, interpretable feature space across model families (i.e., LLaMA, Mistral, and Qwen), enabling cross-model knowledge transfer.",
+          "type": "quote"
+        }
+      ]
+    }
+  ],
+  "extraction_mode": "full"
+}

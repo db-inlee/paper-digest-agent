@@ -1,0 +1,10 @@
+{
+  "arxiv_id": "1706.03762",
+  "practicality": 5,
+  "codeability": 4,
+  "signal": 5,
+  "recommendation": "must_read",
+  "reasoning": "이 논문은 어텐션 메커니즘을 기반으로 한 Transformer 모델을 제안하여 기존의 RNN 및 CNN 모델의 복잡성을 줄이고 효율성을 높이는 방법을 제시한다. 이는 실제 문제 해결에 매우 유용하며, 다양한 자연어 처리(NLP) 작업에 적용 가능하다.",
+  "key_strength": "어텐션 메커니즘을 활용하여 병렬 처리와 효율성을 극대화한 Transformer 모델을 제안한다.",
+  "main_concern": ""
+}

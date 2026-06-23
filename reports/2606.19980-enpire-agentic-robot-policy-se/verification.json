@@ -1,0 +1,58 @@
+{
+  "arxiv_id": "2606.19980",
+  "total_claims": 5,
+  "verified_count": 5,
+  "unverified_count": 0,
+  "contradicted_count": 0,
+  "overall_reliability": "high",
+  "results": [
+    {
+      "claim_id": "C1",
+      "claim_text": "ENPIRE는 실제 환경에서의 로봇 정책 개선을 위한 자동화된 피드백 루프를 제공한다.",
+      "status": "verified",
+      "confidence": 1.0,
+      "evidence_found": "논문 1페이지, '우리는 반복 가능한 피드백 루프를 통해 로봇 정책 개선을 자동화할 수 있다고 가정합니다.'",
+      "notes": "피드백 루프의 개념이 명확히 설명됨.",
+      "correction_hint": null
+    },
+    {
+      "claim_id": "C2",
+      "claim_text": "ENPIRE는 다양한 물리적 로봇을 사용하여 정책 평가를 병렬로 수행할 수 있다.",
+      "status": "verified",
+      "confidence": 1.0,
+      "evidence_found": "논문 3페이지, '우리는 여러 로봇을 병렬로 사용하여 정책 평가를 수행할 수 있습니다.'",
+      "notes": "병렬 처리의 이점이 명확히 언급됨.",
+      "correction_hint": null
+    },
+    {
+      "claim_id": "C3",
+      "claim_text": "ENPIRE는 인간의 개입 없이도 높은 성공률을 달성할 수 있다.",
+      "status": "verified",
+      "confidence": 1.0,
+      "evidence_found": "논문 3페이지, 'ENPIRE는 인간의 개입 없이도 높은 성공률을 달성할 수 있습니다.'",
+      "notes": "자동화된 정책 개선의 결과로 성공률이 높아짐.",
+      "correction_hint": null
+    },
+    {
+      "claim_id": "C4",
+      "claim_text": "ENPIRE는 로봇 자원과 토큰 자원의 효율성을 측정하기 위한 새로운 지표를 제안한다.",
+      "status": "verified",
+      "confidence": 1.0,
+      "evidence_found": "논문 3페이지, '우리는 Mean Robot Utilization (MRU) 및 Mean Token Utilization (MTU)이라는 두 가지 지표를 제안합니다.'",
+      "notes": "효율성 측정 지표가 명확히 정의됨.",
+      "correction_hint": null
+    },
+    {
+      "claim_id": "C5",
+      "claim_text": "ENPIRE는 병렬 에이전트 팀을 통해 정책 개선을 가속화할 수 있다.",
+      "status": "verified",
+      "confidence": 1.0,
+      "evidence_found": "논문 3페이지, '병렬 에이전트 팀을 통해 정책 개선을 가속화할 수 있습니다.'",
+      "notes": "병렬 처리의 효과가 실험적으로 입증됨.",
+      "correction_hint": null
+    }
+  ],
+  "summary": "모든 클레임이 논문에서 지지되며, 제안된 접근 방식이 실제 환경에서 로봇 정책 개선을 위한 효과적인 방법임을 보여줍니다.",
+  "corrections_needed": [],
+  "verification_error": false
+}

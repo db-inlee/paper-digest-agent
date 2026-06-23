@@ -1,0 +1,214 @@
+{
+  "arxiv_id": "2602.18532",
+  "title": "VLANeXt: Recipes for Building Strong VLA Models",
+  "problem_definition": {
+    "statement": "VLA 모델의 설계 공간을 통합된 프레임워크와 평가 설정 하에 재검토하여 강력한 VLA 모델을 구축하기 위한 실용적인 레시피를 도출한다.",
+    "baseline_methods": [
+      "RT-2",
+      "OpenVLA"
+    ],
+    "structural_limitation": "현재 VLA 모델의 설계 공간은 단편적이고 탐색적이며, 일관되지 않은 훈련 프로토콜과 평가 설정으로 인해 어떤 설계 선택이 중요한지 식별하기 어렵다.",
+    "evidence": [
+      {
+        "page": null,
+        "section": "Abstract",
+        "quote": "Yet, the current VLA landscape remains fragmented and exploratory. Although many groups have proposed their own VLA models, inconsistencies in training protocols and evaluation settings make it difficult to identify which design choices truly matter.",
+        "type": "quote"
+      }
+    ]
+  },
+  "baselines": [
+    {
+      "name": "OpenVLA-OFT",
+      "description": "OpenVLA의 변형으로, VLA 모델의 성능을 개선하기 위한 다양한 설계 선택을 포함한다.",
+      "limitation": "VLANeXt에 비해 작은 모델 크기에도 불구하고 성공률이 낮다.",
+      "evidence": [
+        {
+          "page": null,
+          "section": "Abstract",
+          "quote": "VLANeXt outperforms prior state-of-the-art methods on the LIBERO and LIBERO-plus benchmarks and demonstrates strong generalization in real-world experiments.",
+          "type": "quote"
+        }
+      ]
+    }
+  ],
+  "method_components": [
+    {
+      "name": "Policy Module Design",
+      "description": "텍스트 토큰을 재사용하여 액션 분류를 수행하는 대신, 별도의 정책 헤드를 추가하여 액션 예측을 수행한다.",
+      "inputs": [
+        "텍스트 임베딩",
+        "비주얼 임베딩"
+      ],
+      "outputs": [
+        "액션 분류 결과"
+      ],
+      "implementation_hint": "트랜스포머 아키텍처를 사용하여 두 레이어의 정책 헤드를 구성한다.",
+      "role": "novel",
+      "evidence": [
+        {
+          "page": null,
+          "section": "2.1. The Foundational Components",
+          "quote": "We append a class token to the text and visual embeddings and feed its LLM output into a two-layer policy head (transformer architecture) for action classification.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "name": "Action Chunking",
+      "description": "여러 미래의 액션을 공동으로 예측하여 추론 효율성을 개선한다.",
+      "inputs": [
+        "현재 액션 상태"
+      ],
+      "outputs": [
+        "미래 액션 시퀀스"
+      ],
+      "implementation_hint": "액션 청크 크기를 8로 설정하여 더 긴 시간적 창을 모델링한다.",
+      "role": "novel",
+      "evidence": [
+        {
+          "page": null,
+          "section": "2.1. The Foundational Components",
+          "quote": "We therefore adopt action chunking with a chunk size of 8.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "name": "VLM-Policy Connection",
+      "description": "VLM과 정책 모듈 간의 연결 전략을 연구하여 성능에 미치는 영향을 분석한다.",
+      "inputs": [
+        "VLM 출력"
+      ],
+      "outputs": [
+        "정책 모듈 입력"
+      ],
+      "implementation_hint": "학습 가능한 쿼리를 삽입하여 두 모듈 간의 레이어별 연결을 통해 소프트 전략을 도입한다.",
+      "role": "novel",
+      "evidence": [
+        {
+          "page": null,
+          "section": "2.1. The Foundational Components",
+          "quote": "We further introduce a soft strategy that also connects them layer by layer but inserts learnable queries as a latent buffer between the modules.",
+          "type": "quote"
+        }
+      ]
+    }
+  ],
+  "benchmarks": [
+    {
+      "dataset": "LIBERO",
+      "metrics": [
+        "성공률"
+      ],
+      "baseline_results": {
+        "OpenVLA-OFT": "97.1"
+      },
+      "proposed_results": {
+        "VLANeXt": "97.4"
+      },
+      "evidence": [
+        {
+          "page": null,
+          "section": "3.2. LIBERO Benchmark Results",
+          "quote": "On the LIBERO benchmark, we compare our method against two categories of approaches: (i) direct policy learning methods that are trained solely on robotic datasets, and (ii) VLA methods that leverage knowledge from pretrained VLMs for policy learning.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "dataset": "LIBERO-plus",
+      "metrics": [
+        "성공률"
+      ],
+      "baseline_results": {
+        "OpenVLA-OFT": "69.6"
+      },
+      "proposed_results": {
+        "VLANeXt": "80.1"
+      },
+      "evidence": [
+        {
+          "page": null,
+          "section": "3.3. LIBERO-plus Benchmark Results",
+          "quote": "As shown in Table 3, the proposed VLANeXt model demonstrates strong generalization ability across different types of unseen perturbations.",
+          "type": "quote"
+        }
+      ]
+    }
+  ],
+  "benchmark": null,
+  "claims": [
+    {
+      "claim_id": "claim_1",
+      "text": "VLANeXt는 LIBERO 및 LIBERO-plus 벤치마크에서 이전 최첨단 방법보다 우수한 성능을 보인다.",
+      "claim_type": "result",
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "page": null,
+          "section": "Abstract",
+          "quote": "VLANeXt outperforms prior state-of-the-art methods on the LIBERO and LIBERO-plus benchmarks.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "claim_id": "claim_2",
+      "text": "VLANeXt는 소프트 VLM-정책 모듈 연결을 통해 성능을 향상시킨다.",
+      "claim_type": "architecture",
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "page": null,
+          "section": "2.1. The Foundational Components",
+          "quote": "Results show that the soft strategy slightly outperforms both loose and tight connections.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "claim_id": "claim_3",
+      "text": "VLANeXt는 다중 뷰 입력과 VLM 측면의 고유 수용 조건을 통해 성능을 개선한다.",
+      "claim_type": "architecture",
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "page": null,
+          "section": "2.2. The Perception Essentials",
+          "quote": "Results show that combining third-person and wrist views significantly improves performance.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "claim_id": "claim_4",
+      "text": "VLANeXt는 주파수 도메인 보조 손실을 추가하여 액션 생성 성능을 향상시킨다.",
+      "claim_type": "method",
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "page": null,
+          "section": "2.3. Action Modelling Perspectives",
+          "quote": "This strategy improves action generation performance, slightly surpassing the world modeling objective while adding negligible training overhead.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "claim_id": "claim_5",
+      "text": "VLANeXt는 실세계 실험에서 강력한 성능을 보이며, 제안된 레시피가 강력한 VLA 모델을 구축하는 데 효과적임을 입증한다.",
+      "claim_type": "result",
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "page": null,
+          "section": "4.2. Results",
+          "quote": "As can be seen, our model performs well in real-world experiments, demonstrating that the recipes we propose lead to a strong VLA model that can be effectively deployed in real-world settings.",
+          "type": "quote"
+        }
+      ]
+    }
+  ],
+  "extraction_mode": "full"
+}

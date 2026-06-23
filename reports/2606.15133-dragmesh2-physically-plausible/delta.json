@@ -1,0 +1,46 @@
+{
+  "arxiv_id": "2606.15133",
+  "one_line_takeaway": "이 논문은 다관절 객체와의 손-객체 상호작용에서 물리적으로 타당한 상호작용을 가능하게 하기 위해 DragMesh-2 프레임워크와 PICA 메커니즘을 제안한다.",
+  "core_deltas": [
+    {
+      "axis": "프레임워크 구조",
+      "old_approach": "상태 정보만을 사용하는 PPO 기반의 정책 학습 방법",
+      "new_approach": "DragMesh-2 프레임워크를 통해 손-핸들 접촉을 통한 물리적으로 타당한 객체 움직임을 수행",
+      "why_better": "다관절 객체와의 상호작용에서 물리적 타당성을 높여 접촉 하중 변화에 대한 강건성을 향상시킴",
+      "evidence": {
+        "page": null,
+        "section": null,
+        "quote": "DragMesh-2 Framework: 다관절 객체와의 상호작용을 손-핸들 접촉을 통해 물리적으로 타당하게 수행하는 프레임워크",
+        "type": "quote"
+      }
+    },
+    {
+      "axis": "정책 학습 메커니즘",
+      "old_approach": "GRU를 활용한 PPO 기반의 정책 학습 방법",
+      "new_approach": "PICA (Physically Informed Contact-Aware) 메커니즘을 통해 물리적 신호를 정책 학습에 주입",
+      "why_better": "접촉 하중 변화에 대한 강건성을 향상시켜 더 안정적인 상호작용을 가능하게 함",
+      "evidence": {
+        "page": null,
+        "section": null,
+        "quote": "PICA: 물리적 신호를 정책 학습에 주입하여 접촉 하중 변화에 대한 강건성을 향상시키는 메커니즘",
+        "type": "quote"
+      }
+    },
+    {
+      "axis": "인코딩 전략",
+      "old_approach": "Transformer를 활용한 PPO 기반의 정책 학습 방법",
+      "new_approach": "GLA Encoder를 통해 최근의 제어 히스토리를 기반으로 접촉 히스토리 특징을 인코딩",
+      "why_better": "접촉 히스토리의 특징을 효과적으로 인코딩하여 정책 학습의 정확성을 높임",
+      "evidence": {
+        "page": null,
+        "section": null,
+        "quote": "GLA Encoder: 최근의 제어 히스토리를 기반으로 접촉 히스토리 특징을 인코딩하는 Gated Linear Attention 인코더",
+        "type": "quote"
+      }
+    }
+  ],
+  "tradeoffs": [],
+  "when_to_use": "다관절 객체와의 상호작용에서 물리적 타당성과 강건성이 중요한 경우",
+  "when_not_to_use": "단순한 상호작용에서 복잡한 물리적 타당성이 필요하지 않은 경우",
+  "grounded_on": []
+}

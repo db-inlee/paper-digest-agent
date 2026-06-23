@@ -1,0 +1,459 @@
+{
+  "arxiv_id": "2602.20093",
+  "title": "ManCAR: Manifold-Constrained Latent Reasoning with Adaptive Test-Time Computation for Sequential Recommendation",
+  "problem_definition": {
+    "statement": "기존의 순차 추천 시스템에서 발생하는 잠재적 드리프트(latent drift) 문제를 해결하기 위해, 사용자의 최근 행동에 기반한 협업적 이웃을 활용하여 유효한 매니폴드(manifold) 내에서 잠재적 추론을 진행하는 방법을 제안한다.",
+    "baseline_methods": [
+      "SASRec",
+      "BERT4Rec",
+      "ContextBERT4Rec",
+      "ReaRec-ERL",
+      "ReaRec-PRL",
+      "LARES",
+      "PLR"
+    ],
+    "structural_limitation": "기존 방법들은 중간 추론 상태의 진화를 명시적으로 제한하지 않아, 잠재적 드리프트가 발생할 수 있다.",
+    "evidence": [
+      {
+        "page": null,
+        "section": "Introduction",
+        "quote": "Despite empirical gains, existing methods remain poorly understood. They typically guide latent reasoning using target-dominant objectives, such as supervising only the final reasoning state with the target item, or mapping each intermediate state to an item probability distribution and progressively concentrating it toward a target one-hot distribution. However, they impose no explicit constraints on the evolution of intermediate reasoning states.",
+        "type": "quote"
+      }
+    ]
+  },
+  "baselines": [
+    {
+      "name": "SASRec",
+      "description": "Unidirectional Transformer 기반의 순차 추천 모델로, 사용자의 상호작용 시퀀스의 마지막 아이템을 통해 사용자를 표현한다.",
+      "limitation": "잠재적 추론을 포함하지 않아 중간 상태의 불확실성을 해결하는 데 한계가 있다.",
+      "evidence": [
+        {
+          "page": null,
+          "section": "3.1.3 Baselines",
+          "quote": "SASRec [15]: Utilizing a unidirectional Transformer encoder, SASRec represents users by the final item in their interaction sequence.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "name": "BERT4Rec",
+      "description": "BERT에서 영감을 받아 양방향 접근 방식을 채택하여 시퀀스 내의 마스킹된 아이템을 재구성하도록 모델을 훈련한다.",
+      "limitation": "그래프 기반의 문맥 정보를 활용하지 않아 독립적인 사용자 상호작용 시퀀스에만 의존한다.",
+      "evidence": [
+        {
+          "page": null,
+          "section": "3.1.3 Baselines",
+          "quote": "BERT4Rec [26]: adopts a bidirectional approach inspired by BERT, training the model to reconstruct masked items within the sequence.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "name": "ContextBERT4Rec",
+      "description": "BERT4Rec을 확장하여 ManCAR에서 사용된 것과 동일한 그래프 조건부 후보 세트를 사용하여 문맥 엔지니어링을 수행한다.",
+      "limitation": "명시적 다단계 추론을 포함하지 않아 추가적인 모델링 용량을 제공하지 못한다.",
+      "evidence": [
+        {
+          "page": null,
+          "section": "3.1.3 Baselines",
+          "quote": "ContextBERT4Rec: extends BERT4Rec by using the same context engineering as ManCAR.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "name": "ReaRec-ERL",
+      "description": "잠재 공간 추론의 선구자로, 추론 과정을 집합적 궤적으로 취급하여 모든 자가회귀 단계의 암시적 정보를 종합하여 포괄적인 사용자 표현을 형성한다.",
+      "limitation": "추론 궤적의 진화를 명시적으로 제한하지 않아 불안정한 경로로 이어질 수 있다.",
+      "evidence": [
+        {
+          "page": null,
+          "section": "3.1.3 Baselines",
+          "quote": "ReaRec-ERL [31]: As a pioneer in latent space reasoning, this model treats the reasoning process as a collective trajectory.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "name": "ReaRec-PRL",
+      "description": "대조 학습과 노이즈 주입을 활용하여 잠재 표현을 점진적으로 증류하고, 중간 상태를 버리고 최종 추론 단계의 수렴된 출력에만 의존한다.",
+      "limitation": "명시적 제약이 없어 잠재적 드리프트를 방지하지 못한다.",
+      "evidence": [
+        {
+          "page": null,
+          "section": "3.1.3 Baselines",
+          "quote": "ReaRec-PRL [31]: In contrast to ERL, this variant emphasizes iterative optimization.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "name": "LARES",
+      "description": "자기 지도 사전 훈련과 강화 학습 기반의 미세 조정을 순차적으로 적용하여 추론 충실도를 극대화하는 하이브리드 훈련 파이프라인을 채택한다.",
+      "limitation": "추론 궤적의 진화를 명시적으로 제한하지 않아 불안정한 경로로 이어질 수 있다.",
+      "evidence": [
+        {
+          "page": null,
+          "section": "3.1.3 Baselines",
+          "quote": "LARES [20]: This framework introduces pre-blocks and core-blocks.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "name": "PLR",
+      "description": "여러 병렬 추론 스트림을 통해 다양한 추론 경로를 동시에 탐색하는 폭 확장(병렬) 잠재 추론 프레임워크.",
+      "limitation": "명시적 제약이 없어 잠재적 드리프트를 방지하지 못한다.",
+      "evidence": [
+        {
+          "page": null,
+          "section": "3.1.3 Baselines",
+          "quote": "PLR [30]: A width-scaled (parallel) latent reasoning framework for sequential recommendation.",
+          "type": "quote"
+        }
+      ]
+    }
+  ],
+  "method_components": [
+    {
+      "name": "Manifold-Constrained Latent Reasoning",
+      "description": "사용자의 최근 상호작용을 기반으로 한 협업적 이웃을 활용하여 잠재적 추론 궤적을 유효한 매니폴드 내에서 제한한다.",
+      "inputs": [
+        "사용자의 최근 상호작용"
+      ],
+      "outputs": [
+        "유효한 매니폴드 내의 잠재적 추론 궤적"
+      ],
+      "implementation_hint": "그래프 조건부 후보 세트를 사용하여 잠재적 추론 궤적을 제한",
+      "role": "novel",
+      "evidence": [
+        {
+          "page": null,
+          "section": "2.2 Manifold-Constrained Latent Reasoning",
+          "quote": "We propose a geometric perspective: reasoning should not traverse the latent space freely but must be viewed as navigation constrained to a 'collaborative manifold'.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "name": "Variational Training Objective",
+      "description": "잠재적 추론을 중간 의도 변수에 대한 근사 추론으로 취급하여 ELBO와 유사한 목표를 도출한다.",
+      "inputs": [
+        "사용자 상호작용 이력"
+      ],
+      "outputs": [
+        "ELBO와 유사한 목표"
+      ],
+      "implementation_hint": "Evidence Lower Bound (ELBO)와 유사한 목표를 사용하여 잠재적 추론을 최적화",
+      "role": "novel",
+      "evidence": [
+        {
+          "page": null,
+          "section": "2.3 Variational Training Objective",
+          "quote": "We derive an Evidence Lower Bound (ELBO)-like objective, treating latent reasoning as approximate inference over an intermediate intent variable.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "name": "Adaptive Test-Time Termination",
+      "description": "모델이 목표 영역을 충분히 지역화했을 때 적응적으로 추론을 종료하는 수렴 기반 종료 기준을 설계한다.",
+      "inputs": [
+        "잠재적 상태의 아이템 확률 분포"
+      ],
+      "outputs": [
+        "적응적 종료 시점"
+      ],
+      "implementation_hint": "수렴 기반 종료 기준을 사용하여 테스트 시점에서 적응적으로 추론 종료",
+      "role": "novel",
+      "evidence": [
+        {
+          "page": null,
+          "section": "2.6 Training Scheduling and Adaptive Test-Time Reasoning",
+          "quote": "This analysis not only guides the training schedule but also naturally motivates our convergence-based stopping criterion, enabling adaptive test-time reasoning.",
+          "type": "quote"
+        }
+      ]
+    }
+  ],
+  "benchmarks": [
+    {
+      "dataset": "CDs & Vinyl (CDs)",
+      "metrics": [
+        "NDCG@5",
+        "NDCG@10",
+        "Recall@5",
+        "Recall@10"
+      ],
+      "baseline_results": {
+        "NDCG@5": "0.0148",
+        "NDCG@10": "0.0182",
+        "Recall@5": "0.0243",
+        "Recall@10": "0.0391"
+      },
+      "proposed_results": {
+        "NDCG@5": "0.0198",
+        "NDCG@10": "0.0282",
+        "Recall@5": "0.0346",
+        "Recall@10": "0.0516"
+      },
+      "evidence": [
+        {
+          "page": null,
+          "section": "3.2 Overall Performance (Tab. 2)",
+          "quote": "ManCAR achieves the best performance across all datasets and evaluation metrics, demonstrating consistent improvements in both ranking and retrieval quality.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "dataset": "Video & Games (Video)",
+      "metrics": [
+        "NDCG@5",
+        "NDCG@10",
+        "Recall@5",
+        "Recall@10"
+      ],
+      "baseline_results": {
+        "NDCG@5": "0.0119",
+        "NDCG@10": "0.0163",
+        "Recall@5": "0.0190",
+        "Recall@10": "0.0330"
+      },
+      "proposed_results": {
+        "NDCG@5": "0.0217",
+        "NDCG@10": "0.0275",
+        "Recall@5": "0.0339",
+        "Recall@10": "0.0521"
+      },
+      "evidence": [
+        {
+          "page": null,
+          "section": "3.2 Overall Performance (Tab. 2)",
+          "quote": "ManCAR achieves the best performance across all datasets and evaluation metrics, demonstrating consistent improvements in both ranking and retrieval quality.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "dataset": "Office Products (Office)",
+      "metrics": [
+        "NDCG@5",
+        "NDCG@10",
+        "Recall@5",
+        "Recall@10"
+      ],
+      "baseline_results": {
+        "NDCG@5": "0.0076",
+        "NDCG@10": "0.0093",
+        "Recall@5": "0.0129",
+        "Recall@10": "0.0184"
+      },
+      "proposed_results": {
+        "NDCG@5": "0.0108",
+        "NDCG@10": "0.0133",
+        "Recall@5": "0.0174",
+        "Recall@10": "0.0250"
+      },
+      "evidence": [
+        {
+          "page": null,
+          "section": "3.2 Overall Performance (Tab. 2)",
+          "quote": "ManCAR achieves the best performance across all datasets and evaluation metrics, demonstrating consistent improvements in both ranking and retrieval quality.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "dataset": "Arts, Crafts & Sewing (Arts)",
+      "metrics": [
+        "NDCG@5",
+        "NDCG@10",
+        "Recall@5",
+        "Recall@10"
+      ],
+      "baseline_results": {
+        "NDCG@5": "0.0044",
+        "NDCG@10": "0.0059",
+        "Recall@5": "0.0082",
+        "Recall@10": "0.0129"
+      },
+      "proposed_results": {
+        "NDCG@5": "0.0087",
+        "NDCG@10": "0.0114",
+        "Recall@5": "0.0141",
+        "Recall@10": "0.0225"
+      },
+      "evidence": [
+        {
+          "page": null,
+          "section": "3.2 Overall Performance (Tab. 2)",
+          "quote": "ManCAR achieves the best performance across all datasets and evaluation metrics, demonstrating consistent improvements in both ranking and retrieval quality.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "dataset": "Musical Instruments (Music)",
+      "metrics": [
+        "NDCG@5",
+        "NDCG@10",
+        "Recall@5",
+        "Recall@10"
+      ],
+      "baseline_results": {
+        "NDCG@5": "0.0049",
+        "NDCG@10": "0.0059",
+        "Recall@5": "0.0086",
+        "Recall@10": "0.0118"
+      },
+      "proposed_results": {
+        "NDCG@5": "0.0097",
+        "NDCG@10": "0.0120",
+        "Recall@5": "0.0147",
+        "Recall@10": "0.0217"
+      },
+      "evidence": [
+        {
+          "page": null,
+          "section": "3.2 Overall Performance (Tab. 2)",
+          "quote": "ManCAR achieves the best performance across all datasets and evaluation metrics, demonstrating consistent improvements in both ranking and retrieval quality.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "dataset": "Toys & Games (Toys)",
+      "metrics": [
+        "NDCG@5",
+        "NDCG@10",
+        "Recall@5",
+        "Recall@10"
+      ],
+      "baseline_results": {
+        "NDCG@5": "0.0051",
+        "NDCG@10": "0.0063",
+        "Recall@5": "0.0089",
+        "Recall@10": "0.0126"
+      },
+      "proposed_results": {
+        "NDCG@5": "0.0086",
+        "NDCG@10": "0.0108",
+        "Recall@5": "0.0136",
+        "Recall@10": "0.0203"
+      },
+      "evidence": [
+        {
+          "page": null,
+          "section": "3.2 Overall Performance (Tab. 2)",
+          "quote": "ManCAR achieves the best performance across all datasets and evaluation metrics, demonstrating consistent improvements in both ranking and retrieval quality.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "dataset": "Grocery & Gourmet Food (Grocery)",
+      "metrics": [
+        "NDCG@5",
+        "NDCG@10",
+        "Recall@5",
+        "Recall@10"
+      ],
+      "baseline_results": {
+        "NDCG@5": "0.0044",
+        "NDCG@10": "0.0059",
+        "Recall@5": "0.0079",
+        "Recall@10": "0.0126"
+      },
+      "proposed_results": {
+        "NDCG@5": "0.0095",
+        "NDCG@10": "0.0118",
+        "Recall@5": "0.0149",
+        "Recall@10": "0.0220"
+      },
+      "evidence": [
+        {
+          "page": null,
+          "section": "3.2 Overall Performance (Tab. 2)",
+          "quote": "ManCAR achieves the best performance across all datasets and evaluation metrics, demonstrating consistent improvements in both ranking and retrieval quality.",
+          "type": "quote"
+        }
+      ]
+    }
+  ],
+  "benchmark": null,
+  "claims": [
+    {
+      "claim_id": "claim_1",
+      "text": "ManCAR는 협업적 이웃을 활용하여 잠재적 드리프트를 방지하는 매니폴드 제약을 통해 잠재적 추론을 안내한다.",
+      "claim_type": "method",
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "page": null,
+          "section": "Introduction",
+          "quote": "We propose ManCAR, a framework guiding latent reasoning by interpreting collaborative neighborhoods in the interaction graph as feasibility constraints on the item probability simplex, mitigating latent drift.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "claim_id": "claim_2",
+      "text": "ManCAR는 NDCG@10에서 최대 46.88%의 상대적 개선을 달성하며, 최첨단 베이스라인보다 일관되게 성능을 향상시킨다.",
+      "claim_type": "result",
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "page": null,
+          "section": "Abstract",
+          "quote": "Experiments on seven benchmarks demonstrate that ManCAR consistently outperforms state-of-the-art baselines, achieving up to a 46.88% relative improvement w.r.t. NDCG@10.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "claim_id": "claim_3",
+      "text": "ManCAR는 적응적 테스트 시점 종료를 통해 과도한 세분화를 피하고, 예측 분포가 안정화될 때까지 추론을 진행한다.",
+      "claim_type": "method",
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "page": null,
+          "section": "Abstract",
+          "quote": "At test time, reasoning proceeds adaptively until the predictive distribution stabilizes, avoiding over-refinement.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "claim_id": "claim_4",
+      "text": "ManCAR는 그래프 조건부 매니폴드 제약을 통해 잠재적 추론 궤적을 유효한 영역 내에서 제한한다.",
+      "claim_type": "architecture",
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "page": null,
+          "section": "2.2 Manifold-Constrained Latent Reasoning",
+          "quote": "We introduce a graph-conditioned feasibility constraint that explicitly restricts where latent reasoning can evolve.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "claim_id": "claim_5",
+      "text": "ManCAR는 수렴 기반 종료 기준을 통해 적응적 테스트 시점 종료를 가능하게 한다.",
+      "claim_type": "efficiency",
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "page": null,
+          "section": "2.6 Training Scheduling and Adaptive Test-Time Reasoning",
+          "quote": "This analysis not only guides the training schedule but also naturally motivates our convergence-based stopping criterion, enabling adaptive test-time reasoning.",
+          "type": "quote"
+        }
+      ]
+    }
+  ],
+  "extraction_mode": "full"
+}

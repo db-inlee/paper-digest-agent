@@ -1,0 +1,201 @@
+{
+  "arxiv_id": "2606.19980",
+  "title": "ENPIRE: Agentic Robot Policy Self-Improvement in the Real World",
+  "problem_definition": {
+    "statement": "자동화된 로봇 정책 개선을 위한 피드백 루프를 통해 실제 환경에서의 로봇 조작 기술을 향상시키는 문제를 해결하고자 한다.",
+    "baseline_methods": [],
+    "structural_limitation": "기존의 정책 학습 방법은 인간의 개입이 필요하며, 이는 로봇이 기술을 습득하는 속도를 제한하는 요인이 된다.",
+    "evidence": [
+      {
+        "page": 3,
+        "section": "Introduction",
+        "quote": "Frontier policy training methods, although highly effective, still rely on humans behind the scenes to participate in the data collection, evaluation with reset, and algorithm adjustment life cycle.",
+        "type": "quote"
+      }
+    ]
+  },
+  "baselines": [],
+  "method_components": [
+    {
+      "name": "Environment Module (EN)",
+      "description": "자동화된 리셋 및 검증 메커니즘을 통해 환경을 구성하고, 안전 경계를 설정하며, 특정 작업에 대한 절차적 도구 호출을 최적화한다.",
+      "inputs": [
+        "작업 명세",
+        "인간 피드백"
+      ],
+      "outputs": [
+        "환경 API"
+      ],
+      "implementation_hint": "절차적 도구 호출을 통해 안전 경계 및 자동화된 리셋을 구현",
+      "role": "novel",
+      "evidence": [
+        {
+          "page": 4,
+          "section": "Stage One: Environment Construction from Human Feedback",
+          "quote": "agents implement and optimize procedural tool calls that establish safety boundaries, automated reset, and verification procedures for a specific task.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "name": "Policy Improvement Module (PI)",
+      "description": "실제 환경에서의 피드백을 기반으로 정책을 개선하며, 다양한 방법론을 탐색하고 최적화한다.",
+      "inputs": [
+        "작업 설명",
+        "환경의 자동 검증 신호"
+      ],
+      "outputs": [
+        "개선된 정책"
+      ],
+      "implementation_hint": "행동 복제 또는 강화 학습 알고리즘을 사용하여 성능 최적화",
+      "role": "novel",
+      "evidence": [
+        {
+          "page": 5,
+          "section": "Stage Two: Automated Policy Improvement from Real-World Feedback",
+          "quote": "the agent operates through a Policy Improvement module (PI in ENPIRE), where it reviews the literature to generate insights, formulates hypotheses, and directly modifies the training code.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "name": "Rollout Module (R)",
+      "description": "단일 또는 다수의 물리적 로봇을 사용하여 정책을 평가하고, 시각-고유감각 센서 입력을 받아 로봇 제어기로 명령을 제출한다.",
+      "inputs": [
+        "정책",
+        "시각-고유감각 센서 입력"
+      ],
+      "outputs": [
+        "로봇 제어 명령"
+      ],
+      "implementation_hint": "Gym API를 통해 피드백 신호 및 디버깅 정보 제공",
+      "role": "standard",
+      "evidence": [
+        {
+          "page": 5,
+          "section": "Stage One: Environment Construction from Human Feedback",
+          "quote": "Policies also receive visual-proprioception sensor inputs and submit action commands to the robot controller, which, combined with our reward, constitutes the Rollout module (R in ENPIRE).",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "name": "Evolution Module (E)",
+      "description": "코딩 에이전트가 로그를 분석하고, 문헌을 참조하며, 실패 모드를 해결하기 위해 훈련 인프라 및 알고리즘 코드를 개선한다.",
+      "inputs": [
+        "로그 데이터",
+        "문헌"
+      ],
+      "outputs": [
+        "개선된 훈련 인프라 및 알고리즘 코드"
+      ],
+      "implementation_hint": "분산된 에이전트 팀이 비동기적으로 훈련 레시피를 테스트하고 공유",
+      "role": "novel",
+      "evidence": [
+        {
+          "page": 5,
+          "section": "Stage Two: Automated Policy Improvement from Real-World Feedback",
+          "quote": "We dispatch a decentralized team of agents to test training recipes asynchronously, sharing and abandoning ideas based on the average success rates.",
+          "type": "quote"
+        }
+      ]
+    }
+  ],
+  "benchmarks": [
+    {
+      "dataset": "Push-T, Pin Insertion, GPU-insertion, Ziptie-cutting",
+      "metrics": [
+        "성공률"
+      ],
+      "baseline_results": {},
+      "proposed_results": {
+        "Push-T": "99% 성공률",
+        "Pin Insertion": "100% 성공률",
+        "GPU-insertion": "명시되지 않음",
+        "Ziptie-cutting": "명시되지 않음"
+      },
+      "evidence": [
+        {
+          "page": 6,
+          "section": "Experiment",
+          "quote": "We measure success as the chance of completing a task in one rollout, given a fixed number of retries (here, eight).",
+          "type": "quote"
+        }
+      ]
+    }
+  ],
+  "benchmark": null,
+  "claims": [
+    {
+      "claim_id": "C1",
+      "text": "ENPIRE는 실제 환경에서의 로봇 정책 개선을 위한 자동화된 피드백 루프를 제공한다.",
+      "claim_type": "method",
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "page": 2,
+          "section": "Abstract",
+          "quote": "We conjecture that the missing abstraction to automate robotics research is a repeatable feedback loop for real-world policy improvement.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "claim_id": "C2",
+      "text": "ENPIRE는 다양한 물리적 로봇을 사용하여 정책 평가를 병렬로 수행할 수 있다.",
+      "claim_type": "architecture",
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "page": 5,
+          "section": "Stage Two: Automated Policy Improvement from Real-World Feedback",
+          "quote": "We dispatch a decentralized team of agents to test training recipes asynchronously, sharing and abandoning ideas based on the average success rates.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "claim_id": "C3",
+      "text": "ENPIRE는 인간의 개입 없이도 높은 성공률을 달성할 수 있다.",
+      "claim_type": "result",
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "page": 3,
+          "section": "Introduction",
+          "quote": "Guided entirely by the environment’s automated verification signals, the agents independently explore and optimize diverse methodologies to maximize real-world task success rates without human intervention.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "claim_id": "C4",
+      "text": "ENPIRE는 로봇 자원과 토큰 자원의 효율성을 측정하기 위한 새로운 지표를 제안한다.",
+      "claim_type": "efficiency",
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "page": 6,
+          "section": "Experiment",
+          "quote": "We propose two utilization metrics that complement task-level outcomes. Mean Robot Utilization (MRU) and Mean Token Utilization (MTU).",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "claim_id": "C5",
+      "text": "ENPIRE는 병렬 에이전트 팀을 통해 정책 개선을 가속화할 수 있다.",
+      "claim_type": "efficiency",
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "page": 5,
+          "section": "Stage Two: Automated Policy Improvement from Real-World Feedback",
+          "quote": "While automatic reset and verification mechanisms enhance the scalability of a single deployment loop, physical autoresearch can be further accelerated by launching a parallel, multi-agent decentralized collaboration protocol.",
+          "type": "quote"
+        }
+      ]
+    }
+  ],
+  "extraction_mode": "full"
+}

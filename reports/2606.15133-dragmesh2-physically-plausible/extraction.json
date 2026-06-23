@@ -1,0 +1,240 @@
+{
+  "arxiv_id": "2606.15133",
+  "title": "DragMesh-2: Physically Plausible Dexterous Hand-Object Interaction with Articulated Objects",
+  "problem_definition": {
+    "statement": "다관절 객체와의 손-객체 상호작용에서 물리적으로 타당한 상호작용을 가능하게 하는 문제를 해결하고자 한다.",
+    "baseline_methods": [],
+    "structural_limitation": "기존의 강화 학습 방법은 고정된 동역학 하에서만 훈련되어, 접촉 하중이 변할 때 성능이 저하될 수 있다.",
+    "evidence": [
+      {
+        "page": null,
+        "section": "Introduction",
+        "quote": "Naive strategies based on geometric trajectory replay, open-loop execution, or direct state control often fail to capture contact dynamics.",
+        "type": "quote"
+      }
+    ]
+  },
+  "baselines": [
+    {
+      "name": "State-only PPO",
+      "description": "상태 정보만을 사용하는 PPO 기반의 정책 학습 방법",
+      "limitation": "접촉 하중 변화에 대한 강건성이 부족하다.",
+      "evidence": [
+        {
+          "page": null,
+          "section": "Experiments",
+          "quote": "state-only PPO, flat-history PPO, GRU-PPO, and Transformer-PPO.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "name": "Flat-history PPO",
+      "description": "평탄한 히스토리를 사용하는 PPO 기반의 정책 학습 방법",
+      "limitation": "접촉 하중 변화에 대한 강건성이 부족하다.",
+      "evidence": [
+        {
+          "page": null,
+          "section": "Experiments",
+          "quote": "state-only PPO, flat-history PPO, GRU-PPO, and Transformer-PPO.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "name": "GRU-PPO",
+      "description": "GRU를 활용한 PPO 기반의 정책 학습 방법",
+      "limitation": "접촉 하중 변화에 대한 강건성이 부족하다.",
+      "evidence": [
+        {
+          "page": null,
+          "section": "Experiments",
+          "quote": "state-only PPO, flat-history PPO, GRU-PPO, and Transformer-PPO.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "name": "Transformer-PPO",
+      "description": "Transformer를 활용한 PPO 기반의 정책 학습 방법",
+      "limitation": "접촉 하중 변화에 대한 강건성이 부족하다.",
+      "evidence": [
+        {
+          "page": null,
+          "section": "Experiments",
+          "quote": "state-only PPO, flat-history PPO, GRU-PPO, and Transformer-PPO.",
+          "type": "quote"
+        }
+      ]
+    }
+  ],
+  "method_components": [
+    {
+      "name": "DragMesh-2 Framework",
+      "description": "다관절 객체와의 상호작용을 손-핸들 접촉을 통해 물리적으로 타당하게 수행하는 프레임워크",
+      "inputs": [
+        "손의 위치",
+        "손의 속도",
+        "핸들 위치",
+        "목표 관절 상태"
+      ],
+      "outputs": [
+        "손-핸들 접촉을 통한 객체의 움직임"
+      ],
+      "implementation_hint": null,
+      "role": "novel",
+      "evidence": [
+        {
+          "page": null,
+          "section": "Method",
+          "quote": "DragMesh-2 formulates articulated-object manipulation as a problem that must be completed through real hand–handle interaction.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "name": "PICA (Physically Informed Contact-Aware)",
+      "description": "물리적 신호를 정책 학습에 주입하여 접촉 하중 변화에 대한 강건성을 향상시키는 메커니즘",
+      "inputs": [
+        "접촉 유지",
+        "분리 위험",
+        "행동 경계 정규화"
+      ],
+      "outputs": [
+        "강건한 정책 학습"
+      ],
+      "implementation_hint": null,
+      "role": "novel",
+      "evidence": [
+        {
+          "page": null,
+          "section": "Method",
+          "quote": "PICA explicitly injects physically informed signals into policy learning through contact-aware constraints and dynamics randomization.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "name": "GLA Encoder",
+      "description": "최근의 제어 히스토리를 기반으로 접촉 히스토리 특징을 인코딩하는 Gated Linear Attention 인코더",
+      "inputs": [
+        "현재 PD 추적 오류",
+        "이전 행동"
+      ],
+      "outputs": [
+        "접촉 히스토리 특징"
+      ],
+      "implementation_hint": null,
+      "role": "novel",
+      "evidence": [
+        {
+          "page": null,
+          "section": "Method",
+          "quote": "A GLA encoder maps the recent token block to a contact-history feature.",
+          "type": "quote"
+        }
+      ]
+    }
+  ],
+  "benchmarks": [
+    {
+      "dataset": "GAPartNet",
+      "metrics": [
+        "성공률",
+        "행동 포화 비율",
+        "분리 실패율"
+      ],
+      "baseline_results": {
+        "State-only PPO": "0.27/0.26",
+        "Flat-history PPO": "0.32/0.21",
+        "GRU-PPO": "0.30/0.28",
+        "Transformer-PPO": "0.09/0.04"
+      },
+      "proposed_results": {
+        "PICA (Ours)": "0.56/0.43"
+      },
+      "evidence": [
+        {
+          "page": null,
+          "section": "Experiments",
+          "quote": "We evaluate on a benchmark of 7 GAPartNet objects spanning three categories.",
+          "type": "quote"
+        }
+      ]
+    }
+  ],
+  "benchmark": null,
+  "claims": [
+    {
+      "claim_id": "C1",
+      "text": "DragMesh-2는 다관절 객체와의 상호작용을 손-핸들 접촉을 통해 물리적으로 타당하게 수행하는 프레임워크를 제안한다.",
+      "claim_type": "method",
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "page": null,
+          "section": "Method",
+          "quote": "DragMesh-2 formulates articulated-object manipulation as a problem that must be completed through real hand–handle interaction.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "claim_id": "C2",
+      "text": "PICA는 물리적 신호를 정책 학습에 주입하여 접촉 하중 변화에 대한 강건성을 향상시킨다.",
+      "claim_type": "method",
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "page": null,
+          "section": "Method",
+          "quote": "PICA explicitly injects physically informed signals into policy learning through contact-aware constraints and dynamics randomization.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "claim_id": "C3",
+      "text": "DragMesh-2는 접촉 하중 변화에 대한 강건성을 유지하면서 높은 작업 성공률을 달성한다.",
+      "claim_type": "result",
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "page": null,
+          "section": "Abstract",
+          "quote": "DragMesh-2 achieves stronger robustness under contact-load variation than the compared methods while maintaining high task success across damping conditions.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "claim_id": "C4",
+      "text": "기존의 강화 학습 방법은 고정된 동역학 하에서만 훈련되어, 접촉 하중이 변할 때 성능이 저하될 수 있다.",
+      "claim_type": "limitation",
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "page": null,
+          "section": "Introduction",
+          "quote": "Without tactile or force feedback, policies tend to overfit nominal dynamics and rely on dynamics shortcuts rather than learning stable contact behaviors.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "claim_id": "C5",
+      "text": "DragMesh-2는 물리적 신호와 시간적 접촉 반응 모델링을 통해 정책 표현을 개선한다.",
+      "claim_type": "architecture",
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "page": null,
+          "section": "Method",
+          "quote": "We further combine PICA with temporal contact-response modeling to improve policy representations of changing interaction states.",
+          "type": "quote"
+        }
+      ]
+    }
+  ],
+  "extraction_mode": "full"
+}

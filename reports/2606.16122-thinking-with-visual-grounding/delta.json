@@ -1,0 +1,46 @@
+{
+  "arxiv_id": "2606.16122",
+  "one_line_takeaway": "이 논문은 비주얼 그라운딩을 통해 시각적 사고를 개선하는 문제에 대해 Visually Grounded Thinking, Data Synthesis Pipeline, Grounding-aware Reinforcement Learning을 제안한다.",
+  "core_deltas": [
+    {
+      "axis": "추론 전략",
+      "old_approach": "기존의 비전-언어 모델은 자연어 추론을 생성하지만 명시적인 비주얼 그라운딩을 제공하지 않음",
+      "new_approach": "Visually Grounded Thinking을 통해 자연어 추론과 명시적인 비주얼 그라운딩을 교차하여 수행",
+      "why_better": "중요한 시각적 객체를 참조할 때마다 좌표 기반의 그라운딩 태그를 출력하여 이미지에서 참조된 객체를 식별할 수 있음",
+      "evidence": {
+        "page": null,
+        "section": null,
+        "quote": "모델이 자연어 추론과 명시적인 비주얼 그라운딩을 교차하여 수행하는 추론 과정",
+        "type": "quote"
+      }
+    },
+    {
+      "axis": "데이터 생성",
+      "old_approach": "해당 영역에 특화된 데이터 생성 파이프라인 없음",
+      "new_approach": "Data Synthesis Pipeline을 통해 비주얼 그라운딩 데이터를 생성",
+      "why_better": "SAM3 기반의 에이전트를 사용하여 고품질 객체 마스크를 추출하고, 포인트 및 박스 모드의 그라운딩 추론 데이터를 생성함",
+      "evidence": {
+        "page": null,
+        "section": null,
+        "quote": "비주얼 그라운딩 데이터를 생성하기 위한 파이프라인으로, SAM3 기반의 에이전트를 사용하여 고품질 객체 마스크를 추출",
+        "type": "quote"
+      }
+    },
+    {
+      "axis": "학습 전략",
+      "old_approach": "정확한 그라운딩을 장려하는 강화 학습 기법 없음",
+      "new_approach": "Grounding-aware Reinforcement Learning을 통해 정답의 정확성과 시각적 객체의 정확한 그라운딩을 동시에 장려",
+      "why_better": "정확한 그라운딩을 수행하는 모델을 학습시킬 수 있음",
+      "evidence": {
+        "page": null,
+        "section": null,
+        "quote": "정답의 정확성과 시각적 객체의 정확한 그라운딩을 동시에 장려하는 보상을 통해 모델을 학습시키는 강화 학습 기법",
+        "type": "quote"
+      }
+    }
+  ],
+  "tradeoffs": [],
+  "when_to_use": "비주얼 그라운딩을 통해 시각적 사고를 개선하고자 할 때",
+  "when_not_to_use": "명시적인 비주얼 그라운딩이 필요하지 않거나, 다른 방법으로 충분히 해결 가능한 경우",
+  "grounded_on": []
+}
