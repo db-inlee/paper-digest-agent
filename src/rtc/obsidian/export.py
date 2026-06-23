@@ -16,9 +16,12 @@ import re
 from pathlib import Path
 
 from rtc.config import get_settings
+from rtc.obsidian.aggregate import aggregate_baselines
 from rtc.schemas.delta_v2 import DeltaOutput
 from rtc.schemas.extraction_v2 import ExtractionOutput
 from rtc.storage.deep_store import DeepStore
+
+_LINKABLE = {"model", "uncertain"}
 
 logger = logging.getLogger(__name__)
 
@@ -58,15 +61,23 @@ def _related_names(text: str, names: list[str]) -> list[str]:
 
 def note_markdown(extraction: ExtractionOutput, delta: DeltaOutput) -> str:
     """Render one paper note (frontmatter + Korean body + English wikilinks)."""
-    baseline_names = [b.name.strip() for b in extraction.baselines if b.name]
     method_names = [m.name.strip() for m in extraction.method_components if m.name]
-    link_candidates = baseline_names + method_names
+
+    # aggregated baseline view with confidence labels (read-time, derived)
+    agg = aggregate_baselines(extraction.model_dump())
+    linkable = [it for it in agg if it["label"] in _LINKABLE]   # model + uncertain
+    nonlink = [it for it in agg if it["label"] not in _LINKABLE]  # metric + generic
+    desc_of = {b.name.strip(): b.description for b in extraction.baselines if b.name}
+
+    # 관련 wikilinks should only target linkable nodes (+ method names)
+    link_candidates = [it["name"] for it in linkable] + method_names
 
     # --- frontmatter (all-English keys, quoted values) ---
     fm = ["---"]
     fm.append(f"arxiv_id: {_yaml_dq(extraction.arxiv_id)}")
     fm.append(f"title: {_yaml_dq(extraction.title)}")
-    fm.append("baselines: [" + ", ".join(_yaml_dq(n) for n in baseline_names) + "]")
+    # frontmatter baselines = linkable (model + uncertain) only
+    fm.append("baselines: [" + ", ".join(_yaml_dq(it["name"]) for it in linkable) + "]")
     fm.append("methods: [" + ", ".join(_yaml_dq(n) for n in method_names) + "]")
     fm.append("topics: []")
     fm.append("---")
@@ -88,14 +99,21 @@ def note_markdown(extraction: ExtractionOutput, delta: DeltaOutput) -> str:
         body.append(line)
     body.append("")
 
-    # 비교 방법 (baseline list — the edge backbone; names verbatim as wikilinks)
+    # 비교 방법 (baseline edge backbone; model+uncertain as wikilinks, with label)
     body.append("## 비교 방법")
-    if baseline_names:
-        for b in extraction.baselines:
-            if b.name:
-                body.append(f"- [[{b.name.strip()}]]: {b.description}")
+    if linkable:
+        for it in linkable:
+            desc = desc_of.get(it["name"], "")
+            suffix = f": {desc}" if desc else ""
+            body.append(f"- [[{it['name']}]] _({it['label']})_{suffix}")
     else:
         body.append("(직접 비교된 baseline 없음)")
+    # 지표/기타 (metric + generic — kept but NOT linked, to avoid node pollution)
+    if nonlink:
+        body.append("")
+        body.append("### 지표/기타 (비링크)")
+        for it in nonlink:
+            body.append(f"- {it['name']} _({it['label']})_")
     body.append("")
 
     # 구성 방법 (method components)
@@ -120,6 +138,8 @@ def export_vault(reports_dir: Path, vault_dir: Path) -> dict:
     store = DeepStore(reports_dir.parent, reports_dir=reports_dir)
 
     written, skipped = 0, 0
+    label_dist: dict[str, int] = {}
+    uncertain: list[str] = []
     for entry in sorted(reports_dir.iterdir()):
         if not entry.is_dir():
             continue
@@ -139,12 +159,22 @@ def export_vault(reports_dir: Path, vault_dir: Path) -> dict:
         if extraction is None or delta is None:
             skipped += 1
             continue
+        for it in aggregate_baselines(extraction.model_dump()):
+            label_dist[it["label"]] = label_dist.get(it["label"], 0) + 1
+            if it["label"] == "uncertain":
+                uncertain.append(f"{extraction.arxiv_id}: {it['name']}")
         (vault_dir / f"{slug}.md").write_text(
             note_markdown(extraction, delta), encoding="utf-8"
         )
         written += 1
 
-    return {"written": written, "skipped": skipped, "vault": str(vault_dir)}
+    return {
+        "written": written,
+        "skipped": skipped,
+        "vault": str(vault_dir),
+        "label_dist": label_dist,
+        "uncertain": uncertain,
+    }
 
 
 def main() -> None:
@@ -156,6 +186,10 @@ def main() -> None:
     print(f"Notes written : {summary['written']}")
     print(f"Skipped       : {summary['skipped']}")
     print(f"Vault         : {summary['vault']}")
+    print(f"Label dist    : {summary['label_dist']}")
+    print(f"Uncertain ({len(summary['uncertain'])}):")
+    for u in summary["uncertain"]:
+        print(f"  - {u}")
 
 
 if __name__ == "__main__":
