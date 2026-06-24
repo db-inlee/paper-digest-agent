@@ -1,0 +1,46 @@
+{
+  "arxiv_id": "2606.20002",
+  "one_line_takeaway": "이 논문은 장기 수명 에이전트의 다양한 환경에서의 일반화를 위한 'Connect the Dots' 메타 능력을 훈련하는 새로운 접근법을 제안한다.",
+  "core_deltas": [
+    {
+      "axis": "훈련 전략",
+      "old_approach": "해당 영역에 특화된 방법 없음",
+      "new_approach": "CoD-Train을 통해 다양한 환경에서 일반화를 위한 롤아웃 메커니즘을 제공",
+      "why_better": "다양한 환경에서의 일반화를 통해 에이전트의 적응성을 향상시킬 수 있음",
+      "evidence": {
+        "page": null,
+        "section": null,
+        "quote": "CoD-Train: CoD에 전념하는 RL 후속 훈련 프로세스를 나타내며, 다양한 환경에서 일반화를 위한 롤아웃 메커니즘을 제공합니다.",
+        "type": "quote"
+      }
+    },
+    {
+      "axis": "배치 전략",
+      "old_approach": "해당 영역에 특화된 방법 없음",
+      "new_approach": "CoD-Deploy를 통해 에이전트의 환경에 대한 컨텍스트를 업데이트하는 에피소드를 교차하여 수행",
+      "why_better": "새로운 작업을 해결하고 에이전트의 환경 적응성을 높일 수 있음",
+      "evidence": {
+        "page": null,
+        "section": null,
+        "quote": "CoD-Deploy: 장기 수명 에이전트의 배치를 추상화하여 새로운 작업을 해결하고 에이전트의 환경에 대한 컨텍스트를 업데이트하는 에피소드를 교차하여 수행합니다.",
+        "type": "quote"
+      }
+    },
+    {
+      "axis": "강화 학습 알고리즘",
+      "old_approach": "기존의 비평가 모델을 사용하는 강화 학습 알고리즘",
+      "new_approach": "비평가 모델이 필요 없는 GRPO 스타일의 훈련 알고리즘 사용",
+      "why_better": "비평가 모델 없이도 여러 에피소드에 대한 보상 값을 평균하여 이점을 계산할 수 있어 효율적임",
+      "evidence": {
+        "page": null,
+        "section": null,
+        "quote": "GRPO-style RL Algorithm: 비평가 모델이 필요 없는 GRPO 스타일의 훈련 알고리즘을 사용하여 여러 에피소드에 대한 보상 값을 평균하여 이점을 계산합니다.",
+        "type": "quote"
+      }
+    }
+  ],
+  "tradeoffs": [],
+  "when_to_use": "장기 수명 에이전트가 다양한 환경에서 지속적으로 학습하고 적응해야 할 때",
+  "when_not_to_use": "단기적인 작업이나 고정된 환경에서의 작업에 집중할 때",
+  "grounded_on": []
+}

@@ -1,0 +1,202 @@
+{
+  "arxiv_id": "2606.22936",
+  "title": "When Agents Commit Too Soon: Diagnosing Premature Commitment in LLM Agents",
+  "problem_definition": {
+    "statement": "LLM 에이전트가 긴 작업을 수행할 때, 초기 증거 해석에 일찍 고착되어 이후의 과정에서 이를 방어하는 조기 커밋 문제를 해결하고자 한다.",
+    "baseline_methods": [],
+    "structural_limitation": "최종 답변 점수는 프로세스가 이미 안정된 경로로 수렴했는지를 확인하지 못한다.",
+    "evidence": [
+      {
+        "page": null,
+        "section": "Introduction",
+        "quote": "A quiet failure mode is premature commitment: the agent settles on one interpretation early and then defends it for the rest of the run.",
+        "type": "quote"
+      }
+    ]
+  },
+  "baselines": [],
+  "method_components": [
+    {
+      "name": "Representational Commitment",
+      "description": "고정된 에이전트 단계에서의 교차 실행 숨겨진 상태 수렴을 정의하여, 모델이 안정된 해석에 도달했는지를 측정한다.",
+      "inputs": [
+        "입력 데이터",
+        "비영점 온도에서의 n번 실행"
+      ],
+      "outputs": [
+        "평균 쌍별 코사인 유사도"
+      ],
+      "implementation_hint": "활성화 유사도는 측정된 양이며, 대표적 커밋먼트는 이를 지시하는 구성이다.",
+      "role": "novel",
+      "evidence": [
+        {
+          "page": null,
+          "section": "Method",
+          "quote": "We define representational commitment as cross-run hidden-state convergence at a fixed agent step.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "name": "Activation Similarity",
+      "description": "단계별 숨겨진 상태의 평균 쌍별 코사인 유사도를 계산하여, 실행 간의 유사성을 측정한다.",
+      "inputs": [
+        "질문 q",
+        "단계 s",
+        "레이어 ℓ"
+      ],
+      "outputs": [
+        "Sim(s,ℓ)q"
+      ],
+      "implementation_hint": "Sim(s,ℓ)q = (n/2)−1 ∑i<j cos(h(s)ℓ,i , h(s)ℓ,j)",
+      "role": "standard",
+      "evidence": [
+        {
+          "page": null,
+          "section": "Method",
+          "quote": "For question q at step s, layer ℓ, we compute the mean pairwise cosine similarity across runs.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "name": "Runtime Monitor",
+      "description": "실행 중에 단계별 숨겨진 상태를 읽어 일관되지 않은 경로를 플래그한다.",
+      "inputs": [
+        "단계 4 숨겨진 상태"
+      ],
+      "outputs": [
+        "일관성 여부"
+      ],
+      "implementation_hint": "AUROC 0.97까지 일관되지 않은 경로를 감지한다.",
+      "role": "novel",
+      "evidence": [
+        {
+          "page": null,
+          "section": "Contributions",
+          "quote": "A runtime monitor reads step-4 hidden states and flags inconsistent trajectories at AUROC 0.97.",
+          "type": "quote"
+        }
+      ]
+    }
+  ],
+  "benchmarks": [
+    {
+      "dataset": "HotpotQA",
+      "metrics": [
+        "Pearson correlation",
+        "AUROC"
+      ],
+      "baseline_results": {
+        "Pearson correlation": "r = −0.35",
+        "AUROC": "0.97"
+      },
+      "proposed_results": {
+        "Pearson correlation": "r = −0.35",
+        "AUROC": "0.97"
+      },
+      "evidence": [
+        {
+          "page": null,
+          "section": "Results",
+          "quote": "Activation similarity at step 4 is negatively correlated with behavioral CV: questions whose hidden states converge across runs behave more consistently.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "dataset": "StrategyQA",
+      "metrics": [
+        "Pearson correlation"
+      ],
+      "baseline_results": {
+        "Pearson correlation": "r = −0.83"
+      },
+      "proposed_results": {
+        "Pearson correlation": "r = −0.83"
+      },
+      "evidence": [
+        {
+          "page": null,
+          "section": "Cross-benchmark generalization on Llama: StrategyQA",
+          "quote": "The signal replicates strongly at step 3: r = −0.83 (95% CI [−0.90, −0.76], p < 10−13).",
+          "type": "quote"
+        }
+      ]
+    }
+  ],
+  "benchmark": null,
+  "claims": [
+    {
+      "claim_id": "C1",
+      "text": "단계 4에서의 활성화 유사도는 경로 일관성을 예측한다.",
+      "claim_type": "result",
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "page": null,
+          "section": "Results",
+          "quote": "Activation similarity at step 4 is negatively correlated with behavioral CV.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "claim_id": "C2",
+      "text": "커밋먼트는 프로세스 일관성을 추적하지만 정확성을 추적하지 않는다.",
+      "claim_type": "limitation",
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "page": null,
+          "section": "Contributions",
+          "quote": "The diagnostic tracks process consistency, not correctness.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "claim_id": "C3",
+      "text": "실행 중 모니터는 단계 4 숨겨진 상태를 읽어 일관되지 않은 경로를 플래그할 수 있다.",
+      "claim_type": "method",
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "page": null,
+          "section": "Contributions",
+          "quote": "A runtime monitor reads step-4 hidden states and flags inconsistent trajectories at AUROC 0.97.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "claim_id": "C4",
+      "text": "커밋먼트 신호는 HotpotQA와 StrategyQA에서 모델과 벤치마크를 넘어 일반화된다.",
+      "claim_type": "comparison",
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "page": null,
+          "section": "Cross-benchmark generalization on Llama: StrategyQA",
+          "quote": "The signal replicates strongly at step 3: r = −0.83 (95% CI [−0.90, −0.76], p < 10−13).",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "claim_id": "C5",
+      "text": "커밋먼트 프롬프트는 행동적 분산을 28% 줄인다.",
+      "claim_type": "result",
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "page": null,
+          "section": "Inducing commitment by intervention",
+          "quote": "The commitment prompt cuts CV by 28% relative to filler.",
+          "type": "quote"
+        }
+      ]
+    }
+  ],
+  "extraction_mode": "full"
+}

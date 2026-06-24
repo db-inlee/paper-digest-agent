@@ -1,0 +1,46 @@
+{
+  "arxiv_id": "2606.18648",
+  "one_line_takeaway": "이 논문은 물리 과학 분야에서의 심층 연구 에이전트의 능력을 평가하기 위한 포괄적이고 심층적인 벤치마크를 제안한다.",
+  "core_deltas": [
+    {
+      "axis": "계획 전략",
+      "old_approach": "고정된 계획에 의존하여 중간 결과에 대한 적응력이 부족함",
+      "new_approach": "Adaptive Planning Loop를 통해 중간 결과를 수신한 후 재계획을 가능하게 함",
+      "why_better": "동적으로 계획을 수정하여 초기 계획에 얽매이지 않고 유연성을 제공함",
+      "evidence": {
+        "page": null,
+        "section": null,
+        "quote": "Adaptive Planning Loop: 중간 결과를 수신한 후 재계획을 가능하게 하여 초기 계획에 얽매이지 않고 동적으로 계획을 수정.",
+        "type": "quote"
+      }
+    },
+    {
+      "axis": "메모리 구조",
+      "old_approach": "단일 수준의 메모리 구조로 작업 경험과 도메인 지식의 재사용이 제한적임",
+      "new_approach": "Dual-Granularity Memory를 통해 성공적인 궤적과 도메인 지식을 저장하여 재사용을 지원",
+      "why_better": "계획 수준과 실행 수준에서 각각의 메모리를 유지하여 작업 경험과 도메인 지식의 재사용을 강화함",
+      "evidence": {
+        "page": null,
+        "section": null,
+        "quote": "Dual-Granularity Memory: 성공적인 궤적과 도메인 지식을 저장하여 작업 경험과 도메인 지식의 재사용을 지원.",
+        "type": "quote"
+      }
+    },
+    {
+      "axis": "검증 메커니즘",
+      "old_approach": "물리 기반 검증이 부족하여 과학적 일관성이 떨어짐",
+      "new_approach": "Hierarchical Physics-Grounded Reflection을 통해 과학적 일관성을 위해 중간 및 최종 출력을 검증",
+      "why_better": "단계 수준의 로컬 검증기와 궤적 수준의 글로벌 비평가로 구성되어 과학적 일관성을 강화함",
+      "evidence": {
+        "page": null,
+        "section": null,
+        "quote": "Hierarchical Physics-Grounded Reflection: 과학적 일관성을 위해 중간 및 최종 출력을 검증하는 계층적 물리 기반 반사 메커니즘.",
+        "type": "quote"
+      }
+    }
+  ],
+  "tradeoffs": [],
+  "when_to_use": "물리 과학 분야에서 심층 연구 에이전트의 성능을 평가하고자 할 때",
+  "when_not_to_use": "물리 과학 외의 분야에서 평가 기준이 필요할 때",
+  "grounded_on": []
+}

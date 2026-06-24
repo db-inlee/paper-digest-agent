@@ -1,0 +1,46 @@
+{
+  "arxiv_id": "2606.11897",
+  "one_line_takeaway": "이 논문은 실험 노트북을 AI 에이전트가 활용할 수 있는 검증 가능한 스킬로 변환하는 문제에 대해 Epistemic Directive Extraction, MetaSkill Compilation, Dual-Evidence Gate 접근법을 제안한다.",
+  "core_deltas": [
+    {
+      "axis": "지침 추출",
+      "old_approach": "해당 영역에 특화된 방법 없음",
+      "new_approach": "Epistemic Directive Extraction (EDE)을 통해 노트북의 각 문장을 FACT, JUDGMENT, SUGGESTION으로 라벨링하여 지침으로 식별",
+      "why_better": "노트북의 내용을 구조화하여 후속 분석에 활용할 수 있도록 지원함",
+      "evidence": {
+        "page": null,
+        "section": null,
+        "quote": "Epistemic Directive Extraction (EDE): 노트북의 각 문장을 FACT, JUDGMENT, SUGGESTION으로 라벨링하여 후속 분석을 위한 지침으로 식별한다.",
+        "type": "quote"
+      }
+    },
+    {
+      "axis": "스킬 컴파일",
+      "old_approach": "해당 영역에 특화된 방법 없음",
+      "new_approach": "라벨링된 지침을 에이전트가 로드할 수 있는 Markdown 스킬로 컴파일하는 MetaSkill Compilation",
+      "why_better": "에이전트가 직접 활용할 수 있는 형태로 지침을 변환하여 실용성을 높임",
+      "evidence": {
+        "page": null,
+        "section": null,
+        "quote": "MetaSkill Compilation: 라벨링된 지침을 에이전트가 로드할 수 있는 Markdown 스킬로 컴파일한다.",
+        "type": "quote"
+      }
+    },
+    {
+      "axis": "행동 결정",
+      "old_approach": "해당 영역에 특화된 방법 없음",
+      "new_approach": "Dual-Evidence Gate를 통해 LLM의 제안과 캡슐화된 지침을 비교하여 행동을 결정",
+      "why_better": "LLM의 제안과 기존 지침을 비교하여 더 신뢰할 수 있는 행동 결정을 지원함",
+      "evidence": {
+        "page": null,
+        "section": null,
+        "quote": "Dual-Evidence Gate: LLM의 제안과 캡슐화된 지침을 비교하여 강력한 행동을 허용할지 결정한다.",
+        "type": "quote"
+      }
+    }
+  ],
+  "tradeoffs": [],
+  "when_to_use": "실험 노트북의 내용을 AI 에이전트가 활용할 수 있는 형태로 변환하고자 할 때",
+  "when_not_to_use": "기존에 충분히 구조화된 데이터가 이미 있는 경우",
+  "grounded_on": []
+}

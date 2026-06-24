@@ -1,0 +1,58 @@
+{
+  "arxiv_id": "2606.11897",
+  "total_claims": 5,
+  "verified_count": 4,
+  "unverified_count": 1,
+  "contradicted_count": 0,
+  "overall_reliability": "high",
+  "results": [
+    {
+      "claim_id": "C1",
+      "claim_text": "Notes2Skills는 실험 노트북을 에이전트가 로드할 수 있는 스킬로 변환하는 최초의 접근법이다.",
+      "status": "verified",
+      "confidence": 1.0,
+      "evidence_found": "논문에서 Notes2Skills가 실험 노트북을 에이전트가 로드할 수 있는 스킬로 변환하는 최초의 접근법이라고 명시됨.",
+      "notes": "논문 1페이지, 서론에서 언급됨.",
+      "correction_hint": null
+    },
+    {
+      "claim_id": "C2",
+      "claim_text": "Notes2Skills는 불확실한 노트를 확정된 지침으로 오인하지 않으며, 확정된 지침을 잃지 않는다.",
+      "status": "verified",
+      "confidence": 1.0,
+      "evidence_found": "Notes2Skills가 불확실한 노트를 확정된 지침으로 오인하지 않으며, 확정된 지침을 잃지 않는다고 명시됨.",
+      "notes": "논문 2페이지, 결과 섹션에서 언급됨.",
+      "correction_hint": null
+    },
+    {
+      "claim_id": "C3",
+      "claim_text": "Notes2Skills는 실험 노트북의 확실성 보존이 AI 에이전트의 안전한 사용을 위한 핵심 요소임을 보여준다.",
+      "status": "verified",
+      "confidence": 1.0,
+      "evidence_found": "확실성 보존이 AI 에이전트의 안전한 사용을 위한 핵심 요소라고 논문에서 주장함.",
+      "notes": "논문 3페이지, 서론에서 언급됨.",
+      "correction_hint": null
+    },
+    {
+      "claim_id": "C4",
+      "claim_text": "Notes2Skills는 세 가지 코퍼스에서 461개의 주석 세그먼트를 검증한다.",
+      "status": "verified",
+      "confidence": 1.0,
+      "evidence_found": "논문에서 461개의 주석 세그먼트를 세 가지 코퍼스에서 검증했다고 명시됨.",
+      "notes": "논문 6페이지, 실험 설정 섹션에서 언급됨.",
+      "correction_hint": null
+    },
+    {
+      "claim_id": "C5",
+      "claim_text": "Notes2Skills는 불확실성 세션에서 불확실한 판독값을 확정된 행동으로 세탁하는 것을 피한다.",
+      "status": "unverified",
+      "confidence": 0.8,
+      "evidence_found": null,
+      "notes": "논문에서 이 주장을 명시적으로 뒷받침하는 근거가 부족함.",
+      "correction_hint": null
+    }
+  ],
+  "summary": "대부분의 클레임이 논문에서 지지되며, 하나의 클레임은 명확한 근거가 부족하여 미검증으로 분류됨.",
+  "corrections_needed": [],
+  "verification_error": false
+}
