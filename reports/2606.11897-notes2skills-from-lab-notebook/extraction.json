@@ -1,0 +1,180 @@
+{
+  "arxiv_id": "2606.11897",
+  "title": "Notes2Skills: From Lab Notebooks to Certainty-Aware Scientific Agent Skills",
+  "problem_definition": {
+    "statement": "실험 노트북을 AI 에이전트가 활용할 수 있는 검증 가능한 스킬로 변환하는 문제를 해결하고자 한다.",
+    "baseline_methods": [],
+    "structural_limitation": "실험 노트북은 관찰, 해석, 제안이 혼합되어 있어 AI 에이전트가 불확실한 과학적 판단을 확정된 결론으로 오인할 수 있다.",
+    "evidence": [
+      {
+        "page": null,
+        "section": "Introduction",
+        "quote": "Experimental notebooks violate this assumption. For example, the reading dropped sharply after five minutes states a fact; I am not sure the second read is reliable expresses a judgment under uncertainty; and try a fresh buffer next time proposes a suggestion.",
+        "type": "quote"
+      }
+    ]
+  },
+  "baselines": [],
+  "method_components": [
+    {
+      "name": "Epistemic Directive Extraction (EDE)",
+      "description": "노트북의 각 문장을 FACT, JUDGMENT, SUGGESTION으로 라벨링하여 후속 분석을 위한 지침으로 식별한다.",
+      "inputs": [
+        "노트북 세그먼트"
+      ],
+      "outputs": [
+        "지침과 그 확실성 라벨"
+      ],
+      "implementation_hint": "언어적 단서를 기반으로 라벨을 할당한다.",
+      "role": "novel",
+      "evidence": [
+        {
+          "page": null,
+          "section": "Task Formalization",
+          "quote": "Stage 1 identifies notebook statements that may guide subsequent analysis and labels each statement as FACT, JUDGMENT, or SUGGESTION.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "name": "MetaSkill Compilation",
+      "description": "라벨링된 지침을 에이전트가 로드할 수 있는 Markdown 스킬로 컴파일한다.",
+      "inputs": [
+        "라벨링된 지침"
+      ],
+      "outputs": [
+        "MetaSkill Markdown 문서"
+      ],
+      "implementation_hint": "각 지침은 그 확실성 라벨과 출처 링크를 포함한다.",
+      "role": "novel",
+      "evidence": [
+        {
+          "page": null,
+          "section": "Task Formalization",
+          "quote": "Stage 2 compiles these labeled statements into a MetaSkill: an agent-loadable Markdown skill in which every action remains explicitly linked to its source excerpt and certainty label.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "name": "Dual-Evidence Gate",
+      "description": "LLM의 제안과 캡슐화된 지침을 비교하여 강력한 행동을 허용할지 결정한다.",
+      "inputs": [
+        "LLM의 제안",
+        "지침 캡슐",
+        "파일의 신호 증거"
+      ],
+      "outputs": [
+        "Authorize, Veto, Substitute, Abstain 중 하나"
+      ],
+      "implementation_hint": "캡슐의 확실성, 승인, 후보 행동을 검사한다.",
+      "role": "novel",
+      "evidence": [
+        {
+          "page": null,
+          "section": "The Executor",
+          "quote": "The executor implements the dual-evidence gate introduced in §3.2: a deterministic alignment check between the LLM’s proposal and the matched capsule.",
+          "type": "quote"
+        }
+      ]
+    }
+  ],
+  "benchmarks": [
+    {
+      "dataset": "FreeNotes",
+      "metrics": [
+        "F1",
+        "QWK"
+      ],
+      "baseline_results": {
+        "zero-shot": "F1=0.682",
+        "few-shot": "F1=0.737"
+      },
+      "proposed_results": {
+        "MetaSkill + executor": "F1=0.857"
+      },
+      "evidence": [
+        {
+          "page": null,
+          "section": "Exp 1: Stage 1 Extraction",
+          "quote": "Few-shot prompting consistently lifts macro-𝐹1 on directive_type (Claude +0.18, GPT-4o +0.12, Qwen-Max +0.12).",
+          "type": "quote"
+        }
+      ]
+    }
+  ],
+  "benchmark": null,
+  "claims": [
+    {
+      "claim_id": "C1",
+      "text": "Notes2Skills는 실험 노트북을 에이전트가 로드할 수 있는 스킬로 변환하는 최초의 접근법이다.",
+      "claim_type": "method",
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "page": null,
+          "section": "Introduction",
+          "quote": "To our knowledge, we are the first to consider transferring single-author experimental notebooks to agent-loadable skills.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "claim_id": "C2",
+      "text": "Notes2Skills는 불확실한 노트를 확정된 지침으로 오인하지 않으며, 확정된 지침을 잃지 않는다.",
+      "claim_type": "result",
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "page": null,
+          "section": "Introduction",
+          "quote": "Notes2Skills is the only configuration that neither mistakes uncertain notes for firm instructions nor discards firm ones.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "claim_id": "C3",
+      "text": "Notes2Skills는 실험 노트북의 확실성 보존이 AI 에이전트의 안전한 사용을 위한 핵심 요소임을 보여준다.",
+      "claim_type": "method",
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "page": null,
+          "section": "Introduction",
+          "quote": "We show that certainty preservation is the missing piece between lab notebooks and reliable agent skills, opening a path toward safer AI co-scientist systems.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "claim_id": "C4",
+      "text": "Notes2Skills는 세 가지 코퍼스에서 461개의 주석 세그먼트를 검증한다.",
+      "claim_type": "result",
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "page": null,
+          "section": "Task Formalization",
+          "quote": "We validate Notes2Skills on 461 annotated segments across three corpora spanning a formality spectrum.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "claim_id": "C5",
+      "text": "Notes2Skills는 불확실성 세션에서 불확실한 판독값을 확정된 행동으로 세탁하는 것을 피한다.",
+      "claim_type": "result",
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "page": null,
+          "section": "Exp 3: Downstream Skill Loading",
+          "quote": "Notes2Skills skill with an evidence-aligned executor is the only tested configuration that avoids both observed failure modes across uncertainty-heavy and FACT-dominated sessions.",
+          "type": "quote"
+        }
+      ]
+    }
+  ],
+  "extraction_mode": "full"
+}

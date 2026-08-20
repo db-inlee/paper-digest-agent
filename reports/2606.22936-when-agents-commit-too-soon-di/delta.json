@@ -1,0 +1,46 @@
+{
+  "arxiv_id": "2606.22936",
+  "one_line_takeaway": "이 논문은 LLM 에이전트의 조기 커밋 문제를 해결하기 위해 Representational Commitment와 Runtime Monitor를 제안한다.",
+  "core_deltas": [
+    {
+      "axis": "커밋 측정 방법",
+      "old_approach": "해당 영역에 특화된 방법 없음",
+      "new_approach": "Representational Commitment를 통해 고정된 에이전트 단계에서의 교차 실행 숨겨진 상태 수렴을 정의",
+      "why_better": "모델이 안정된 해석에 도달했는지를 측정하여 조기 커밋 문제를 진단할 수 있음",
+      "evidence": {
+        "page": null,
+        "section": null,
+        "quote": "Representational Commitment: 고정된 에이전트 단계에서의 교차 실행 숨겨진 상태 수렴을 정의하여, 모델이 안정된 해석에 도달했는지를 측정한다.",
+        "type": "quote"
+      }
+    },
+    {
+      "axis": "실행 유사성 측정",
+      "old_approach": "일반적인 실행 유사성 측정 방법",
+      "new_approach": "Activation Similarity를 통해 단계별 숨겨진 상태의 평균 쌍별 코사인 유사도를 계산",
+      "why_better": "실행 간의 유사성을 정량적으로 측정하여 조기 커밋 문제를 진단할 수 있음",
+      "evidence": {
+        "page": null,
+        "section": null,
+        "quote": "Activation Similarity: 단계별 숨겨진 상태의 평균 쌍별 코사인 유사도를 계산하여, 실행 간의 유사성을 측정한다.",
+        "type": "quote"
+      }
+    },
+    {
+      "axis": "실행 모니터링",
+      "old_approach": "해당 영역에 특화된 방법 없음",
+      "new_approach": "Runtime Monitor를 통해 실행 중에 단계별 숨겨진 상태를 읽어 일관되지 않은 경로를 플래그",
+      "why_better": "실행 중에 일관되지 않은 경로를 실시간으로 감지하여 조기 커밋 문제를 방지할 수 있음",
+      "evidence": {
+        "page": null,
+        "section": null,
+        "quote": "Runtime Monitor: 실행 중에 단계별 숨겨진 상태를 읽어 일관되지 않은 경로를 플래그한다.",
+        "type": "quote"
+      }
+    }
+  ],
+  "tradeoffs": [],
+  "when_to_use": "LLM 에이전트가 긴 작업을 수행할 때 조기 커밋 문제를 진단하고자 할 때",
+  "when_not_to_use": "조기 커밋 문제가 발생하지 않는 간단한 작업이나 짧은 작업을 수행할 때",
+  "grounded_on": []
+}

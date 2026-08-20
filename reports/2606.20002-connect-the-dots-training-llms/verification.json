@@ -1,0 +1,58 @@
+{
+  "arxiv_id": "2606.20002",
+  "total_claims": 5,
+  "verified_count": 5,
+  "unverified_count": 0,
+  "contradicted_count": 0,
+  "overall_reliability": "high",
+  "results": [
+    {
+      "claim_id": "claim_1",
+      "claim_text": "CoD 프레임워크는 LLM의 CoD 메타 능력을 강화하기 위해 RL 후속 훈련을 사용합니다.",
+      "status": "verified",
+      "confidence": 1.0,
+      "evidence_found": "논문 1페이지, CoD 프레임워크 설명에서 RL 후속 훈련 사용 언급.",
+      "notes": "CoD 프레임워크의 주요 구성 요소로 RL 후속 훈련이 명시됨.",
+      "correction_hint": null
+    },
+    {
+      "claim_id": "claim_2",
+      "claim_text": "CoD-Train은 다양한 환경에서 일반화를 위한 롤아웃 메커니즘을 제공합니다.",
+      "status": "verified",
+      "confidence": 1.0,
+      "evidence_found": "논문 2페이지, CoD-Train의 롤아웃 메커니즘 설명.",
+      "notes": "CoD-Train의 롤아웃 메커니즘이 다양한 환경에서의 일반화를 지원함.",
+      "correction_hint": null
+    },
+    {
+      "claim_id": "claim_3",
+      "claim_text": "GRPO 스타일의 RL 알고리즘은 비평가 모델이 필요 없으며, 여러 에피소드에 대한 보상 값을 평균하여 이점을 계산합니다.",
+      "status": "verified",
+      "confidence": 1.0,
+      "evidence_found": "논문 3페이지, GRPO 스타일의 RL 알고리즘 설명.",
+      "notes": "비평가 모델 없이 보상 값을 평균하여 이점을 계산하는 방식이 명확히 설명됨.",
+      "correction_hint": null
+    },
+    {
+      "claim_id": "claim_4",
+      "claim_text": "FrozenLake-Obscure 환경에서 CoD-Train을 적용하면 네 번째 작업의 성공률이 28%에서 76%로 증가합니다.",
+      "status": "verified",
+      "confidence": 1.0,
+      "evidence_found": "논문 6페이지, FrozenLake-Obscure 환경에서의 성공률 변화 설명.",
+      "notes": "성공률 변화가 실험 결과로 명확히 제시됨.",
+      "correction_hint": null
+    },
+    {
+      "claim_id": "claim_5",
+      "claim_text": "CoD 메타 능력은 도메인 내 및 도메인 간 일반화 가능성을 보여줍니다.",
+      "status": "verified",
+      "confidence": 1.0,
+      "evidence_found": "논문 7페이지, CoD 메타 능력의 일반화 가능성에 대한 설명.",
+      "notes": "도메인 내 및 도메인 간 일반화 가능성이 실험 결과로 확인됨.",
+      "correction_hint": null
+    }
+  ],
+  "summary": "모든 클레임이 논문에서 지지되며, 제시된 방법론과 결과가 명확하게 설명됨.",
+  "corrections_needed": [],
+  "verification_error": false
+}

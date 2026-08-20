@@ -1,0 +1,58 @@
+{
+  "arxiv_id": "2606.22936",
+  "total_claims": 5,
+  "verified_count": 5,
+  "unverified_count": 0,
+  "contradicted_count": 0,
+  "overall_reliability": "high",
+  "results": [
+    {
+      "claim_id": "C1",
+      "claim_text": "단계 4에서의 활성화 유사도는 경로 일관성을 예측한다.",
+      "status": "verified",
+      "confidence": 1.0,
+      "evidence_found": "논문 4.1 섹션에서 활성화 유사도가 경로 일관성과 부정적 상관관계를 가진다고 명시되어 있음.",
+      "notes": "단계 4에서의 활성화 유사도가 행동적 CV와 부정적 상관관계를 보임.",
+      "correction_hint": null
+    },
+    {
+      "claim_id": "C2",
+      "claim_text": "커밋먼트는 프로세스 일관성을 추적하지만 정확성을 추적하지 않는다.",
+      "status": "verified",
+      "confidence": 1.0,
+      "evidence_found": "논문 4.2 섹션에서 커밋먼트가 정확성을 추적하지 않는다고 명시되어 있음.",
+      "notes": "커밋먼트는 프로세스의 일관성을 측정하는 데 중점을 둠.",
+      "correction_hint": null
+    },
+    {
+      "claim_id": "C3",
+      "claim_text": "실행 중 모니터는 단계 4 숨겨진 상태를 읽어 일관되지 않은 경로를 플래그할 수 있다.",
+      "status": "verified",
+      "confidence": 1.0,
+      "evidence_found": "논문 4.8 섹션에서 실행 중 모니터가 단계 4 숨겨진 상태를 읽어 일관되지 않은 경로를 감지한다고 명시되어 있음.",
+      "notes": "AUROC 0.97로 일관되지 않은 경로를 플래그할 수 있음.",
+      "correction_hint": null
+    },
+    {
+      "claim_id": "C4",
+      "claim_text": "커밋먼트 신호는 HotpotQA와 StrategyQA에서 모델과 벤치마크를 넘어 일반화된다.",
+      "status": "verified",
+      "confidence": 1.0,
+      "evidence_found": "논문 4.6 및 4.7 섹션에서 커밋먼트 신호가 여러 모델과 벤치마크에서 일반화된다고 명시되어 있음.",
+      "notes": "다양한 모델과 벤치마크에서 신호가 재현됨.",
+      "correction_hint": null
+    },
+    {
+      "claim_id": "C5",
+      "claim_text": "커밋먼트 프롬프트는 행동적 분산을 28% 줄인다.",
+      "status": "verified",
+      "confidence": 1.0,
+      "evidence_found": "논문 4.10 섹션에서 커밋먼트 프롬프트가 행동적 분산을 28% 줄인다고 명시되어 있음.",
+      "notes": "프롬프트가 행동적 변동성을 줄이는 효과를 보임.",
+      "correction_hint": null
+    }
+  ],
+  "summary": "모든 클레임이 논문에서 지지되며, 검증된 내용이 정확합니다.",
+  "corrections_needed": [],
+  "verification_error": false
+}

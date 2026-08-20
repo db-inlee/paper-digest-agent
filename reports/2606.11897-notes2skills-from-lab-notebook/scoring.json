@@ -1,0 +1,10 @@
+{
+  "arxiv_id": "2606.11897",
+  "practicality": 4,
+  "codeability": 3,
+  "signal": 4,
+  "recommendation": "worth_reading",
+  "reasoning": "이 논문은 실험 노트북을 AI 에이전트가 활용할 수 있는 검증 가능한 스킬로 변환하는 문제를 다루고 있으며, 제안된 방법들이 실제 문제 해결에 기여할 가능성이 높다. 그러나 구현의 복잡성으로 인해 즉시 적용 가능성은 다소 제한적이다.",
+  "key_strength": "Epistemic Directive Extraction, MetaSkill Compilation, Dual-Evidence Gate 접근법을 통해 실험 노트북의 활용 가능성을 높인다.",
+  "main_concern": "구현 과정에서의 복잡성과 실제 적용 시의 한계"
+}

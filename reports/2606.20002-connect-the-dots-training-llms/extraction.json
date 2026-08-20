@@ -1,0 +1,179 @@
+{
+  "arxiv_id": "2606.20002",
+  "title": "Connect the Dots: Training LLMs for Long-Lifecycle Agents with Cross-Domain Generalization Via Reinforcement Learning",
+  "problem_definition": {
+    "statement": "이 논문은 장기 수명 에이전트가 다양한 환경에서 지속적으로 학습하고 자기 업데이트를 통해 성능을 향상시키는 'Connect the Dots' (CoD) 메타 능력을 훈련하는 문제를 다룹니다.",
+    "baseline_methods": [],
+    "structural_limitation": "기존의 LLM 기반 에이전트는 제한된 CoD 메타 능력으로 인해 환경에서 쉽게 길을 잃거나, 복잡한 설계가 필요한 인간이 제작한 에이전트 구조에 의존해야 합니다.",
+    "evidence": [
+      {
+        "page": 1,
+        "section": "Introduction",
+        "quote": "Frontier LLMs today still fall short in this regard: with limited CoD meta-capability, an LLM-based agent may easily get lost in environments with underspecification.",
+        "type": "quote"
+      }
+    ]
+  },
+  "baselines": [],
+  "method_components": [
+    {
+      "name": "CoD-Deploy",
+      "description": "장기 수명 에이전트의 배치를 추상화하여 새로운 작업을 해결하고 에이전트의 환경에 대한 컨텍스트를 업데이트하는 에피소드를 교차하여 수행합니다.",
+      "inputs": [
+        "환경 M",
+        "작업 xM_i"
+      ],
+      "outputs": [
+        "업데이트된 컨텍스트 zM_i+1"
+      ],
+      "implementation_hint": "온라인 학습을 통해 시도와 오류를 반복합니다.",
+      "role": "novel",
+      "evidence": [
+        {
+          "page": 2,
+          "section": "The CoD framework",
+          "quote": "CoD-Deploy is an abstraction of long-lifecycle agentic deployment in an environment M, which interleaves episodes for solving a task xM_i and for updating the agent’s context from zM_i to zM_i+1.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "name": "CoD-Train",
+      "description": "CoD에 전념하는 RL 후속 훈련 프로세스를 나타내며, 다양한 환경에서 일반화를 위한 롤아웃 메커니즘을 제공합니다.",
+      "inputs": [
+        "환경 A, B, ...",
+        "작업 시퀀스"
+      ],
+      "outputs": [
+        "훈련된 모델 가중치"
+      ],
+      "implementation_hint": "동적 프로그래밍 원칙을 사용하여 즉각적인 보상과 미래 보상을 최대화합니다.",
+      "role": "novel",
+      "evidence": [
+        {
+          "page": 2,
+          "section": "The CoD framework",
+          "quote": "CoD-Train represents the rollout mechanism in RL post-training dedicated to CoD, and the corresponding RL algorithm for training model weights.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "name": "GRPO-style RL Algorithm",
+      "description": "비평가 모델이 필요 없는 GRPO 스타일의 훈련 알고리즘을 사용하여 여러 에피소드에 대한 보상 값을 평균하여 이점을 계산합니다.",
+      "inputs": [
+        "롤아웃 궤적",
+        "보상 값"
+      ],
+      "outputs": [
+        "이점 계산"
+      ],
+      "implementation_hint": "에피소드의 반환을 현재 에피소드의 평균 보상과 미래 해결 작업 에피소드의 보상으로 정의합니다.",
+      "role": "novel",
+      "evidence": [
+        {
+          "page": 5,
+          "section": "RL algorithm and infrastructure",
+          "quote": "We adopt a GRPO-style training algorithm in CoD-Train, which requires no critic model and assumes access to multiple rollout trajectories for the same sequence of tasks.",
+          "type": "quote"
+        }
+      ]
+    }
+  ],
+  "benchmarks": [
+    {
+      "dataset": "FrozenLake-Obscure",
+      "metrics": [
+        "성공률"
+      ],
+      "baseline_results": {
+        "초기 성공률": "18%"
+      },
+      "proposed_results": {
+        "네 번째 작업 성공률": "76%"
+      },
+      "evidence": [
+        {
+          "page": 6,
+          "section": "Empirical validation",
+          "quote": "For example, when applying CoD-Train to Qwen3-8B-Instruct on FrozenLake-Obscure environments... its success rate in solving the fourth task within a sequence — conditioned on its self-updated context — increases substantially from 28% to 76%.",
+          "type": "quote"
+        }
+      ]
+    }
+  ],
+  "benchmark": null,
+  "claims": [
+    {
+      "claim_id": "claim_1",
+      "text": "CoD 프레임워크는 LLM의 CoD 메타 능력을 강화하기 위해 RL 후속 훈련을 사용합니다.",
+      "claim_type": "method",
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "page": 2,
+          "section": "The CoD framework",
+          "quote": "In this section, we introduce the CoD framework — visualized in Figure 1 — that aims for eliciting the aforementioned CoD meta-capability in LLMs via RL post-training.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "claim_id": "claim_2",
+      "text": "CoD-Train은 다양한 환경에서 일반화를 위한 롤아웃 메커니즘을 제공합니다.",
+      "claim_type": "architecture",
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "page": 2,
+          "section": "The CoD framework",
+          "quote": "CoD-Train represents the rollout mechanism in RL post-training dedicated to CoD, and the corresponding RL algorithm for training model weights.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "claim_id": "claim_3",
+      "text": "GRPO 스타일의 RL 알고리즘은 비평가 모델이 필요 없으며, 여러 에피소드에 대한 보상 값을 평균하여 이점을 계산합니다.",
+      "claim_type": "method",
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "page": 5,
+          "section": "RL algorithm and infrastructure",
+          "quote": "We adopt a GRPO-style training algorithm in CoD-Train, which requires no critic model and assumes access to multiple rollout trajectories for the same sequence of tasks.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "claim_id": "claim_4",
+      "text": "FrozenLake-Obscure 환경에서 CoD-Train을 적용하면 네 번째 작업의 성공률이 28%에서 76%로 증가합니다.",
+      "claim_type": "result",
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "page": 6,
+          "section": "Empirical validation",
+          "quote": "its success rate in solving the fourth task within a sequence — conditioned on its self-updated context — increases substantially from 28% to 76%.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "claim_id": "claim_5",
+      "text": "CoD 메타 능력은 도메인 내 및 도메인 간 일반화 가능성을 보여줍니다.",
+      "claim_type": "result",
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "page": 6,
+          "section": "Empirical validation",
+          "quote": "Moreover, the elicited CoD meta-capability demonstrates potential for in-domain and cross-domain generalization.",
+          "type": "quote"
+        }
+      ]
+    }
+  ],
+  "extraction_mode": "full"
+}

@@ -1,0 +1,193 @@
+{
+  "arxiv_id": "2606.18648",
+  "title": "Deep Research in Physical Sciences: A Multi-Agent Framework and Comprehensive Benchmark",
+  "problem_definition": {
+    "statement": "물리 과학 분야에서의 심층 연구 에이전트의 능력을 평가하기 위한 포괄적이고 심층적인 벤치마크가 부족하다.",
+    "baseline_methods": [],
+    "structural_limitation": "기존 벤치마크는 단일 작업을 고립된 상태로 평가하며, 외부 도구와 통합된 확장된 워크플로우를 평가하지 못한다.",
+    "evidence": [
+      {
+        "page": null,
+        "section": "Introduction",
+        "quote": "Nevertheless, existing benchmarks remain inadequate for evaluating the capability of agents to undertake authentic research tasks in the physical sciences.",
+        "type": "quote"
+      }
+    ]
+  },
+  "baselines": [
+    {
+      "name": "Gemini Deep Research",
+      "description": "물리 과학 연구에서의 심층 연구 에이전트로, PhySciBench에서 33.5%의 정확도를 달성.",
+      "limitation": "긴 호라이즌 추론에서 불안정하고, 단계 간 도메인 경험 전이가 약하며, 물리 기반 검증이 부족하다.",
+      "evidence": [
+        {
+          "page": null,
+          "section": "Results",
+          "quote": "the strongest baseline, Gemini Deep Research, achieves 33.5% accuracy.",
+          "type": "quote"
+        }
+      ]
+    }
+  ],
+  "method_components": [
+    {
+      "name": "Adaptive Planning Loop",
+      "description": "중간 결과를 수신한 후 재계획을 가능하게 하여 초기 계획에 얽매이지 않고 동적으로 계획을 수정.",
+      "inputs": [
+        "초기 계획",
+        "중간 결과"
+      ],
+      "outputs": [
+        "수정된 계획"
+      ],
+      "implementation_hint": "계획 수정은 중간 결과를 관찰한 후 이루어짐.",
+      "role": "novel",
+      "evidence": [
+        {
+          "page": null,
+          "section": "DelveAgent addresses systemic deficiencies",
+          "quote": "adaptive planning enables replanning after receiving intermediate outcomes.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "name": "Dual-Granularity Memory",
+      "description": "성공적인 궤적과 도메인 지식을 저장하여 작업 경험과 도메인 지식의 재사용을 지원.",
+      "inputs": [
+        "작업 경험",
+        "도메인 지식"
+      ],
+      "outputs": [
+        "재사용 가능한 계획 및 지식"
+      ],
+      "implementation_hint": "계획 수준과 실행 수준에서 각각의 메모리를 유지.",
+      "role": "novel",
+      "evidence": [
+        {
+          "page": null,
+          "section": "DelveAgent addresses systemic deficiencies",
+          "quote": "dual-granularity memory supports reuse of task experience and domain knowledge.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "name": "Hierarchical Physics-Grounded Reflection",
+      "description": "과학적 일관성을 위해 중간 및 최종 출력을 검증하는 계층적 물리 기반 반사 메커니즘.",
+      "inputs": [
+        "중간 출력",
+        "최종 출력"
+      ],
+      "outputs": [
+        "검증된 출력"
+      ],
+      "implementation_hint": "단계 수준의 로컬 검증기와 궤적 수준의 글로벌 비평가로 구성.",
+      "role": "novel",
+      "evidence": [
+        {
+          "page": null,
+          "section": "DelveAgent addresses systemic deficiencies",
+          "quote": "hierarchical physics-grounded reflection checks intermediate and final outputs for scientific consistency.",
+          "type": "quote"
+        }
+      ]
+    }
+  ],
+  "benchmarks": [
+    {
+      "dataset": "PhySciBench",
+      "metrics": [
+        "accuracy"
+      ],
+      "baseline_results": {
+        "Gemini Deep Research": "33.5%"
+      },
+      "proposed_results": {
+        "DelveAgent": "41.0%"
+      },
+      "evidence": [
+        {
+          "page": null,
+          "section": "DelveAgent addresses systemic deficiencies",
+          "quote": "DelveAgent achieved an overall accuracy of 41.0% on PhySciBench, a +7.5 percentage-point improvement over the strongest baseline, Gemini Deep Research (33.5%).",
+          "type": "quote"
+        }
+      ]
+    }
+  ],
+  "benchmark": null,
+  "claims": [
+    {
+      "claim_id": "C1",
+      "text": "PhySciBench는 물리 과학 연구에서 AI 시스템을 평가하기 위한 중요한 벤치마크로 자리 잡았다.",
+      "claim_type": "method",
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "page": null,
+          "section": "Introduction",
+          "quote": "These results establish the significance of PhySciBench as a critical benchmark for evaluating AI systems in the physical sciences.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "claim_id": "C2",
+      "text": "DelveAgent는 가장 강력한 베이스라인보다 최대 7.5% 포인트의 정확도 향상을 달성했다.",
+      "claim_type": "result",
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "page": null,
+          "section": "DelveAgent addresses systemic deficiencies",
+          "quote": "DelveAgent improves accuracy by up to 7.5 percentage points over the strongest baseline.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "claim_id": "C3",
+      "text": "DelveAgent는 추론 비용을 Gemini Deep Research의 약 1/3로 줄였다.",
+      "claim_type": "efficiency",
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "page": null,
+          "section": "DelveAgent addresses systemic deficiencies",
+          "quote": "reducing inference cost to about one-third of Gemini Deep Research.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "claim_id": "C4",
+      "text": "DelveAgent의 아키텍처는 계획, 메모리 및 반사의 조정된 작용을 통해 에이전트의 불안정성을 크게 제거한다.",
+      "claim_type": "architecture",
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "page": null,
+          "section": "Discussion",
+          "quote": "the coordinated action of planning, memory, and reflection substantially eliminates the coarse-grained agentic instabilities.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "claim_id": "C5",
+      "text": "DelveAgent의 성능 향상은 아키텍처 전문화에 의해 주로 이루어졌다.",
+      "claim_type": "comparison",
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "page": null,
+          "section": "Discussion",
+          "quote": "the advantage of DelveAgent is produced by architectural specialisation rather than by the underlying foundation model.",
+          "type": "quote"
+        }
+      ]
+    }
+  ],
+  "extraction_mode": "full"
+}
