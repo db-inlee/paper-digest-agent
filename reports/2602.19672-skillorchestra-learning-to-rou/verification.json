@@ -1,0 +1,57 @@
+{
+  "arxiv_id": "2602.19672",
+  "total_claims": 5,
+  "verified_count": 3,
+  "unverified_count": 2,
+  "contradicted_count": 0,
+  "overall_reliability": "high",
+  "results": [
+    {
+      "claim_id": "1",
+      "claim_text": "SkillOrchestra는 스킬 인식 오케스트레이션을 통해 상태에 따라 성능-비용을 최적화하는 결정을 내린다.",
+      "status": "verified",
+      "confidence": 1.0,
+      "evidence_found": "논문에서 SkillOrchestra가 스킬 인식 오케스트레이션을 통해 성능-비용 최적화를 달성한다고 명시되어 있음.",
+      "notes": "SkillOrchestra의 오케스트레이션 방식이 명확히 설명됨.",
+      "correction_hint": null
+    },
+    {
+      "claim_id": "2",
+      "claim_text": "SkillOrchestra는 RL 기반 오케스트레이터보다 최대 22.5% 더 높은 성능을 달성하며, 학습 비용을 700배 및 300배 줄인다.",
+      "status": "verified",
+      "confidence": 1.0,
+      "evidence_found": "논문에서 SkillOrchestra가 RL 기반 오케스트레이터보다 최대 22.5% 성능 향상과 700배 및 300배 비용 절감을 달성했다고 명시됨.",
+      "notes": "실험 결과가 명확히 제시됨.",
+      "correction_hint": null
+    },
+    {
+      "claim_id": "3",
+      "claim_text": "Skill Handbook는 다양한 오케스트레이터 백본과 모델 풀에서 재사용 가능하며, 라우터 매개변수와 독립적으로 오케스트레이션 지식을 제공한다.",
+      "status": "verified",
+      "confidence": 1.0,
+      "evidence_found": "논문에서 Skill Handbook가 다양한 오케스트레이터 백본에서 재사용 가능하다고 명시됨.",
+      "notes": "Skill Handbook의 재사용 가능성이 강조됨.",
+      "correction_hint": null
+    },
+    {
+      "claim_id": "4",
+      "claim_text": "SkillOrchestra는 라우팅 붕괴를 완화하고, RL 기반 라우팅에서 발생하는 문제를 해결한다.",
+      "status": "unverified",
+      "confidence": 0.8,
+      "evidence_found": null,
+      "notes": "라우팅 붕괴 완화에 대한 언급은 있으나 구체적인 실험적 증거는 부족함.",
+      "correction_hint": null
+    },
+    {
+      "claim_id": "5",
+      "claim_text": "Skill Handbook의 최적 성능-비용 트레이드오프는 오케스트레이터의 역량에 맞게 스킬을 정제하고 선택해야 한다.",
+      "status": "unverified",
+      "confidence": 0.7,
+      "evidence_found": null,
+      "notes": "스킬 정제와 선택의 중요성에 대한 언급은 있으나 구체적인 실험적 증거는 부족함.",
+      "correction_hint": null
+    }
+  ],
+  "summary": "SkillOrchestra는 스킬 인식 오케스트레이션을 통해 성능-비용 최적화를 달성하며, RL 기반 오케스트레이터보다 우수한 성능을 보인다.",
+  "corrections_needed": []
+}

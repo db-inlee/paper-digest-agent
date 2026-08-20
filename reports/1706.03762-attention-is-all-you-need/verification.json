@@ -1,0 +1,57 @@
+{
+  "arxiv_id": "1706.03762",
+  "total_claims": 5,
+  "verified_count": 5,
+  "unverified_count": 0,
+  "contradicted_count": 0,
+  "overall_reliability": "high",
+  "results": [
+    {
+      "claim_id": "C1",
+      "claim_text": "Transformer는 순환 레이어를 완전히 대체하여 어텐션만으로 시퀀스 변환을 수행하는 최초의 모델이다.",
+      "status": "verified",
+      "confidence": 1.0,
+      "evidence_found": "논문에서 Transformer가 RNN이나 CNN을 사용하지 않고 어텐션만으로 시퀀스 변환을 수행한다고 명시됨.",
+      "notes": "Transformer는 기존의 RNN 및 CNN 기반 모델을 대체하는 새로운 접근법으로 설명됨.",
+      "correction_hint": null
+    },
+    {
+      "claim_id": "C2",
+      "claim_text": "Transformer는 기존의 순환 또는 합성곱 기반 아키텍처보다 훨씬 빠르게 학습할 수 있다.",
+      "status": "verified",
+      "confidence": 1.0,
+      "evidence_found": "논문에서 Transformer가 더 빠른 학습 속도를 달성한다고 언급됨.",
+      "notes": "기존 모델보다 학습 시간이 적게 소요된다고 명시됨.",
+      "correction_hint": null
+    },
+    {
+      "claim_id": "C3",
+      "claim_text": "Transformer는 WMT 2014 English-to-German 번역 작업에서 새로운 최고 성능을 달성했다.",
+      "status": "verified",
+      "confidence": 1.0,
+      "evidence_found": "논문에서 Transformer가 WMT 2014 English-to-German 번역 작업에서 28.4 BLEU 점수를 기록했다고 명시됨.",
+      "notes": "기존 최고 성능을 초과했다고 언급됨.",
+      "correction_hint": null
+    },
+    {
+      "claim_id": "C4",
+      "claim_text": "Transformer는 WMT 2014 English-to-French 번역 작업에서 모든 이전에 보고된 단일 모델을 능가했다.",
+      "status": "verified",
+      "confidence": 1.0,
+      "evidence_found": "논문에서 Transformer가 WMT 2014 English-to-French 번역 작업에서 41.8 BLEU 점수를 기록했다고 명시됨.",
+      "notes": "모든 이전 단일 모델을 초과했다고 언급됨.",
+      "correction_hint": null
+    },
+    {
+      "claim_id": "C5",
+      "claim_text": "Transformer는 영어 구성 구문 분석 작업에서도 잘 일반화된다.",
+      "status": "verified",
+      "confidence": 1.0,
+      "evidence_found": "논문에서 Transformer가 영어 구성 구문 분석 작업에 성공적으로 적용되었다고 언급됨.",
+      "notes": "다양한 작업에 대한 일반화 능력이 강조됨.",
+      "correction_hint": null
+    }
+  ],
+  "summary": "모든 클레임이 논문에서 지지되며, 제시된 baseline과 one-line takeaway도 정확하게 반영됨.",
+  "corrections_needed": []
+}

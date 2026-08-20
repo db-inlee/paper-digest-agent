@@ -1,0 +1,192 @@
+{
+  "arxiv_id": "2602.11715",
+  "title": "DICE: Diffusion Large Language Models Excel at Generating CUDA Kernels",
+  "problem_definition": {
+    "statement": "CUDA 커널 생성을 위한 diffusion 대형 언어 모델(dLLMs)의 개발 및 최적화.",
+    "baseline_methods": [],
+    "structural_limitation": "기존의 autoregressive LLMs는 순차적 의존성으로 인해 긴 시퀀스에서 추론 지연이 발생하며, 이는 비선형적 코드 생성 워크플로우와 맞지 않음.",
+    "evidence": [
+      {
+        "page": null,
+        "section": "Introduction",
+        "quote": "The inherent sequential dependency introduces significant inference latency, particularly for long sequences. Furthermore, this rigid generation process diverges from iterative human programming workflows.",
+        "type": "quote"
+      }
+    ]
+  },
+  "baselines": [
+    {
+      "name": "cudaLLM",
+      "description": "CUDA 커널 생성을 위한 reasoning 모델.",
+      "limitation": "DICE는 cudaLLM보다 적은 데이터와 계산 자원을 사용하면서도 유사한 성능을 달성.",
+      "evidence": [
+        {
+          "page": null,
+          "section": "Experimental Results",
+          "quote": "DICE achieves performance parity with cudaLLM. Notably, our model demonstrates superior performance on relatively difficult tasks (Levels 2 and 3), while remaining highly competitive, though marginally suboptimal, on Level 1.",
+          "type": "quote"
+        }
+      ]
+    }
+  ],
+  "method_components": [
+    {
+      "name": "Bi-phase Curated Reinforcement Learning (BiC-RL)",
+      "description": "CUDA 커널 생성을 위한 강화 학습 프레임워크로, 커널 인필링 단계와 엔드 투 엔드 커널 생성 단계로 구성됨.",
+      "inputs": [
+        "CUDA 커널 데이터",
+        "PyTorch 참조"
+      ],
+      "outputs": [
+        "최적화된 CUDA 커널"
+      ],
+      "implementation_hint": "TraceRL 기반의 계층적 강화 학습 전략을 사용하여 데이터와 훈련을 두 단계로 나눔.",
+      "role": "novel",
+      "evidence": [
+        {
+          "page": null,
+          "section": "Methodology",
+          "quote": "We propose a bi-phase curated reinforcement learning framework built upon TraceRL.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "name": "CuKe Dataset",
+      "description": "고성능 CUDA 커널을 포함하는 감독 학습 데이터셋으로, ConCuR 데이터셋을 기반으로 개선됨.",
+      "inputs": [
+        "ConCuR 데이터셋"
+      ],
+      "outputs": [
+        "고성능 PyTorch-CUDA 쌍"
+      ],
+      "implementation_hint": "2.0× 속도 향상 임계값을 적용하여 데이터 쌍을 필터링.",
+      "role": "novel",
+      "evidence": [
+        {
+          "page": null,
+          "section": "CuKe Dataset Construction",
+          "quote": "We introduce CuKe, an augmented dataset that is substantially improved on top of the ConCuR dataset.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "name": "Block Diffusion Mechanism",
+      "description": "시퀀스를 여러 블록으로 나누어 각 블록 내에서 병렬 디코딩을 수행하는 하이브리드 접근 방식.",
+      "inputs": [
+        "시퀀스 x"
+      ],
+      "outputs": [
+        "복원된 블록"
+      ],
+      "implementation_hint": "블록 내에서는 autoregressive, 블록 간에는 비-autoregressive 방식으로 작동.",
+      "role": "standard",
+      "evidence": [
+        {
+          "page": null,
+          "section": "Block Diffusion Language Models",
+          "quote": "The block diffusion mechanism enables models to generate autoregressively between blocks, while parallel discrete decoding within blocks.",
+          "type": "quote"
+        }
+      ]
+    }
+  ],
+  "benchmarks": [
+    {
+      "dataset": "KernelBench",
+      "metrics": [
+        "Execution Correctness",
+        "Speedup (fast1, fast2)"
+      ],
+      "baseline_results": {
+        "cudaLLM": "Level 1: Exec 46.0, fast1/fast2 12.0/7.0; Level 2: Exec 34.0, fast1/fast2 12.0/6.0; Level 3: Exec 6.0, fast1/fast2 4.0/0.0"
+      },
+      "proposed_results": {
+        "DICE": "Level 1: Exec 40.0, fast1/fast2 9.0/5.0; Level 2: Exec 39.0, fast1/fast2 14.0/0.0; Level 3: Exec 16.0, fast1/fast2 8.0/4.0"
+      },
+      "evidence": [
+        {
+          "page": null,
+          "section": "Experimental Results",
+          "quote": "Tables 1, 2, and 3 summarize the performance of our DICE models across the 8B, 4B, and 1.7B scales.",
+          "type": "quote"
+        }
+      ]
+    }
+  ],
+  "benchmark": null,
+  "claims": [
+    {
+      "claim_id": "claim_1",
+      "text": "DICE는 CUDA 커널 생성을 위한 최초의 특화된 dLLM이다.",
+      "claim_type": "method",
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "page": null,
+          "section": "Introduction",
+          "quote": "We present DICE, which is the first specialized dLLM designed for CUDA kernel generation, to our best knowledge.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "claim_id": "claim_2",
+      "text": "DICE는 autoregressive 및 diffusion LLMs보다 우수한 성능을 보인다.",
+      "claim_type": "result",
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "page": null,
+          "section": "Abstract",
+          "quote": "Extensive experiments on KernelBench demonstrate that DICE significantly outperforms both autoregressive and diffusion LLMs of comparable scale.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "claim_id": "claim_3",
+      "text": "BiC-RL은 CUDA 커널 생성 작업을 위한 새로운 강화 학습 패러다임이다.",
+      "claim_type": "method",
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "page": null,
+          "section": "Introduction",
+          "quote": "We propose BiC-RL, a new reinforcement learning paradigm for the CUDA kernel generation task.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "claim_id": "claim_4",
+      "text": "CuKe 데이터셋은 고성능 CUDA 커널을 포함하는 감독 학습 데이터셋이다.",
+      "claim_type": "method",
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "page": null,
+          "section": "CuKe Dataset Construction",
+          "quote": "We introduce CuKe, a specifically curated supervised fine-tuning dataset that contains a large number of high-performance CUDA kernels.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "claim_id": "claim_5",
+      "text": "DICE는 적은 데이터와 계산 자원을 사용하면서도 cudaLLM과 유사한 성능을 달성한다.",
+      "claim_type": "comparison",
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "page": null,
+          "section": "Experimental Results",
+          "quote": "Despite this reduction in data volume and computational budget, DICE achieves performance parity with cudaLLM.",
+          "type": "quote"
+        }
+      ]
+    }
+  ],
+  "extraction_mode": "full"
+}

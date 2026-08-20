@@ -1,0 +1,57 @@
+{
+  "arxiv_id": "2602.20093",
+  "total_claims": 5,
+  "verified_count": 5,
+  "unverified_count": 0,
+  "contradicted_count": 0,
+  "overall_reliability": "high",
+  "results": [
+    {
+      "claim_id": "claim_1",
+      "claim_text": "ManCAR는 협업적 이웃을 활용하여 잠재적 드리프트를 방지하는 매니폴드 제약을 통해 잠재적 추론을 안내한다.",
+      "status": "verified",
+      "confidence": 1.0,
+      "evidence_found": "논문 1페이지, 'ManCAR constructs a local intent prior from the collaborative neighborhood of a user’s recent actions, represented as a distribution over the item simplex.'",
+      "notes": "매니폴드 제약을 통해 잠재적 드리프트를 방지하는 방법이 명확히 설명됨.",
+      "correction_hint": null
+    },
+    {
+      "claim_id": "claim_2",
+      "claim_text": "ManCAR는 NDCG@10에서 최대 46.88%의 상대적 개선을 달성하며, 최첨단 베이스라인보다 일관되게 성능을 향상시킨다.",
+      "status": "verified",
+      "confidence": 1.0,
+      "evidence_found": "논문 1페이지, 'Experiments on seven benchmarks demonstrate that ManCAR consistently outperforms state-of-the-art baselines, achieving up to a 46.88% relative improvement w.r.t. NDCG@10.'",
+      "notes": "실험 결과가 명확히 제시됨.",
+      "correction_hint": null
+    },
+    {
+      "claim_id": "claim_3",
+      "claim_text": "ManCAR는 적응적 테스트 시점 종료를 통해 과도한 세분화를 피하고, 예측 분포가 안정화될 때까지 추론을 진행한다.",
+      "status": "verified",
+      "confidence": 1.0,
+      "evidence_found": "논문 1페이지, 'At test time, reasoning proceeds adaptively until the predictive distribution stabilizes, avoiding over-refinement.'",
+      "notes": "적응적 종료 기준이 명확히 설명됨.",
+      "correction_hint": null
+    },
+    {
+      "claim_id": "claim_4",
+      "claim_text": "ManCAR는 그래프 조건부 매니폴드 제약을 통해 잠재적 추론 궤적을 유효한 영역 내에서 제한한다.",
+      "status": "verified",
+      "confidence": 1.0,
+      "evidence_found": "논문 2페이지, 'we treat the neighborhood induced by the item graph as a manifold constraint, restricting latent reasoning trajectories to evolve within collaboratively reachable regions.'",
+      "notes": "매니폴드 제약의 역할이 명확히 설명됨.",
+      "correction_hint": null
+    },
+    {
+      "claim_id": "claim_5",
+      "claim_text": "ManCAR는 수렴 기반 종료 기준을 통해 적응적 테스트 시점 종료를 가능하게 한다.",
+      "status": "verified",
+      "confidence": 1.0,
+      "evidence_found": "논문 2페이지, 'This motivates us to design a convergence-based stopping criterion for ManCAR, allowing test-time computation to terminate adaptively when the model has sufficiently localized the target region.'",
+      "notes": "수렴 기반 종료 기준이 명확히 설명됨.",
+      "correction_hint": null
+    }
+  ],
+  "summary": "모든 클레임이 논문에서 지지되며, 실험적 비교가 이루어진 베이스라인이 정확하게 언급됨.",
+  "corrections_needed": []
+}

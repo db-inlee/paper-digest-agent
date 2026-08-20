@@ -1,0 +1,195 @@
+{
+  "arxiv_id": "2608.13558",
+  "title": "OmniScientist: An Omni-Modal Omni-Discipline AI Scientist",
+  "problem_definition": {
+    "statement": "OmniScientist는 이질적인 과학적 증거로부터 직접 다학문적 연구를 수행하는 엔드 투 엔드, 옴니 모달 AI 과학자를 제안한다.",
+    "baseline_methods": [],
+    "structural_limitation": "기존 시스템은 텍스트, 코드, 레이블 또는 사전 계산된 요약을 통해 데이터를 노출하여 연구 질문, 실험 설계 및 최종 주장을 형성하는 데 필요한 관계를 제한한다.",
+    "evidence": [
+      {
+        "page": null,
+        "section": "Introduction",
+        "quote": "Existing systems typically reason over text, code, labels, or precomputed summaries, leaving scientifically decisive spatial, temporal, cross-channel, and procedural relations unavailable to the agent.",
+        "type": "quote"
+      }
+    ]
+  },
+  "baselines": [],
+  "method_components": [
+    {
+      "name": "Perception Layer",
+      "description": "다양한 모달리티의 원시 데이터를 직접 인식하여 증거를 계층적으로 조직한다.",
+      "inputs": [
+        "원시 데이터"
+      ],
+      "outputs": [
+        "계층적으로 조직된 증거"
+      ],
+      "implementation_hint": "각 증거 가족 내에서 특정 모달리티가 정의되며, 에이전트는 등록된 도구를 사용하여 이를 검사한다.",
+      "role": "novel",
+      "evidence": [
+        {
+          "page": null,
+          "section": "4.1 Perception layer",
+          "quote": "The perception layer supplies this grounding by organizing observations hierarchically.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "name": "Ideation Agent",
+      "description": "ReAct 루프를 통해 발견 프로세스를 자동으로 시퀀싱하여 구체적이고 새로운, 반증 가능한 질문을 공식화한다.",
+      "inputs": [
+        "자료 인벤토리",
+        "문헌 검색 결과"
+      ],
+      "outputs": [
+        "최종화된 연구 질문"
+      ],
+      "implementation_hint": "최소 5개의 후보 아이디어를 개발하고, 각 아이디어의 참신성 위험과 실행 가능성을 평가한다.",
+      "role": "novel",
+      "evidence": [
+        {
+          "page": null,
+          "section": "4.2 Ideation",
+          "quote": "The ideation stage requires the agent to formulate a concrete, novel, and falsifiable question that can be answered computationally from the supplied data.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "name": "Experiment Agent",
+      "description": "최종화된 아이디어를 방법론적 설계로 번역하고 반복적인 코드 생성을 통해 구현한다.",
+      "inputs": [
+        "최종화된 연구 질문"
+      ],
+      "outputs": [
+        "실험 결과"
+      ],
+      "implementation_hint": "실험 설계에 최소 4개의 분석을 통합하여 주요 가설 테스트와 필수적인 통제 요소를 결합한다.",
+      "role": "novel",
+      "evidence": [
+        {
+          "page": null,
+          "section": "4.3 Experiment",
+          "quote": "During experimentation, the agent autonomously translates the finalized idea into a methodological design and implements it through iterative code generation.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "name": "Writeup Agent",
+      "description": "실행 기록에 의해 지원되는 주장만을 선택, 근거화, 보고하여 최종 논문을 작성한다.",
+      "inputs": [
+        "실험 결과"
+      ],
+      "outputs": [
+        "최종 논문"
+      ],
+      "implementation_hint": "각 섹션은 필요한 구조화된 실험 기록의 슬라이스에서만 확장된다.",
+      "role": "novel",
+      "evidence": [
+        {
+          "page": null,
+          "section": "4.4 Writeup",
+          "quote": "The writeup stage is where breadth becomes visible in the artifact itself.",
+          "type": "quote"
+        }
+      ]
+    }
+  ],
+  "benchmarks": [
+    {
+      "dataset": "36-case demonstration suite",
+      "metrics": [
+        "mean overall paper score"
+      ],
+      "baseline_results": {},
+      "proposed_results": {
+        "mean overall paper score": "6.3"
+      },
+      "evidence": [
+        {
+          "page": null,
+          "section": "Evaluation",
+          "quote": "The system completes the full path from raw data to a compiled paper in all 36 cases and achieves a mean overall paper score of 6.3 with the reference reasoning backbone.",
+          "type": "quote"
+        }
+      ]
+    }
+  ],
+  "benchmark": null,
+  "claims": [
+    {
+      "claim_id": "claim_1",
+      "text": "OmniScientist는 이질적인 과학적 증거로부터 직접 다학문적 연구를 수행할 수 있는 엔드 투 엔드, 옴니 모달 AI 과학자이다.",
+      "claim_type": "method",
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "page": null,
+          "section": "Abstract",
+          "quote": "We introduce OmniScientist, an end-to-end, omni-modal AI scientist that conducts multidisciplinary research directly from heterogeneous raw evidence.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "claim_id": "claim_2",
+      "text": "OmniScientist는 36개의 실제 데이터 사례에서 전체 경로를 완료하고 평균 종합 논문 점수 6.3을 달성한다.",
+      "claim_type": "result",
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "page": null,
+          "section": "Evaluation",
+          "quote": "The system completes the full path from raw data to a compiled paper in all 36 cases and achieves a mean overall paper score of 6.3 with the reference reasoning backbone.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "claim_id": "claim_3",
+      "text": "직접적인 인식은 모든 평가 차원에서 개선을 가져오며, 85%의 대결 판단에서 승리한다.",
+      "claim_type": "comparison",
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "page": null,
+          "section": "Abstract",
+          "quote": "In paired comparisons against a blind variant that receives only precomputed scalar features, direct perception improves all 7 evaluation dimensions and wins 85% of head-to-head judgments.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "claim_id": "claim_4",
+      "text": "OmniScientist는 공간적, 시간적, 통계적, 절차적 관계를 연구 과정 전반에 걸쳐 유지하여 자동화된 발견을 워크플로우 범위를 넘어 확장한다.",
+      "claim_type": "method",
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "page": null,
+          "section": "Conclusion",
+          "quote": "By integrating multimodal perception directly into the research lifecycle, the system enables raw observations to drive ideation, steer experimental execution, and substantiate the claims of the resulting manuscript.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "claim_id": "claim_5",
+      "text": "OmniScientist는 5개의 학문 가족과 4개의 과학적 증거 가족에 걸쳐 36개의 사례를 평가하여 광범위한 교차 학문적 적용 가능성을 입증한다.",
+      "claim_type": "result",
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "page": null,
+          "section": "Conclusion",
+          "quote": "The framework demonstrates extensive cross-disciplinary applicability by successfully completing a 36-case demonstration suite spanning 5 discipline families.",
+          "type": "quote"
+        }
+      ]
+    }
+  ],
+  "extraction_mode": "full"
+}

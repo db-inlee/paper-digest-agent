@@ -1,0 +1,57 @@
+{
+  "arxiv_id": "2608.13558",
+  "one_line_takeaway": "이 논문은 다학문적 연구를 수행하는 AI 과학자라는 새로운 문제 영역에 대해 OmniScientist 접근법을 제안한다.",
+  "core_deltas": [
+    {
+      "axis": "지각 계층",
+      "old_approach": "일반적인 기존 접근",
+      "new_approach": "다양한 모달리티의 원시 데이터를 직접 인식하여 증거를 계층적으로 조직",
+      "why_better": "이질적인 과학적 증거를 효과적으로 조직하여 다학문적 연구를 지원한다.",
+      "evidence": {
+        "page": null,
+        "section": "Method Components",
+        "quote": "Perception Layer: 다양한 모달리티의 원시 데이터를 직접 인식하여 증거를 계층적으로 조직한다.",
+        "type": "quote"
+      }
+    },
+    {
+      "axis": "아이디어 생성 에이전트",
+      "old_approach": "해당 영역에 특화된 방법 없음",
+      "new_approach": "ReAct 루프를 통해 발견 프로세스를 자동으로 시퀀싱하여 구체적이고 새로운, 반증 가능한 질문을 공식화",
+      "why_better": "자동화된 아이디어 생성으로 연구 질문의 참신성과 실행 가능성을 평가할 수 있다.",
+      "evidence": {
+        "page": null,
+        "section": "Method Components",
+        "quote": "Ideation Agent: ReAct 루프를 통해 발견 프로세스를 자동으로 시퀀싱하여 구체적이고 새로운, 반증 가능한 질문을 공식화한다.",
+        "type": "quote"
+      }
+    },
+    {
+      "axis": "실험 에이전트",
+      "old_approach": "해당 영역에 특화된 방법 없음",
+      "new_approach": "최종화된 아이디어를 방법론적 설계로 번역하고 반복적인 코드 생성을 통해 구현",
+      "why_better": "효율적인 실험 설계와 구현을 통해 주요 가설 테스트와 통제 요소를 결합할 수 있다.",
+      "evidence": {
+        "page": null,
+        "section": "Method Components",
+        "quote": "Experiment Agent: 최종화된 아이디어를 방법론적 설계로 번역하고 반복적인 코드 생성을 통해 구현한다.",
+        "type": "quote"
+      }
+    },
+    {
+      "axis": "작성 에이전트",
+      "old_approach": "해당 영역에 특화된 방법 없음",
+      "new_approach": "실행 기록에 의해 지원되는 주장만을 선택, 근거화, 보고하여 최종 논문을 작성",
+      "why_better": "구조화된 실험 기록을 기반으로 한 신뢰성 있는 논문 작성이 가능하다.",
+      "evidence": {
+        "page": null,
+        "section": "Method Components",
+        "quote": "Writeup Agent: 실행 기록에 의해 지원되는 주장만을 선택, 근거화, 보고하여 최종 논문을 작성한다.",
+        "type": "quote"
+      }
+    }
+  ],
+  "tradeoffs": [],
+  "when_to_use": "다양한 모달리티의 데이터를 활용하여 다학문적 연구를 수행할 때",
+  "when_not_to_use": "단일 모달리티 데이터만을 사용하는 단일 분야 연구에서는 필요하지 않을 수 있음"
+}

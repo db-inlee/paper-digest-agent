@@ -1,0 +1,57 @@
+{
+  "arxiv_id": "2608.16590",
+  "total_claims": 5,
+  "verified_count": 4,
+  "unverified_count": 1,
+  "contradicted_count": 0,
+  "overall_reliability": "high",
+  "results": [
+    {
+      "claim_id": "claim_1",
+      "claim_text": "Zetta는 코드 기반의 런타임 비평가와 복구 기술을 온라인으로 진화시키는 폐쇄 루프 구현을 제안한다.",
+      "status": "verified",
+      "confidence": 1.0,
+      "evidence_found": "논문 1페이지, Zetta의 구조와 기능 설명.",
+      "notes": "Zetta의 폐쇄 루프 구조에 대한 설명이 명확하게 제시됨.",
+      "correction_hint": null
+    },
+    {
+      "claim_id": "claim_2",
+      "claim_text": "Zetta는 LIBERO-Pro와 RoboCasa에서 각각 90.8%와 93.6%의 성공률을 달성한다.",
+      "status": "verified",
+      "confidence": 1.0,
+      "evidence_found": "논문 3페이지, Zetta의 성공률에 대한 실험 결과.",
+      "notes": "성공률에 대한 데이터가 명확하게 제공됨.",
+      "correction_hint": null
+    },
+    {
+      "claim_id": "claim_3",
+      "claim_text": "Zetta는 기존의 정책 모델과 비교하여 11.1배의 추론 속도 향상을 제공한다.",
+      "status": "verified",
+      "confidence": 1.0,
+      "evidence_found": "논문 3페이지, Zetta의 추론 속도 향상에 대한 언급.",
+      "notes": "추론 속도 향상에 대한 비교가 명확하게 제시됨.",
+      "correction_hint": null
+    },
+    {
+      "claim_id": "claim_4",
+      "claim_text": "Zetta는 동일한 작업에서 지속적인 개선을 가능하게 하며, 제로샷 기술 전이를 지원한다.",
+      "status": "unverified",
+      "confidence": 0.8,
+      "evidence_found": null,
+      "notes": "제로샷 기술 전이에 대한 구체적인 실험 결과가 부족함.",
+      "correction_hint": null
+    },
+    {
+      "claim_id": "claim_5",
+      "claim_text": "Z-Infra는 에이전트 논리를 이종 하드웨어 리소스에서 분리하여 확장 가능한 롤아웃 생성을 지원한다.",
+      "status": "verified",
+      "confidence": 1.0,
+      "evidence_found": "논문 12페이지, Z-Infra의 구조와 기능 설명.",
+      "notes": "Z-Infra의 기능이 명확하게 설명됨.",
+      "correction_hint": null
+    }
+  ],
+  "summary": "대부분의 클레임이 논문에서 지지되며, 실험 결과와 방법론이 명확하게 제시됨.",
+  "corrections_needed": []
+}

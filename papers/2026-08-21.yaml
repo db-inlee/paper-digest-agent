@@ -1,0 +1,254 @@
+date: '2026-08-21'
+total_collected: 14
+total_skimmed: 8
+total_after_filter: 8
+skipped_previously_processed: 3
+skipped_duplicate: 0
+skipped_hard_filter: 0
+skipped_keyword_filter: 3
+skipped_venue_filter: 0
+effective_keywords:
+- LLM
+- agent
+- agentic
+- multi-agent
+- RAG
+- retrieval
+- reasoning
+- planning
+- prompt
+papers:
+- arxiv_id: '2608.16590'
+  title: 'Zetta ζ: An Efficient Closed-Loop Embodied Harness for Self-Evolving Physical
+    Intelligence'
+  one_liner: Zetta는 물리적 실행에서의 닫힌 루프 학습을 가능하게 하는 효율적인 에이전트 하네스이다.
+  tags:
+  - embodied agents
+  - closed-loop learning
+  - robotics
+  - self-evolution
+  - runtime critics
+  interest_score: 4
+  interest_reason: 물리적 지능을 위한 닫힌 루프 학습의 새로운 경로를 제시하여 중요한 기여를 한다.
+  baseline_mentioned: LIBERO-Pro, RoboCasa
+  category: agent
+  has_code: true
+  link: https://arxiv.org/abs/2608.16590
+  github_url: https://github.com/air-embodied-brain/Zetta-Embodiment
+  github_stars: 186
+  matched_keywords:
+  - agent
+  - agentic
+- arxiv_id: '2608.18565'
+  title: 'SemaPLC: A Project-Grounded, Verification-Gated Agent Harness for PLC Code
+    Generation'
+  one_liner: SemaPLC는 PLC 코드 생성을 위한 검증 기반 에이전트 하네스이며, 프로젝트 맥락에서 높은 검증 통과율을 달성합니다.
+  tags:
+  - PLC
+  - code generation
+  - verification
+  - agent
+  interest_score: 4
+  interest_reason: 산업용 PLC 코드 생성의 검증을 강화하는 중요한 기여를 합니다.
+  baseline_mentioned: 기존 7개 모델
+  category: agent
+  has_code: true
+  link: https://arxiv.org/abs/2608.18565
+  github_url: https://github.com/midea-ai/SemaPLC
+  github_stars: 32
+  matched_keywords:
+  - agent
+- arxiv_id: '2608.13558'
+  title: 'OmniScientist: An Omni-Modal Omni-Discipline AI Scientist'
+  one_liner: OmniScientist는 다양한 원시 증거를 기반으로 다학제 연구를 수행하는 AI 과학자 시스템이다.
+  tags:
+  - AI scientist
+  - multidisciplinary research
+  - evidence-based
+  - workflow automation
+  - end-to-end
+  interest_score: 5
+  interest_reason: 과학적 발견의 전 과정을 자동화하는 혁신적인 접근 방식을 제시한다.
+  baseline_mentioned: 36 real-data cases
+  category: reasoning
+  has_code: true
+  link: https://arxiv.org/abs/2608.13558
+  github_url: https://github.com/Omni-Scientist/OmniScientist
+  github_stars: 17
+  matched_keywords:
+  - agent
+  - RAG
+  - reasoning
+- arxiv_id: '2608.17253'
+  title: 'Co-RL: Unsupervised Reasoning Emerges from Diverse Cohort in Multi-agent
+    RL'
+  one_liner: Co-RL은 협력적 다중 에이전트 훈련을 통해 비지도 추론을 가능하게 하는 프레임워크이다.
+  tags:
+  - reinforcement learning
+  - multi-agent
+  - unsupervised reasoning
+  - cooperative training
+  - diversity
+  interest_score: 4
+  interest_reason: 비지도 학습에서의 추론 성능을 향상시키는 새로운 방법론을 제시한다.
+  baseline_mentioned: base models, prior label-free approaches
+  category: reasoning
+  has_code: true
+  link: https://arxiv.org/abs/2608.17253
+  github_url: https://github.com/DrStranded/Co-RL
+  github_stars: 2
+  matched_keywords:
+  - LLM
+  - agent
+  - multi-agent
+  - RAG
+  - reasoning
+- arxiv_id: '2608.19197'
+  title: 'SPADE: Self-Play in Adaptive Synthetic Executable Environments'
+  one_liner: SPADE는 LLM이 환경 설계자와 추론 에이전트 역할을 수행하는 자기 플레이 RL 프레임워크입니다.
+  tags:
+  - self-play
+  - reinforcement learning
+  - environment design
+  - agent
+  interest_score: 4
+  interest_reason: 자기 생성 목표를 통한 지속적인 자기 개선을 위한 혁신적인 접근 방식을 제시합니다.
+  baseline_mentioned: 고정 환경 기준선
+  category: agent
+  has_code: true
+  link: https://arxiv.org/abs/2608.19197
+  github_url: https://github.com/spade-rl/spade
+  github_stars: 16
+  matched_keywords:
+  - LLM
+  - agent
+  - agentic
+  - RAG
+  - reasoning
+- arxiv_id: '2608.18940'
+  title: Training Chemical Plausibility-Aware Large Language Models for Single-Step
+    Retrosynthesis
+  one_liner: C3LM은 단일 단계 역합성을 위한 화학적 타당성을 고려한 LLM으로, Top-K 프롬프트를 통해 다양한 반응 예측을 캡처합니다.
+  tags:
+  - retrosynthesis
+  - chemical models
+  - training
+  - evaluation
+  interest_score: 4
+  interest_reason: 화학 합성 계획에서의 성능을 크게 향상시키는 새로운 훈련 패러다임을 제안합니다.
+  baseline_mentioned: OOD URSA-expert-2026 벤치마크
+  category: training
+  has_code: false
+  link: https://arxiv.org/abs/2608.18940
+  github_url: null
+  github_stars: null
+  matched_keywords:
+  - LLM
+  - planning
+  - prompt
+- arxiv_id: '2608.18746'
+  title: 'Decision-Metric Alignment in Latent World Models: Diagnostics and Action-Conditioned
+    Objectives for MPC Planning'
+  one_liner: DA-LeWM은 MPC 계획을 위한 잠재적 세계 모델에서 의사 결정 메트릭 정렬을 개선하는 방법을 제안합니다.
+  tags:
+  - MPC
+  - latent models
+  - planning
+  - reasoning
+  interest_score: 3
+  interest_reason: 모델 예측 제어의 효율성을 높이는 유용한 기여를 합니다.
+  baseline_mentioned: LeWM
+  category: reasoning
+  has_code: false
+  link: https://arxiv.org/abs/2608.18746
+  github_url: null
+  github_stars: null
+  matched_keywords:
+  - planning
+- arxiv_id: '2608.18171'
+  title: Looped Language Models Improve Compositional Tool Calling
+  one_liner: 루프 언어 모델은 조합적 도구 호출에서의 성능을 향상시키는 가능성을 보여줍니다.
+  tags:
+  - tool calling
+  - looped models
+  - agent
+  - reasoning
+  interest_score: 4
+  interest_reason: 에이전트 시스템에서 도구 사용의 신뢰성을 높이는 중요한 연구입니다.
+  baseline_mentioned: API-Bank, BFCL, NESTful
+  category: agent
+  has_code: false
+  link: https://arxiv.org/abs/2608.18171
+  github_url: null
+  github_stars: null
+  matched_keywords:
+  - agent
+  - agentic
+  - reasoning
+  - planning
+- arxiv_id: '2608.18423'
+  title: 'FM-Bench: A Benchmark for Long-Horizon Management with Competing Agents'
+  one_liner: FM-Bench는 LLM 에이전트의 장기적인 의사 결정을 평가하는 새로운 벤치마크를 제안합니다.
+  tags:
+  - benchmark
+  - long-horizon
+  - decision-making
+  - evaluation
+  interest_score: 4
+  interest_reason: 장기적인 의사 결정 능력을 측정하는 중요한 기준을 제공합니다.
+  baseline_mentioned: 고정 스크립트 세계
+  category: evaluation
+  has_code: true
+  link: https://arxiv.org/abs/2608.18423
+  github_url: https://github.com/Analogy-AI/fm-bench
+  github_stars: 13
+  matched_keywords:
+  - LLM
+  - agent
+- arxiv_id: '2608.14229'
+  title: 'The More Popular, The Harder to Forget: Adaptive Popularity for LLM Unlearning'
+  one_liner: AdaPop은 LLM의 비우기 방법을 개선하여 인기 있는 사실의 제거를 더 효과적으로 수행합니다.
+  tags:
+  - unlearning
+  - adaptive methods
+  - training
+  - evaluation
+  interest_score: 4
+  interest_reason: LLM의 비우기 성능을 크게 향상시키는 혁신적인 접근 방식을 제안합니다.
+  baseline_mentioned: 기존 비우기 방법
+  category: training
+  has_code: false
+  link: https://arxiv.org/abs/2608.14229
+  github_url: null
+  github_stars: null
+  matched_keywords:
+  - LLM
+- arxiv_id: '2608.13947'
+  title: Scaling Creative Writing Beyond Story-Centric Data with Attribute-Guided
+    Genre Expansion
+  one_liner: 속성 기반 장르 확장 프레임워크는 다양한 창작 형식의 데이터 생성을 위한 새로운 접근 방식을 제안합니다.
+  tags:
+  - creative writing
+  - data generation
+  - genre expansion
+  - training
+  interest_score: 4
+  interest_reason: 창의적 글쓰기 능력을 향상시키는 중요한 기여를 합니다.
+  baseline_mentioned: 기존 글쓰기 전문화 모델
+  category: training
+  has_code: false
+  link: https://arxiv.org/abs/2608.13947
+  github_url: null
+  github_stars: null
+  matched_keywords:
+  - LLM
+  - RAG
+  - prompt
+deep_candidates:
+- '2608.13558'
+- '2608.16590'
+- '2608.17253'
+- '2608.18171'
+- '2608.18565'
+- '2608.19197'
+skimmed_at: '2026-08-21T06:37:42.302760'

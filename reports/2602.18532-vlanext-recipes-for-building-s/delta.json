@@ -1,0 +1,58 @@
+{
+  "arxiv_id": "2602.18532",
+  "one_line_takeaway": "이 논문은 VLA 모델의 설계 공간을 통합된 프레임워크로 체계화하여 강력한 VLA 모델 구축을 지원한다.",
+  "core_deltas": [
+    {
+      "axis": "정책 모듈 설계",
+      "old_approach": "텍스트 토큰을 재사용하여 액션 분류를 수행",
+      "new_approach": "별도의 정책 헤드를 추가하여 액션 예측을 수행",
+      "why_better": "정책 헤드를 추가함으로써 액션 예측의 정확성을 높이고, 모델의 유연성을 증가시킴",
+      "evidence": {
+        "page": null,
+        "section": "Method Components",
+        "quote": "텍스트 토큰을 재사용하여 액션 분류를 수행하는 대신, 별도의 정책 헤드를 추가하여 액션 예측을 수행한다.",
+        "type": "quote"
+      }
+    },
+    {
+      "axis": "액션 청킹",
+      "old_approach": "단일 액션 예측",
+      "new_approach": "여러 미래의 액션을 공동으로 예측",
+      "why_better": "추론 효율성을 개선하고 더 긴 시간적 창을 모델링할 수 있음",
+      "evidence": {
+        "page": null,
+        "section": "Method Components",
+        "quote": "여러 미래의 액션을 공동으로 예측하여 추론 효율성을 개선한다.",
+        "type": "quote"
+      }
+    },
+    {
+      "axis": "VLM-정책 모듈 연결",
+      "old_approach": "고정된 연결 전략",
+      "new_approach": "학습 가능한 쿼리를 삽입하여 소프트 전략 도입",
+      "why_better": "모듈 간의 유연한 연결을 통해 성능 향상을 도모",
+      "evidence": {
+        "page": null,
+        "section": "Method Components",
+        "quote": "학습 가능한 쿼리를 삽입하여 두 모듈 간의 레이어별 연결을 통해 소프트 전략을 도입한다.",
+        "type": "quote"
+      }
+    }
+  ],
+  "tradeoffs": [
+    {
+      "aspect": "복잡성",
+      "benefit": "정확성과 유연성 증가",
+      "cost": "모델의 복잡성이 증가하여 학습 및 추론 시간이 늘어날 수 있음",
+      "when_acceptable": null,
+      "evidence": {
+        "page": null,
+        "section": "Method Components",
+        "quote": "별도의 정책 헤드를 추가하여 액션 예측을 수행한다.",
+        "type": "quote"
+      }
+    }
+  ],
+  "when_to_use": "강력한 VLA 모델을 구축하고자 할 때, 특히 다양한 설계 선택을 평가하고 최적화할 필요가 있을 때",
+  "when_not_to_use": "모델의 복잡성을 최소화해야 하거나, 제한된 자원으로 빠른 추론이 필요한 경우"
+}

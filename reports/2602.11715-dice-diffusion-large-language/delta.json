@@ -1,0 +1,58 @@
+{
+  "arxiv_id": "2602.11715",
+  "one_line_takeaway": "이 논문은 CUDA 커널 생성을 위한 diffusion 대형 언어 모델(dLLMs)의 개발 및 최적화를 통해 기존 cudaLLM의 데이터 및 계산 자원 사용을 줄이면서 유사한 성능을 달성한다.",
+  "core_deltas": [
+    {
+      "axis": "강화 학습 프레임워크",
+      "old_approach": "기존 cudaLLM은 강화 학습을 사용하지 않음",
+      "new_approach": "Bi-phase Curated Reinforcement Learning (BiC-RL)을 도입하여 커널 인필링과 엔드 투 엔드 커널 생성 단계를 포함",
+      "why_better": "강화 학습을 통해 CUDA 커널 생성의 효율성을 높이고 최적화된 결과를 도출할 수 있음",
+      "evidence": {
+        "page": null,
+        "section": null,
+        "quote": "Bi-phase Curated Reinforcement Learning (BiC-RL): CUDA 커널 생성을 위한 강화 학습 프레임워크로, 커널 인필링 단계와 엔드 투 엔드 커널 생성 단계로 구성됨.",
+        "type": "quote"
+      }
+    },
+    {
+      "axis": "데이터셋",
+      "old_approach": "ConCuR 데이터셋을 사용",
+      "new_approach": "CuKe Dataset을 도입하여 고성능 CUDA 커널을 포함하는 감독 학습 데이터셋으로 개선",
+      "why_better": "2.0× 속도 향상 임계값을 적용하여 데이터 쌍을 필터링함으로써 더 높은 성능의 CUDA 커널을 생성할 수 있음",
+      "evidence": {
+        "page": null,
+        "section": null,
+        "quote": "CuKe Dataset: 고성능 CUDA 커널을 포함하는 감독 학습 데이터셋으로, ConCuR 데이터셋을 기반으로 개선됨.",
+        "type": "quote"
+      }
+    },
+    {
+      "axis": "디코딩 메커니즘",
+      "old_approach": "기존 방법은 시퀀스 전체를 autoregressive 방식으로 처리",
+      "new_approach": "Block Diffusion Mechanism을 도입하여 시퀀스를 여러 블록으로 나누어 병렬 디코딩 수행",
+      "why_better": "블록 내에서는 autoregressive, 블록 간에는 비-autoregressive 방식으로 작동하여 디코딩 효율성을 높임",
+      "evidence": {
+        "page": null,
+        "section": null,
+        "quote": "Block Diffusion Mechanism: 시퀀스를 여러 블록으로 나누어 각 블록 내에서 병렬 디코딩을 수행하는 하이브리드 접근 방식.",
+        "type": "quote"
+      }
+    }
+  ],
+  "tradeoffs": [
+    {
+      "aspect": "계산 자원",
+      "benefit": "적은 데이터와 계산 자원으로 유사한 성능을 달성",
+      "cost": "강화 학습과 데이터셋 개선에 따른 초기 설정 비용 증가",
+      "when_acceptable": "장기적으로 CUDA 커널 생성의 효율성을 높이고자 할 때",
+      "evidence": {
+        "page": null,
+        "section": null,
+        "quote": "DICE는 cudaLLM보다 적은 데이터와 계산 자원을 사용하면서도 유사한 성능을 달성.",
+        "type": "quote"
+      }
+    }
+  ],
+  "when_to_use": "CUDA 커널 생성을 최적화하고자 할 때, 특히 자원 효율성을 중시하는 경우",
+  "when_not_to_use": "초기 설정 비용이 제한적이거나 강화 학습을 적용하기 어려운 환경에서는 사용하지 않는 것이 좋음"
+}

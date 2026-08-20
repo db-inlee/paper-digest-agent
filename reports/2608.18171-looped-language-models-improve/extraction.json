@@ -1,0 +1,251 @@
+{
+  "arxiv_id": "2608.18171",
+  "title": "Looped Language Models Improve Compositional Tool Calling",
+  "problem_definition": {
+    "statement": "루프드 언어 모델(looped language models)이 에이전트 시스템에서의 도구 사용을 개선할 수 있는지 평가한다.",
+    "baseline_methods": [],
+    "structural_limitation": "기존의 언어 모델은 단일 호출에 대한 도구 선택과 인수 생성에 중점을 두지만, 복합적인 도구 호출에서는 구조적 의사결정이 필요하다.",
+    "evidence": [
+      {
+        "page": 1,
+        "section": "Abstract",
+        "quote": "Looped language models have shown promising results on reasoning benchmarks, yet their potential for agentic tool use remains largely unexplored.",
+        "type": "quote"
+      }
+    ]
+  },
+  "baselines": [
+    {
+      "name": "Qwen3-1.7B",
+      "description": "Qwen3 계열의 표준 Transformer 모델",
+      "limitation": "단일 호출 API-Bank 벤치마크에서 일관되지 않은 성능을 보임",
+      "evidence": [
+        {
+          "page": 5,
+          "section": "Results",
+          "quote": "On BFCL, the smallest differences occur on Simple tasks, where both looped and non-looped SFT models already perform strongly.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "name": "Llama-3.2-1B",
+      "description": "Llama 계열의 표준 Transformer 모델",
+      "limitation": "복합적인 도구 호출에서 성능이 떨어짐",
+      "evidence": [
+        {
+          "page": 5,
+          "section": "Results",
+          "quote": "On BFCL, the smallest differences occur on Simple tasks, where both looped and non-looped SFT models already perform strongly.",
+          "type": "quote"
+        }
+      ]
+    }
+  ],
+  "method_components": [
+    {
+      "name": "Looped Transformers",
+      "description": "공유된 Transformer 블록을 반복적으로 적용하여 테스트 시간의 계산을 증가시키는 모델",
+      "inputs": [
+        "초기 숨겨진 표현 h(0)"
+      ],
+      "outputs": [
+        "정제된 예측 시퀀스 {π(1)θ, ..., π(T)θ}"
+      ],
+      "implementation_hint": "Fθ(h(t−1))를 사용하여 숨겨진 상태를 갱신",
+      "role": "novel",
+      "evidence": [
+        {
+          "page": 3,
+          "section": "Background",
+          "quote": "Looped Transformers repeatedly apply a shared block of Transformer layers over multiple recurrent iterations.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "name": "Adaptive Inference",
+      "description": "루프드 Transformer가 학습된 정지 정책이나 사후 기준을 사용하여 동적으로 계산을 할당",
+      "inputs": [
+        "각 토큰의 누적 종료 확률"
+      ],
+      "outputs": [
+        "선택된 루프 깊이"
+      ],
+      "implementation_hint": "학습된 정지 정책을 사용하여 종료 반복을 선택",
+      "role": "novel",
+      "evidence": [
+        {
+          "page": 3,
+          "section": "Background",
+          "quote": "Looped Transformers can dynamically allocate computation by selecting an exit iteration using either a learned halting policy or post-hoc criteria.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "name": "Compositional Tool Use Formalism",
+      "description": "도구 호출과 그 종속성에 대한 구조적 예측으로 구성된 공식화",
+      "inputs": [
+        "사용자 요청 x"
+      ],
+      "outputs": [
+        "구조화된 도구 호출 분포 pθ(ck | x)"
+      ],
+      "implementation_hint": "도구 사용 솔루션을 방향성 비순환 그래프로 표현",
+      "role": "novel",
+      "evidence": [
+        {
+          "page": 3,
+          "section": "Background",
+          "quote": "A tool use solution can be represented as a directed acyclic graph Gx = (Cx, Ex).",
+          "type": "quote"
+        }
+      ]
+    }
+  ],
+  "benchmarks": [
+    {
+      "dataset": "BFCL v3",
+      "metrics": [
+        "AST accuracy"
+      ],
+      "baseline_results": {
+        "Ouro-1.4B Base": "55.4",
+        "Ouro-2.6B Base": "47.9"
+      },
+      "proposed_results": {
+        "Ouro-1.4B SFT": "79.3",
+        "Ouro-2.6B SFT": "86.4"
+      },
+      "evidence": [
+        {
+          "page": 5,
+          "section": "Results",
+          "quote": "Tables 1, 2, and 3 report results on BFCL, NESTful, and API-Bank.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "dataset": "NESTful",
+      "metrics": [
+        "Win Rate"
+      ],
+      "baseline_results": {
+        "Ouro-1.4B Base": "0.110",
+        "Ouro-2.6B Base": "0.190"
+      },
+      "proposed_results": {
+        "Ouro-1.4B SFT": "0.191",
+        "Ouro-2.6B SFT": "0.371"
+      },
+      "evidence": [
+        {
+          "page": 5,
+          "section": "Results",
+          "quote": "Tables 1, 2, and 3 report results on BFCL, NESTful, and API-Bank.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "dataset": "API-Bank",
+      "metrics": [
+        "Call Correctness",
+        "Exact",
+        "Parse"
+      ],
+      "baseline_results": {
+        "Ouro-1.4B Base": "73.0",
+        "Ouro-2.6B Base": "79.2"
+      },
+      "proposed_results": {
+        "Ouro-1.4B SFT": "75.1",
+        "Ouro-2.6B SFT": "79.9"
+      },
+      "evidence": [
+        {
+          "page": 5,
+          "section": "Results",
+          "quote": "Tables 1, 2, and 3 report results on BFCL, NESTful, and API-Bank.",
+          "type": "quote"
+        }
+      ]
+    }
+  ],
+  "benchmark": null,
+  "claims": [
+    {
+      "claim_id": "C1",
+      "text": "루프드 언어 모델은 복합적인 도구 호출에서 성능을 향상시킨다.",
+      "claim_type": "result",
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "page": 5,
+          "section": "Results",
+          "quote": "Looped language models improve tool use.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "claim_id": "C2",
+      "text": "반복 깊이를 증가시키면 복합적인 도구 사용 성능이 일반적으로 향상된다.",
+      "claim_type": "result",
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "page": 6,
+          "section": "Results",
+          "quote": "Tool-use performance increases with recurrent depth.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "claim_id": "C3",
+      "text": "적응형 추론은 계산 성능의 균형을 개선한다.",
+      "claim_type": "efficiency",
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "page": 7,
+          "section": "Results",
+          "quote": "Adaptive looped computation increases tool-calling efficiency.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "claim_id": "C4",
+      "text": "루프드 언어 모델은 에이전트 시스템의 기초로 유망하다.",
+      "claim_type": "method",
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "page": 8,
+          "section": "Conclusion",
+          "quote": "The results presented in this paper suggest that looped language models are a promising foundation for agentic systems.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "claim_id": "C5",
+      "text": "루프드 모델은 복합적인 도구 호출 워크플로우의 계획, 조정 및 실행을 개선한다.",
+      "claim_type": "method",
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "page": 8,
+          "section": "Conclusion",
+          "quote": "Looped language models are a promising foundation for agentic systems that must dynamically allocate computation while planning, coordinating, and executing compositional tool use workflows.",
+          "type": "quote"
+        }
+      ]
+    }
+  ],
+  "extraction_mode": "full"
+}

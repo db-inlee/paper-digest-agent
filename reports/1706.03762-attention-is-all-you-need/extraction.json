@@ -1,0 +1,303 @@
+{
+  "arxiv_id": "1706.03762",
+  "title": "Attention Is All You Need",
+  "problem_definition": {
+    "statement": "기존의 순환 신경망(RNN)이나 합성곱 신경망(CNN) 기반의 시퀀스 변환 모델의 복잡성을 줄이고, 어텐션 메커니즘만을 사용하여 더 효율적이고 병렬화 가능한 모델을 제안한다.",
+    "baseline_methods": [
+      "Recurrent Neural Networks (RNN)",
+      "Convolutional Neural Networks (CNN)"
+    ],
+    "structural_limitation": "기존의 순환 모델은 입력과 출력 시퀀스의 심볼 위치에 따라 계산을 순차적으로 수행해야 하며, 이는 긴 시퀀스에서 병렬화를 어렵게 만든다. (p.1 §Introduction)",
+    "evidence": [
+      {
+        "page": 1,
+        "section": "Introduction",
+        "quote": "Recurrent models typically factor computation along the symbol positions of the input and output sequences.",
+        "type": "quote"
+      }
+    ]
+  },
+  "baselines": [
+    {
+      "name": "ByteNet",
+      "description": "합성곱 신경망을 사용하여 입력과 출력 위치 간의 신호를 병렬로 계산하는 모델",
+      "limitation": "입력 또는 출력 위치 간의 신호를 연결하는 데 필요한 연산 수가 위치 간의 거리와 선형적으로 증가한다.",
+      "evidence": [
+        {
+          "page": 2,
+          "section": "Background",
+          "quote": "In these models, the number of operations required to relate signals from two arbitrary input or output positions grows in the distance between positions, linearly for ConvS2S and logarithmically for ByteNet.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "name": "ConvS2S",
+      "description": "합성곱 신경망을 사용하여 시퀀스 변환을 수행하는 모델",
+      "limitation": "입력 또는 출력 위치 간의 신호를 연결하는 데 필요한 연산 수가 위치 간의 거리와 선형적으로 증가한다.",
+      "evidence": [
+        {
+          "page": 2,
+          "section": "Background",
+          "quote": "In these models, the number of operations required to relate signals from two arbitrary input or output positions grows in the distance between positions, linearly for ConvS2S and logarithmically for ByteNet.",
+          "type": "quote"
+        }
+      ]
+    }
+  ],
+  "method_components": [
+    {
+      "name": "Scaled Dot-Product Attention",
+      "description": "쿼리와 키의 내적을 계산하고, 이를 스케일링하여 소프트맥스를 적용한 후, 값에 가중합을 적용하여 출력값을 생성하는 어텐션 메커니즘",
+      "inputs": [
+        "Query (Q)",
+        "Key (K)",
+        "Value (V)"
+      ],
+      "outputs": [
+        "어텐션 가중합 적용된 값"
+      ],
+      "implementation_hint": "Attention(Q, K, V) = softmax(QK^T / sqrt(dk))V",
+      "role": "novel",
+      "evidence": [
+        {
+          "page": 3,
+          "section": "Scaled Dot-Product Attention",
+          "quote": "We compute the dot products of the query with all keys, divide each by √dk, and apply a softmax function to obtain the weights on the values.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "name": "Multi-Head Attention",
+      "description": "여러 개의 어텐션 헤드를 병렬로 실행하여 다양한 표현 부분공간에서 정보를 동시에 수집하는 메커니즘",
+      "inputs": [
+        "Query (Q)",
+        "Key (K)",
+        "Value (V)"
+      ],
+      "outputs": [
+        "병렬 어텐션 결과의 결합된 출력"
+      ],
+      "implementation_hint": "MultiHead(Q, K, V) = Concat(head1, ..., headh)W O",
+      "role": "novel",
+      "evidence": [
+        {
+          "page": 4,
+          "section": "Multi-Head Attention",
+          "quote": "Multi-head attention allows the model to jointly attend to information from different representation subspaces at different positions.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "name": "Position-wise Feed-Forward Network",
+      "description": "각 위치에 독립적으로 적용되는 2층 피드포워드 네트워크로, 두 개의 선형 변환과 ReLU 활성화 함수로 구성",
+      "inputs": [
+        "입력 벡터 x"
+      ],
+      "outputs": [
+        "변환된 출력 벡터"
+      ],
+      "implementation_hint": "FFN(x) = max(0, xW1 + b1)W2 + b2",
+      "role": "standard",
+      "evidence": [
+        {
+          "page": 5,
+          "section": "Position-wise Feed-Forward Networks",
+          "quote": "This consists of two linear transformations with a ReLU activation in between.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "name": "Positional Encoding",
+      "description": "시퀀스의 위치 정보를 사인 및 코사인 함수로 인코딩하여 입력 임베딩에 추가",
+      "inputs": [
+        "입력 임베딩"
+      ],
+      "outputs": [
+        "위치 정보가 추가된 임베딩"
+      ],
+      "implementation_hint": "PE(pos,2i) = sin(pos/100002i/dmodel), PE(pos,2i+1) = cos(pos/100002i/dmodel)",
+      "role": "novel",
+      "evidence": [
+        {
+          "page": 5,
+          "section": "Positional Encoding",
+          "quote": "To this end, we add 'positional encodings' to the input embeddings at the bottoms of the encoder and decoder stacks.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "name": "Encoder Block",
+      "description": "6개의 동일한 레이어로 구성된 인코더 스택으로, 각 레이어는 멀티헤드 셀프 어텐션과 위치별 피드포워드 네트워크로 구성",
+      "inputs": [
+        "입력 시퀀스"
+      ],
+      "outputs": [
+        "연속 표현 시퀀스"
+      ],
+      "implementation_hint": "LayerNorm(x + Sublayer(x))",
+      "role": "novel",
+      "evidence": [
+        {
+          "page": 3,
+          "section": "Encoder and Decoder Stacks",
+          "quote": "The encoder is composed of a stack of N = 6 identical layers.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "name": "Decoder Block",
+      "description": "6개의 동일한 레이어로 구성된 디코더 스택으로, 각 레이어는 마스크드 셀프 어텐션, 인코더-디코더 어텐션, 위치별 피드포워드 네트워크로 구성",
+      "inputs": [
+        "인코더 출력",
+        "이전 디코더 출력"
+      ],
+      "outputs": [
+        "출력 시퀀스"
+      ],
+      "implementation_hint": "LayerNorm(x + Sublayer(x))",
+      "role": "novel",
+      "evidence": [
+        {
+          "page": 3,
+          "section": "Encoder and Decoder Stacks",
+          "quote": "The decoder is also composed of a stack of N = 6 identical layers.",
+          "type": "quote"
+        }
+      ]
+    }
+  ],
+  "benchmarks": [
+    {
+      "dataset": "WMT 2014 English-to-German",
+      "metrics": [
+        "BLEU"
+      ],
+      "baseline_results": {
+        "ByteNet": "23.75",
+        "GNMT + RL": "24.6",
+        "ConvS2S": "25.16",
+        "MoE": "26.03",
+        "GNMT + RL Ensemble": "26.30",
+        "ConvS2S Ensemble": "26.36"
+      },
+      "proposed_results": {
+        "Transformer (base model)": "27.3",
+        "Transformer (big)": "28.4"
+      },
+      "evidence": [
+        {
+          "page": 7,
+          "section": "Results",
+          "quote": "On the WMT 2014 English-to-German translation task, the big transformer model (Transformer (big) in Table 2) outperforms the best previously reported models (including ensembles) by more than 2.0 BLEU.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "dataset": "WMT 2014 English-to-French",
+      "metrics": [
+        "BLEU"
+      ],
+      "baseline_results": {
+        "Deep-Att + PosUnk": "39.2",
+        "GNMT + RL": "39.92",
+        "ConvS2S": "40.46",
+        "MoE": "40.56",
+        "Deep-Att + PosUnk Ensemble": "40.4",
+        "GNMT + RL Ensemble": "41.16",
+        "ConvS2S Ensemble": "41.29"
+      },
+      "proposed_results": {
+        "Transformer (big)": "41.8"
+      },
+      "evidence": [
+        {
+          "page": 7,
+          "section": "Results",
+          "quote": "On the WMT 2014 English-to-French translation task, our big model achieves a BLEU score of 41.0, outperforming all of the previously published single models.",
+          "type": "quote"
+        }
+      ]
+    }
+  ],
+  "benchmark": null,
+  "claims": [
+    {
+      "claim_id": "C1",
+      "text": "Transformer는 순환 레이어를 완전히 대체하여 어텐션만으로 시퀀스 변환을 수행하는 최초의 모델이다.",
+      "claim_type": "method",
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "page": 6,
+          "section": "Conclusion",
+          "quote": "In this work, we presented the Transformer, the first sequence transduction model based entirely on attention, replacing the recurrent layers most commonly used in encoder-decoder architectures with multi-headed self-attention.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "claim_id": "C2",
+      "text": "Transformer는 기존의 순환 또는 합성곱 기반 아키텍처보다 훨씬 빠르게 학습할 수 있다.",
+      "claim_type": "efficiency",
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "page": 6,
+          "section": "Conclusion",
+          "quote": "For translation tasks, the Transformer can be trained significantly faster than architectures based on recurrent or convolutional layers.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "claim_id": "C3",
+      "text": "Transformer는 WMT 2014 English-to-German 번역 작업에서 새로운 최고 성능을 달성했다.",
+      "claim_type": "result",
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "page": 7,
+          "section": "Results",
+          "quote": "On the WMT 2014 English-to-German translation task, the big transformer model (Transformer (big) in Table 2) outperforms the best previously reported models (including ensembles) by more than 2.0 BLEU.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "claim_id": "C4",
+      "text": "Transformer는 WMT 2014 English-to-French 번역 작업에서 모든 이전에 보고된 단일 모델을 능가했다.",
+      "claim_type": "comparison",
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "page": 7,
+          "section": "Results",
+          "quote": "On the WMT 2014 English-to-French translation task, our big model achieves a BLEU score of 41.0, outperforming all of the previously published single models.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "claim_id": "C5",
+      "text": "Transformer는 영어 구성 구문 분석 작업에서도 잘 일반화된다.",
+      "claim_type": "result",
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "page": 9,
+          "section": "English Constituency Parsing",
+          "quote": "Our results in Table 4 show that despite the lack of task-specific tuning our model performs surprisingly well, yielding better results than all previously reported models with the exception of the Recurrent Neural Network Grammar.",
+          "type": "quote"
+        }
+      ]
+    }
+  ],
+  "extraction_mode": "full"
+}

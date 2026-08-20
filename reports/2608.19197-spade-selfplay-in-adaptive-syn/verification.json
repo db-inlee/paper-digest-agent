@@ -1,0 +1,57 @@
+{
+  "arxiv_id": "2608.19197",
+  "total_claims": 5,
+  "verified_count": 4,
+  "unverified_count": 1,
+  "contradicted_count": 0,
+  "overall_reliability": "high",
+  "results": [
+    {
+      "claim_id": "C1",
+      "claim_text": "SPADE는 환경 설계를 학습 가능한 역할로 만들어, 에이전트의 학습 경계에 있는 환경을 생성하도록 한다.",
+      "status": "verified",
+      "confidence": 1.0,
+      "evidence_found": "논문 4페이지에서 SPADE의 환경 설계가 학습 가능한 역할로서 에이전트의 학습 경계에 있는 환경을 생성한다고 명시됨.",
+      "notes": "",
+      "correction_hint": null
+    },
+    {
+      "claim_id": "C2",
+      "claim_text": "SPADE는 고정된 환경 베이스라인보다 평균적으로 +5.3 포인트 더 높은 성능을 보인다.",
+      "status": "verified",
+      "confidence": 1.0,
+      "evidence_found": "논문 6페이지에서 SPADE가 고정된 환경 베이스라인보다 평균 +5.3 포인트 성능 향상을 보였다고 명시됨.",
+      "notes": "",
+      "correction_hint": null
+    },
+    {
+      "claim_id": "C3",
+      "claim_text": "SPADE의 환경 설계는 Python 프로그램으로 표현되며, 단일 및 다중 턴 설정을 통합한다.",
+      "status": "verified",
+      "confidence": 1.0,
+      "evidence_found": "논문 4페이지에서 SPADE의 환경 설계가 Python 프로그램으로 표현되며, 단일 및 다중 턴 설정을 통합한다고 설명됨.",
+      "notes": "",
+      "correction_hint": null
+    },
+    {
+      "claim_id": "C4",
+      "claim_text": "힌트 기반 후회 보상은 Reasoning Agent의 학습 경계에 있는 환경을 목표로 한다.",
+      "status": "verified",
+      "confidence": 1.0,
+      "evidence_found": "논문 4페이지에서 힌트 기반 후회 보상이 Reasoning Agent의 학습 경계에 있는 환경을 목표로 한다고 명시됨.",
+      "notes": "",
+      "correction_hint": null
+    },
+    {
+      "claim_id": "C5",
+      "claim_text": "SPADE는 30B+ 규모에서 실용적인 학습 레시피를 제공하며, 작은 모델을 넘어서는 성능을 보인다.",
+      "status": "unverified",
+      "confidence": 0.8,
+      "evidence_found": null,
+      "notes": "논문에서 30B+ 모델에 대한 실용적인 학습 레시피에 대한 구체적인 언급이 부족함.",
+      "correction_hint": null
+    }
+  ],
+  "summary": "대부분의 클레임이 논문에서 지지되며, 고정된 환경 베이스라인과의 비교 결과도 명확하게 제시됨.",
+  "corrections_needed": []
+}

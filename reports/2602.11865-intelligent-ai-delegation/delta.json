@@ -1,0 +1,45 @@
+{
+  "arxiv_id": "2602.11865",
+  "one_line_takeaway": "이 논문은 지능형 AI 위임 프레임워크를 제안하여 기존의 단순한 휴리스틱 기반 작업 분해 및 위임 방법의 한계를 극복한다.",
+  "core_deltas": [
+    {
+      "axis": "평가 메커니즘",
+      "old_approach": "단순한 휴리스틱에 의존한 작업 분해 및 위임",
+      "new_approach": "대규모 불확실한 환경에서 역량, 신뢰성, 의도를 동적으로 평가하는 메커니즘",
+      "why_better": "환경 변화에 동적으로 적응하고 예기치 않은 실패를 견고하게 처리할 수 있도록 지원함",
+      "evidence": {
+        "page": null,
+        "section": null,
+        "quote": "Dynamic Assessment: 대규모 불확실한 환경에서의 역량, 신뢰성, 의도를 동적으로 평가하는 메커니즘.",
+        "type": "quote"
+      }
+    },
+    {
+      "axis": "적응 실행",
+      "old_approach": "환경 변화에 대한 정적 대응",
+      "new_approach": "환경 변화, 자원 제약, 하위 시스템의 실패에 적응하는 위임 결정",
+      "why_better": "단일 위임자-위임자 링크를 넘어서는 적응 전략을 통해 더 유연한 대응 가능",
+      "evidence": {
+        "page": null,
+        "section": null,
+        "quote": "Adaptive Execution: 환경 변화, 자원 제약, 하위 시스템의 실패에 적응하는 위임 결정.",
+        "type": "quote"
+      }
+    },
+    {
+      "axis": "구조적 투명성",
+      "old_approach": "하위 작업 실행의 불투명성",
+      "new_approach": "지능형 작업 위임을 위한 견고한 감독을 지원하기 위한 하위 작업 실행의 투명성",
+      "why_better": "엄격히 시행되는 감사 가능성을 통해 작업 위임의 신뢰성을 높임",
+      "evidence": {
+        "page": null,
+        "section": null,
+        "quote": "Structural Transparency: 지능형 작업 위임을 위한 견고한 감독을 지원하기 위한 하위 작업 실행의 투명성.",
+        "type": "quote"
+      }
+    }
+  ],
+  "tradeoffs": [],
+  "when_to_use": "대규모 불확실한 환경에서 작업 분해 및 위임이 필요한 경우",
+  "when_not_to_use": "단순한 작업 분해 및 위임이 충분한 경우"
+}

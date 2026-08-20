@@ -1,0 +1,233 @@
+{
+  "arxiv_id": "2602.19672",
+  "title": "SkillOrchestra: Learning to Route Agents via Skill Transfer",
+  "problem_definition": {
+    "statement": "기존의 라우팅 접근 방식은 입력 수준의 라우터가 진화하는 작업 요구 사항을 무시하고, RL로 훈련된 오케스트레이터는 적응 비용이 높고 라우팅 붕괴에 취약하다. SkillOrchestra는 스킬 인식 오케스트레이션을 통해 이러한 문제를 해결하고자 한다.",
+    "baseline_methods": [
+      "Router-R1",
+      "ToolOrchestra"
+    ],
+    "structural_limitation": "기존의 라우팅 접근 방식은 입력 수준의 라우터가 진화하는 작업 요구 사항을 무시하고, RL로 훈련된 오케스트레이터는 적응 비용이 높고 라우팅 붕괴에 취약하다.",
+    "evidence": [
+      {
+        "page": 1,
+        "section": "Abstract",
+        "quote": "Existing routing approaches face two limitations: (1) input-level routers make coarse query-level decisions that ignore evolving task requirements; (2) RL-trained orchestrators are expensive to adapt and often suffer from routing collapse.",
+        "type": "quote"
+      }
+    ]
+  },
+  "baselines": [
+    {
+      "name": "Router-R1",
+      "description": "RL 기반의 멀티턴 라우터로, 14k 샘플을 사용하여 훈련된 현재 SoTA의 엔드 투 엔드 오케스트레이션을 대표한다.",
+      "limitation": "높은 훈련 비용, 새로운 모델 풀이나 작업에 대한 적응성 부족, 라우팅 붕괴 경향",
+      "evidence": [
+        {
+          "page": 3,
+          "section": "Related Works",
+          "quote": "Router-R1 (Zhang et al., 2025a), a strong PPO-trained (Schulman et al., 2017) multi-turn router with 14k samples, which represents the current SoTA in learned end-to-end orchestration.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "name": "ToolOrchestra",
+      "description": "모델과 도구의 효율적인 오케스트레이션을 통해 지능을 향상시키는 방법",
+      "limitation": "높은 훈련 비용, 새로운 모델 풀이나 작업에 대한 적응성 부족, 라우팅 붕괴 경향",
+      "evidence": [
+        {
+          "page": 3,
+          "section": "Related Works",
+          "quote": "ToolOrchestra (Su et al., 2025) that interleave reasoning and routing, optimizing performance-cost trade-offs via trajectory-level rewards.",
+          "type": "quote"
+        }
+      ]
+    }
+  ],
+  "method_components": [
+    {
+      "name": "Skill Handbook",
+      "description": "재사용 가능한 실행 지식을 캡처하는 구조화된 스킬 핸드북을 학습하여 모드 선택 및 에이전트 라우팅을 안내한다.",
+      "inputs": [
+        "Execution traces"
+      ],
+      "outputs": [
+        "Mode-level execution insights",
+        "Fine-grained skills",
+        "Agent profiles"
+      ],
+      "implementation_hint": "핸드북은 모드 선택 통찰력, 스킬, 에이전트 프로필을 저장하는 그래프로 볼 수 있다.",
+      "role": "novel",
+      "evidence": [
+        {
+          "page": 6,
+          "section": "SkillOrchestra",
+          "quote": "The Skill Handbook ℋorganizes reusable orchestration knowledge at three levels: (i) mode-level execution insights, (ii) a registry of fine-grained skills, and (iii) agent profiles.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "name": "Mode Selection",
+      "description": "현재 상호작용 상태에 따라 적절한 운영 모드를 선택한다.",
+      "inputs": [
+        "Current state"
+      ],
+      "outputs": [
+        "Operational mode"
+      ],
+      "implementation_hint": "모드 정책 πmode는 상호작용 상태와 핸드북에 저장된 모드 수준 라우팅 메타데이터를 기반으로 현재 운영 모드를 선택한다.",
+      "role": "novel",
+      "evidence": [
+        {
+          "page": 8,
+          "section": "Skill-Grounded Agent Routing",
+          "quote": "The mode policy πmode selects the current operational mode ψt based on the interaction state st and the mode-level routing metadata stored in the handbook.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "name": "Competence-Aware Agent Routing",
+      "description": "선택된 모드에 따라 관련 스킬을 식별하고, 스킬 집합에 대한 역량 추정치를 집계하여 에이전트를 선택한다.",
+      "inputs": [
+        "Selected mode",
+        "Relevant skills"
+      ],
+      "outputs": [
+        "Selected agent"
+      ],
+      "implementation_hint": "각 에이전트에 대해 스킬 집합에 대한 역량 추정치를 집계하고 실행 비용과 비교하여 에이전트를 선택한다.",
+      "role": "novel",
+      "evidence": [
+        {
+          "page": 8,
+          "section": "Skill-Grounded Agent Routing",
+          "quote": "Conditioned on the selected mode ψt, the orchestrator identifies a set of relevant skills Σt ⊆Σψt that are active for the current state. Agent selection is then performed by aggregating competence estimates over this skill set and trading them off against execution cost.",
+          "type": "quote"
+        }
+      ]
+    }
+  ],
+  "benchmarks": [
+    {
+      "dataset": "General QA",
+      "metrics": [
+        "Exact Match (EM)"
+      ],
+      "baseline_results": {
+        "Router-R1": "41.6",
+        "ToolOrchestra": "76.3"
+      },
+      "proposed_results": {
+        "SkillOrchestra": "47.4",
+        "SkillOrchestra+": "51.6"
+      },
+      "evidence": [
+        {
+          "page": 10,
+          "section": "Experiments",
+          "quote": "SkillOrchestra surpasses all baselines on both general and multi-hop QA (Table 1). Compared to Router-R1 (41.6 EM), SkillOrchestra reaches 47.4 (+5.8), and SkillOrchestra+ achieves 51.6 (+10.0).",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "dataset": "Multi-Hop QA",
+      "metrics": [
+        "Exact Match (EM)"
+      ],
+      "baseline_results": {
+        "Router-R1": "41.6",
+        "ToolOrchestra": "76.3"
+      },
+      "proposed_results": {
+        "SkillOrchestra": "47.4",
+        "SkillOrchestra+": "51.6"
+      },
+      "evidence": [
+        {
+          "page": 10,
+          "section": "Experiments",
+          "quote": "SkillOrchestra surpasses all baselines on both general and multi-hop QA (Table 1). Compared to Router-R1 (41.6 EM), SkillOrchestra reaches 47.4 (+5.8), and SkillOrchestra+ achieves 51.6 (+10.0).",
+          "type": "quote"
+        }
+      ]
+    }
+  ],
+  "benchmark": null,
+  "claims": [
+    {
+      "claim_id": "1",
+      "text": "SkillOrchestra는 스킬 인식 오케스트레이션을 통해 상태에 따라 성능-비용을 최적화하는 결정을 내린다.",
+      "claim_type": "method",
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "page": 6,
+          "section": "SkillOrchestra",
+          "quote": "SkillOrchestra reframes orchestration as skill-grounded decision making rather than direct policy optimization.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "claim_id": "2",
+      "text": "SkillOrchestra는 RL 기반 오케스트레이터보다 최대 22.5% 더 높은 성능을 달성하며, 학습 비용을 700배 및 300배 줄인다.",
+      "claim_type": "result",
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "page": 1,
+          "section": "Abstract",
+          "quote": "SkillOrchestra outperforms SoTA RL-based orchestrators by up to 22.5% with 700× and 300× learning cost reduction compared to Router-R1 and ToolOrchestra, respectively.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "claim_id": "3",
+      "text": "Skill Handbook는 다양한 오케스트레이터 백본과 모델 풀에서 재사용 가능하며, 라우터 매개변수와 독립적으로 오케스트레이션 지식을 제공한다.",
+      "claim_type": "method",
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "page": 2,
+          "section": "Introduction",
+          "quote": "Third, it produces transferable orchestration knowledge: the learned Skill Handbook can be reused across different orchestrator backbones and updated model pools, decoupling orchestration knowledge from router parameters.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "claim_id": "4",
+      "text": "SkillOrchestra는 라우팅 붕괴를 완화하고, RL 기반 라우팅에서 발생하는 문제를 해결한다.",
+      "claim_type": "comparison",
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "page": 11,
+          "section": "Experiments",
+          "quote": "Skill-based routing alleviates routing collapse seen in RL-based routing (RQ3).",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "claim_id": "5",
+      "text": "Skill Handbook의 최적 성능-비용 트레이드오프는 오케스트레이터의 역량에 맞게 스킬을 정제하고 선택해야 한다.",
+      "claim_type": "efficiency",
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "page": 13,
+          "section": "Experiments",
+          "quote": "More skills are not always better; optimal performance-cost trade-offs require refining and selecting skills to match the orchestrator’s capability (RQ1, RQ3, RQ5).",
+          "type": "quote"
+        }
+      ]
+    }
+  ],
+  "extraction_mode": "full"
+}
