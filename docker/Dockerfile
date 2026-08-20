@@ -36,12 +36,18 @@ COPY --from=frontend /app/notifier/web/build ./notifier/web/build
 # Copy reports data (bundled, will be copied to persistent disk on first run)
 COPY reports/ ./reports/
 
+# Copy skim/index history (bundled, seeded to the persistent disk on first run)
+COPY papers/ ./papers/
+COPY index/ ./index/
+
 # Copy entrypoint
 COPY docker/entrypoint.sh ./entrypoint.sh
 RUN chmod +x ./entrypoint.sh
 
 # Default env — Render injects PORT
 ENV REPORT_BASE_DIR=/app/data/reports \
+    PAPERS_BASE_DIR=/app/data/papers \
+    INDEX_BASE_DIR=/app/data/index \
     PYTHONPATH=/app/src \
     SERVER_HOST=0.0.0.0 \
     WEB_BUILD_DIR=/app/notifier/web/build \

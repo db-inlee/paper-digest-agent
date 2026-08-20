@@ -2,7 +2,7 @@
 
 import logging
 import re
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
 import arxiv
 
@@ -30,8 +30,11 @@ class FetchOutput:
     total_after_filter: int
     skipped_previously_processed: int
     skipped_keyword_filter: int
+    skipped_duplicate: int = 0
+    skipped_hard_filter: int = 0
     skipped_venue_filter: int = 0
     venue_enriched_count: int = 0
+    effective_keywords: list[str] = field(default_factory=list)
 
 
 class CandidateFetcher(BaseAgent[FetchInput, FetchOutput]):
@@ -64,8 +67,9 @@ class CandidateFetcher(BaseAgent[FetchInput, FetchOutput]):
         if self.settings.venue_filter_enabled:
             venue_enriched = self._enrich_arxiv_comments(candidates)
 
-        # 3. 필터링 적용
-        filtered, stats = self._apply_filters(candidates)
+        # 3. 필터링 적용 (어휘는 한 번만 해석하여 필터와 스냅샷이 항상 일치)
+        keywords = self.settings.get_effective_hf_keywords()
+        filtered, stats = self._apply_filters(candidates, keywords)
 
         return FetchOutput(
             candidates=filtered,
@@ -73,8 +77,11 @@ class CandidateFetcher(BaseAgent[FetchInput, FetchOutput]):
             total_after_filter=len(filtered),
             skipped_previously_processed=stats["skipped_processed"],
             skipped_keyword_filter=stats["skipped_keyword"],
+            skipped_duplicate=stats.get("skipped_duplicate", 0),
+            skipped_hard_filter=stats.get("skipped_hard_filter", 0),
             skipped_venue_filter=stats.get("skipped_venue", 0),
             venue_enriched_count=venue_enriched,
+            effective_keywords=keywords,
         )
 
     async def _collect_papers(self) -> list[PaperCandidate]:
@@ -91,12 +98,13 @@ class CandidateFetcher(BaseAgent[FetchInput, FetchOutput]):
             await server.close()
 
     def _apply_filters(
-        self, candidates: list[PaperCandidate]
+        self, candidates: list[PaperCandidate], keywords: list[str]
     ) -> tuple[list[PaperCandidate], dict]:
         """필터링 적용.
 
         Args:
             candidates: 원본 논문 목록
+            keywords: 적용할 유효 키워드 어휘
 
         Returns:
             (필터링된 목록, 통계 dict)
@@ -114,8 +122,6 @@ class CandidateFetcher(BaseAgent[FetchInput, FetchOutput]):
             "skipped_hard_filter": 0,
             "skipped_venue": 0,
         }
-
-        keywords = self.settings.get_effective_hf_keywords()
 
         for paper in candidates:
             base_id = paper.arxiv_id.split("v")[0]

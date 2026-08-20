@@ -18,13 +18,14 @@ class IndexStore:
     - by_score.yaml: 점수별 논문 인덱스
     """
 
-    def __init__(self, base_dir: Path):
+    def __init__(self, base_dir: Path, *, index_dir: Path | None = None):
         """초기화.
 
         Args:
-            base_dir: 프로젝트 베이스 디렉토리
+            base_dir: 프로젝트 베이스 디렉토리 (레거시)
+            index_dir: index 디렉토리 경로 (우선 사용)
         """
-        self.index_dir = base_dir / "index"
+        self.index_dir = index_dir if index_dir is not None else base_dir / "index"
         self.index_dir.mkdir(parents=True, exist_ok=True)
 
     def update_by_date(self, date: str, arxiv_ids: list[str]) -> Path:

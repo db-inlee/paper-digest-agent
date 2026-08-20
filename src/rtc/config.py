@@ -213,12 +213,19 @@ class Settings(BaseSettings):
     scheduler_timezone: str = Field(default="Asia/Seoul", alias="SCHEDULER_TIMEZONE")
 
     # Paths
-    base_dir: Path = Field(default_factory=lambda: Path(__file__).parent.parent.parent)
+    base_dir: Path = Field(
+        default_factory=lambda: Path(__file__).parent.parent.parent,
+        alias="BASE_DIR",
+    )
     report_base_dir: Optional[Path] = Field(default=None, alias="REPORT_BASE_DIR")
+    papers_base_dir: Optional[Path] = Field(default=None, alias="PAPERS_BASE_DIR")
+    index_base_dir: Optional[Path] = Field(default=None, alias="INDEX_BASE_DIR")
 
     @property
     def papers_dir(self) -> Path:
         """papers/ 디렉토리 (스킴 결과 저장)."""
+        if self.papers_base_dir is not None:
+            return self.papers_base_dir
         return self.base_dir / "papers"
 
     @property
@@ -231,6 +238,8 @@ class Settings(BaseSettings):
     @property
     def index_dir(self) -> Path:
         """index/ 디렉토리 (인덱스 저장)."""
+        if self.index_base_dir is not None:
+            return self.index_base_dir
         return self.base_dir / "index"
 
     def get_effective_hf_keywords(self) -> list[str]:

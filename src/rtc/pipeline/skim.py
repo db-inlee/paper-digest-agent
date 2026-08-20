@@ -39,6 +39,14 @@ class SkimState(TypedDict, total=False):
     total_collected: int
     total_after_filter: int
     total_skimmed: int
+    skipped_previously_processed: int
+    skipped_duplicate: int
+    skipped_hard_filter: int
+    skipped_keyword_filter: int
+    skipped_venue_filter: int
+
+    # 어휘 스냅샷
+    effective_keywords: list[str]
 
     # 에러
     errors: Annotated[list[dict], merge_errors]
@@ -57,6 +65,12 @@ async def fetch_node(state: SkimState) -> dict:
             "candidates": result.candidates,
             "total_collected": result.total_collected,
             "total_after_filter": result.total_after_filter,
+            "skipped_previously_processed": result.skipped_previously_processed,
+            "skipped_duplicate": result.skipped_duplicate,
+            "skipped_hard_filter": result.skipped_hard_filter,
+            "skipped_keyword_filter": result.skipped_keyword_filter,
+            "skipped_venue_filter": result.skipped_venue_filter,
+            "effective_keywords": result.effective_keywords,
         }
     except Exception as e:
         return {
@@ -144,13 +158,20 @@ async def save_skim_node(state: SkimState) -> dict:
         date=run_date,
         total_collected=total_collected,
         total_skimmed=total_skimmed,
+        total_after_filter=state.get("total_after_filter"),
+        skipped_previously_processed=state.get("skipped_previously_processed"),
+        skipped_duplicate=state.get("skipped_duplicate"),
+        skipped_hard_filter=state.get("skipped_hard_filter"),
+        skipped_keyword_filter=state.get("skipped_keyword_filter"),
+        skipped_venue_filter=state.get("skipped_venue_filter"),
+        effective_keywords=state.get("effective_keywords", []),
         papers=all_papers,
         deep_candidates=deep_candidates,
     )
 
     # 저장
     settings = get_settings()
-    store = SkimStore(settings.base_dir)
+    store = SkimStore(settings.base_dir, papers_dir=settings.papers_dir)
 
     try:
         path = store.save(daily_output)

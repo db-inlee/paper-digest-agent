@@ -1,0 +1,107 @@
+date: '2026-02-13'
+total_collected: 5
+total_skimmed: 5
+papers:
+- arxiv_id: '2602.09877'
+  title: 'The Devil Behind Moltbook: Anthropic Safety is Always Vanishing in Self-Evolving
+    AI Societies'
+  one_liner: 이 논문은 자가 진화하는 AI 사회에서 안전성이 지속적으로 감소하는 불가능성을 이론적 및 경험적으로 입증하고, 외부 감독의
+    필요성을 강조합니다.
+  tags:
+  - multi-agent
+  - safety
+  - self-evolution
+  - AI alignment
+  interest_score: 4
+  interest_reason: AI 안전성에 대한 근본적인 한계를 제시하여 중요한 논의를 촉발합니다.
+  baseline_mentioned: null
+  category: agent
+  has_code: false
+  link: https://arxiv.org/abs/2602.09877
+  github_url: null
+  github_stars: null
+  matched_keywords:
+  - LLM
+  - agent
+  - multi-agent
+- arxiv_id: '2602.12125'
+  title: 'Learning beyond Teacher: Generalized On-Policy Distillation with Reward
+    Extrapolation'
+  one_liner: 이 연구는 일반화된 온-정책 증류(G-OPD) 프레임워크를 제안하고, 보상 스케일링을 통해 학생 모델의 성능을 향상시키는 방법을
+    제시합니다.
+  tags:
+  - on-policy distillation
+  - reinforcement learning
+  - reward extrapolation
+  interest_score: 4
+  interest_reason: 학생 모델의 성능을 극대화하는 새로운 접근 방식을 제안합니다.
+  baseline_mentioned: standard OPD
+  category: training
+  has_code: true
+  link: https://arxiv.org/abs/2602.12125
+  github_url: https://github.com/RUCBM/G-OPD
+  github_stars: 1
+  matched_keywords:
+  - reasoning
+- arxiv_id: '2602.12099'
+  title: 'GigaBrain-0.5M*: a VLA That Learns From World Model-Based Reinforcement
+    Learning'
+  one_liner: GigaBrain-0.5M*는 세계 모델 기반 강화 학습을 통해 비전-언어-행동 모델의 성능을 크게 향상시킵니다.
+  tags:
+  - vision-language-action
+  - reinforcement learning
+  - world models
+  interest_score: 4
+  interest_reason: 비디오 세계 모델을 활용하여 복잡한 작업에서 성능을 크게 향상시킵니다.
+  baseline_mentioned: RECAP
+  category: agent
+  has_code: false
+  link: https://arxiv.org/abs/2602.12099
+  github_url: null
+  github_stars: null
+  matched_keywords:
+  - reasoning
+- arxiv_id: '2602.12056'
+  title: 'LawThinker: A Deep Research Legal Agent in Dynamic Environments'
+  one_liner: LawThinker는 동적 법률 환경에서 절차적 준수를 보장하는 자율 법률 연구 에이전트를 제안합니다.
+  tags:
+  - legal reasoning
+  - dynamic environments
+  - verification
+  interest_score: 4
+  interest_reason: 법률 연구의 정확성과 절차적 준수를 향상시키는 혁신적인 접근 방식을 제시합니다.
+  baseline_mentioned: direct reasoning, workflow-based methods
+  category: agent
+  has_code: true
+  link: https://arxiv.org/abs/2602.12056
+  github_url: https://github.com/yxy-919/LawThinker-agent
+  github_stars: null
+  matched_keywords:
+  - agent
+  - retrieval
+  - reasoning
+- arxiv_id: '2602.05548'
+  title: 'Unveiling Implicit Advantage Symmetry: Why GRPO Struggles with Exploration
+    and Difficulty Adaptation'
+  one_liner: 이 논문은 GRPO의 탐색 및 난이도 적응 문제를 비대칭 GRAE를 통해 해결하는 방법을 제안합니다.
+  tags:
+  - reinforcement learning
+  - exploration
+  - difficulty adaptation
+  interest_score: 3
+  interest_reason: 탐색 효율성을 높이는 새로운 방법론을 제시하지만, 기존 연구에 비해 큰 혁신은 아닙니다.
+  baseline_mentioned: GRPO
+  category: training
+  has_code: true
+  link: https://arxiv.org/abs/2602.05548
+  github_url: https://github.com/HKU-HealthAI/A-GRAE
+  github_stars: 7
+  matched_keywords:
+  - LLM
+  - RAG
+  - reasoning
+deep_candidates:
+- '2602.09877'
+- '2602.12056'
+- '2602.12099'
+skimmed_at: '2026-02-13T12:39:13.286969'
