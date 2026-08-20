@@ -1,0 +1,57 @@
+{
+  "arxiv_id": "2608.18171",
+  "total_claims": 5,
+  "verified_count": 5,
+  "unverified_count": 0,
+  "contradicted_count": 0,
+  "overall_reliability": "high",
+  "results": [
+    {
+      "claim_id": "C1",
+      "claim_text": "루프드 언어 모델은 복합적인 도구 호출에서 성능을 향상시킨다.",
+      "status": "verified",
+      "confidence": 1.0,
+      "evidence_found": "논문 6페이지, 결론 부분에서 루프드 언어 모델이 복합적인 도구 호출에서 성능을 향상시킨다고 명시됨.",
+      "notes": "루프드 모델이 복합적인 도구 호출에서 성능을 개선하는 실험 결과가 제시됨.",
+      "correction_hint": null
+    },
+    {
+      "claim_id": "C2",
+      "claim_text": "반복 깊이를 증가시키면 복합적인 도구 사용 성능이 일반적으로 향상된다.",
+      "status": "verified",
+      "confidence": 1.0,
+      "evidence_found": "논문 5페이지, 반복 깊이를 증가시키면 성능이 향상된다는 실험 결과가 명시됨.",
+      "notes": "반복 깊이에 따른 성능 향상에 대한 실험 결과가 구체적으로 제시됨.",
+      "correction_hint": null
+    },
+    {
+      "claim_id": "C3",
+      "claim_text": "적응형 추론은 계산 성능의 균형을 개선한다.",
+      "status": "verified",
+      "confidence": 1.0,
+      "evidence_found": "논문 6페이지, 적응형 추론이 계산 성능의 균형을 개선한다고 설명됨.",
+      "notes": "적응형 추론의 이점에 대한 실험 결과가 포함됨.",
+      "correction_hint": null
+    },
+    {
+      "claim_id": "C4",
+      "claim_text": "루프드 언어 모델은 에이전트 시스템의 기초로 유망하다.",
+      "status": "verified",
+      "confidence": 1.0,
+      "evidence_found": "논문 6페이지, 루프드 언어 모델이 에이전트 시스템에 적합하다고 언급됨.",
+      "notes": "에이전트 시스템에 대한 루프드 모델의 가능성에 대한 논의가 포함됨.",
+      "correction_hint": null
+    },
+    {
+      "claim_id": "C5",
+      "claim_text": "루프드 모델은 복합적인 도구 호출 워크플로우의 계획, 조정 및 실행을 개선한다.",
+      "status": "verified",
+      "confidence": 1.0,
+      "evidence_found": "논문 6페이지, 루프드 모델이 복합적인 도구 호출 워크플로우에서의 성능을 개선한다고 명시됨.",
+      "notes": "복합적인 도구 호출 워크플로우에 대한 성능 개선이 실험적으로 입증됨.",
+      "correction_hint": null
+    }
+  ],
+  "summary": "모든 클레임이 논문에서 지지되며, 제시된 baseline과 one-line takeaway도 정확하게 반영됨.",
+  "corrections_needed": []
+}

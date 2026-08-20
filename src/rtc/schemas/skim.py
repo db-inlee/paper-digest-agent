@@ -45,6 +45,29 @@ class DailySkimOutput(BaseModel):
     date: str = Field(..., description="YYYY-MM-DD 형식")
     total_collected: int = Field(..., description="수집된 전체 논문 수")
     total_skimmed: int = Field(..., description="스킴 완료된 논문 수")
+    # Funnel stats for the latest run of this date (optional for legacy files).
+    total_after_filter: Optional[int] = Field(
+        default=None, description="필터 통과 논문 수"
+    )
+    skipped_previously_processed: Optional[int] = Field(
+        default=None, description="이미 처리되어 제외된 논문 수"
+    )
+    skipped_duplicate: Optional[int] = Field(
+        default=None, description="중복으로 제외된 논문 수"
+    )
+    skipped_hard_filter: Optional[int] = Field(
+        default=None, description="하드 필터로 제외된 논문 수"
+    )
+    skipped_keyword_filter: Optional[int] = Field(
+        default=None, description="키워드 필터로 제외된 논문 수"
+    )
+    skipped_venue_filter: Optional[int] = Field(
+        default=None, description="venue 필터로 제외된 논문 수"
+    )
+    effective_keywords: list[str] = Field(
+        default_factory=list,
+        description="그날 실제로 적용된 키워드 어휘 스냅샷",
+    )
     papers: list[SkimSummary] = Field(default_factory=list)
     deep_candidates: list[str] = Field(
         default_factory=list, description="Deep 분석 대상 arxiv_ids"

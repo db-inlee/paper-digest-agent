@@ -1,0 +1,57 @@
+{
+  "arxiv_id": "2608.17253",
+  "total_claims": 5,
+  "verified_count": 5,
+  "unverified_count": 0,
+  "contradicted_count": 0,
+  "overall_reliability": "high",
+  "results": [
+    {
+      "claim_id": "C1",
+      "claim_text": "CO-RL은 라벨 없는 다중 에이전트 강화 학습 방법으로, 에이전트들이 서로의 예측에서 보상을 학습한다.",
+      "status": "verified",
+      "confidence": 1.0,
+      "evidence_found": "논문 1페이지, CO-RL의 정의 및 설명.",
+      "notes": "CO-RL의 구조와 작동 방식이 명확히 설명됨.",
+      "correction_hint": null
+    },
+    {
+      "claim_id": "C2",
+      "claim_text": "CO-RL은 다양한 모델 패밀리와 크기를 통해 코호트 다양성을 증가시켜 상관된 오류를 줄인다.",
+      "status": "verified",
+      "confidence": 1.0,
+      "evidence_found": "논문 5페이지, 코호트 다양성의 중요성에 대한 설명.",
+      "notes": "모델 다양성이 상관된 오류를 줄이는 데 기여함을 명확히 언급.",
+      "correction_hint": null
+    },
+    {
+      "claim_id": "C3",
+      "claim_text": "CO-RL은 기존의 자체 보상 방법보다 더 나은 성능을 보인다.",
+      "status": "verified",
+      "confidence": 1.0,
+      "evidence_found": "논문 6페이지, CO-RL과 TTRL, RENT, Intuitor의 성능 비교.",
+      "notes": "CO-RL이 기존 방법들보다 성능이 우수하다는 실험 결과 제공.",
+      "correction_hint": null
+    },
+    {
+      "claim_id": "C4",
+      "claim_text": "CO-RL은 다중 에이전트 RL 방법보다 더 나은 성능을 보인다.",
+      "status": "verified",
+      "confidence": 1.0,
+      "evidence_found": "논문 6페이지, CO-RL과 CoMAS의 성능 비교.",
+      "notes": "CO-RL이 CoMAS보다 성능이 우수하다는 결과 제공.",
+      "correction_hint": null
+    },
+    {
+      "claim_id": "C5",
+      "claim_text": "CO-RL은 텍스트 전용 모델을 넘어 비전-언어 모델에도 일반화된다.",
+      "status": "verified",
+      "confidence": 1.0,
+      "evidence_found": "논문 6페이지, CO-RL의 비전-언어 모델에 대한 적용 가능성.",
+      "notes": "CO-RL이 비전-언어 모델에서도 성능을 발휘함을 명확히 언급.",
+      "correction_hint": null
+    }
+  ],
+  "summary": "모든 클레임이 논문에서 지지되며, 실험적 비교와 주장이 일치함.",
+  "corrections_needed": []
+}

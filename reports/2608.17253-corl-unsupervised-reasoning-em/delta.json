@@ -1,0 +1,58 @@
+{
+  "arxiv_id": "2608.17253",
+  "one_line_takeaway": "이 논문은 강화 학습에서 라벨이 없는 문제에 대해 다중 에이전트가 서로를 감독하는 Co-RL 접근법을 제안한다.",
+  "core_deltas": [
+    {
+      "axis": "제어 패러다임",
+      "old_approach": "자체 생성된 예측에 의존하여 보상을 주는 방법",
+      "new_approach": "여러 독립된 에이전트가 다수결로 얻은 가짜 보상을 통해 서로를 감독",
+      "why_better": "다양한 에이전트의 상호 감독을 통해 편향을 줄이고 신뢰성을 높일 수 있음",
+      "evidence": {
+        "page": null,
+        "section": null,
+        "quote": "Co-Reinforcement Learning (Co-RL): 여러 독립된 에이전트가 라벨이 없는 문제에 대해 독립적으로 완료를 생성하고, 다수결로 얻은 가짜 보상을 통해 서로를 감독하는 라벨 없는 다중 에이전트 강화 학습 방법",
+        "type": "quote"
+      }
+    },
+    {
+      "axis": "모델 다양성",
+      "old_approach": "동일한 모델에서 파생된 뷰로 인해 오류가 강하게 상관될 수 있음",
+      "new_approach": "다양한 모델 패밀리, 크기, 입력 형식을 통해 코호트 다양성을 증가",
+      "why_better": "상관된 오류를 줄이고 교정 신호를 강화할 수 있음",
+      "evidence": {
+        "page": null,
+        "section": null,
+        "quote": "Diverse Cohorts: 다양한 모델 패밀리, 크기, 입력 형식을 통해 코호트 다양성을 증가시켜 상관된 오류를 줄이고 교정 신호를 강화",
+        "type": "quote"
+      }
+    },
+    {
+      "axis": "정책 최적화",
+      "old_approach": "기존의 보상 신호에 의존",
+      "new_approach": "각 에이전트는 자신의 롤아웃 그룹 내에서 보상을 정규화하여 GRPO 목표에 사용",
+      "why_better": "그룹 상대적 이점을 통해 에이전트 최적화를 개선할 수 있음",
+      "evidence": {
+        "page": null,
+        "section": null,
+        "quote": "Policy Optimization with GRPO: 각 에이전트는 자신의 롤아웃 그룹 내에서 보상을 정규화하여 그룹 상대적 이점을 얻고, 이를 GRPO 목표에 사용하여 에이전트를 최적화",
+        "type": "quote"
+      }
+    }
+  ],
+  "tradeoffs": [
+    {
+      "aspect": "복잡성",
+      "benefit": "다양한 에이전트의 상호 감독을 통해 편향을 줄이고 신뢰성을 높임",
+      "cost": "다양한 에이전트 설정 및 관리의 복잡성이 증가",
+      "when_acceptable": "다양한 에이전트를 효과적으로 관리할 수 있는 환경에서",
+      "evidence": {
+        "page": null,
+        "section": null,
+        "quote": "여러 독립된 에이전트가 다수결로 얻은 가짜 보상을 통해 서로를 감독",
+        "type": "quote"
+      }
+    }
+  ],
+  "when_to_use": "라벨이 없는 문제에서 다양한 에이전트를 활용하여 편향을 줄이고자 할 때",
+  "when_not_to_use": "에이전트 간의 상호작용을 효과적으로 관리할 수 없는 경우"
+}

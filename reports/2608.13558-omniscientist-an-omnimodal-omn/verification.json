@@ -1,0 +1,57 @@
+{
+  "arxiv_id": "2608.13558",
+  "total_claims": 5,
+  "verified_count": 5,
+  "unverified_count": 0,
+  "contradicted_count": 0,
+  "overall_reliability": "high",
+  "results": [
+    {
+      "claim_id": "claim_1",
+      "claim_text": "OmniScientist는 이질적인 과학적 증거로부터 직접 다학문적 연구를 수행할 수 있는 엔드 투 엔드, 옴니 모달 AI 과학자이다.",
+      "status": "verified",
+      "confidence": 1.0,
+      "evidence_found": "논문 본문에서 OmniScientist의 기능과 구조에 대한 설명이 있음.",
+      "notes": "OmniScientist는 다양한 모달리티의 원시 데이터를 직접 인식하여 연구를 수행함.",
+      "correction_hint": null
+    },
+    {
+      "claim_id": "claim_2",
+      "claim_text": "OmniScientist는 36개의 실제 데이터 사례에서 전체 경로를 완료하고 평균 종합 논문 점수 6.3을 달성한다.",
+      "status": "verified",
+      "confidence": 1.0,
+      "evidence_found": "논문 본문에서 36개의 사례와 평균 점수 6.3에 대한 평가 결과가 명시됨.",
+      "notes": "모든 사례에서 전체 경로를 완료한 결과가 있음.",
+      "correction_hint": null
+    },
+    {
+      "claim_id": "claim_3",
+      "claim_text": "직접적인 인식은 모든 평가 차원에서 개선을 가져오며, 85%의 대결 판단에서 승리한다.",
+      "status": "verified",
+      "confidence": 1.0,
+      "evidence_found": "논문 본문에서 직접 인식의 효과와 85% 승리에 대한 언급이 있음.",
+      "notes": "비교 실험 결과가 명확히 제시됨.",
+      "correction_hint": null
+    },
+    {
+      "claim_id": "claim_4",
+      "claim_text": "OmniScientist는 공간적, 시간적, 통계적, 절차적 관계를 연구 과정 전반에 걸쳐 유지하여 자동화된 발견을 워크플로우 범위를 넘어 확장한다.",
+      "status": "verified",
+      "confidence": 1.0,
+      "evidence_found": "논문 본문에서 OmniScientist의 기능이 연구 과정 전반에 걸쳐 관계를 유지하는 방식에 대한 설명이 있음.",
+      "notes": "자동화된 발견의 범위를 확장하는 방법이 명시됨.",
+      "correction_hint": null
+    },
+    {
+      "claim_id": "claim_5",
+      "claim_text": "OmniScientist는 5개의 학문 가족과 4개의 과학적 증거 가족에 걸쳐 36개의 사례를 평가하여 광범위한 교차 학문적 적용 가능성을 입증한다.",
+      "status": "verified",
+      "confidence": 1.0,
+      "evidence_found": "논문 본문에서 36개의 사례와 5개 학문 가족, 4개 증거 가족에 대한 평가가 언급됨.",
+      "notes": "교차 학문적 적용 가능성에 대한 명확한 증거가 있음.",
+      "correction_hint": null
+    }
+  ],
+  "summary": "모든 클레임이 논문에서 지지되며, OmniScientist의 기능과 성능에 대한 주장이 정확하게 표현됨.",
+  "corrections_needed": []
+}

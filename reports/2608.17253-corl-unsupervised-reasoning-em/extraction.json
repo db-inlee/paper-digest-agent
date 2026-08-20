@@ -1,0 +1,259 @@
+{
+  "arxiv_id": "2608.17253",
+  "title": "Co-RL: Unsupervised Reasoning Emerges from Diverse Cohort in Multi-agent RL",
+  "problem_definition": {
+    "statement": "강화 학습(RL)은 언어 및 비전-언어 모델의 추론을 개선하는 강력한 접근 방식으로 부상했지만, 여전히 강력한 성공은 주로 진실한 감독(예: 검증 가능한 보상)에 크게 의존한다. 이러한 주석은 얻기 어렵고, 인간이 신뢰할 수 있는 평가를 넘어서는 추론 능력이 발전함에 따라 점점 더 희귀해진다.",
+    "baseline_methods": [],
+    "structural_limitation": "자체 생성 피드백에만 의존하여 훈련하면 기존의 편향과 최적이 아닌 행동을 강화하고, 응답 다양성을 줄이며, 궁극적으로는 동질화된 응답과 훈련 붕괴로 이어질 수 있다.",
+    "evidence": [
+      {
+        "page": 1,
+        "section": "Abstract",
+        "quote": "Self-rewarding RL reduces this dependence by enabling models to derive reward signals from their own completions. However, training solely on self-generated feedback can reinforce existing biases and suboptimal behaviors, reduce response diversity, and ultimately lead to homogenized responses and training collapse.",
+        "type": "quote"
+      }
+    ]
+  },
+  "baselines": [
+    {
+      "name": "TTRL",
+      "description": "자체 생성된 다수결 예측과 일치하는 응답에 보상을 주는 방법",
+      "limitation": "자체 예측에만 의존하여 편향을 강화할 수 있음",
+      "evidence": [
+        {
+          "page": 3,
+          "section": "Self-rewarding RL",
+          "quote": "TTRL [Zuo et al., 2025] rewards responses that agree with the policy’s majority-vote prediction.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "name": "RENT",
+      "description": "모델의 토큰 수준 예측 분포에서 보상을 유도하는 방법",
+      "limitation": "자체 예측에만 의존하여 편향을 강화할 수 있음",
+      "evidence": [
+        {
+          "page": 3,
+          "section": "Self-rewarding RL",
+          "quote": "RENT [Prabhudesai et al., 2025] operates on the predictive distribution, assigning rewards from the model’s token-level predictive distributions.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "name": "Intuitor",
+      "description": "토큰 수준의 확신도를 측정하여 보상을 주는 방법",
+      "limitation": "자체 예측에만 의존하여 편향을 강화할 수 있음",
+      "evidence": [
+        {
+          "page": 3,
+          "section": "Self-rewarding RL",
+          "quote": "Intuitor [Zhao et al., 2026] measures token-level confidence using rewards derived from the model’s token-level predictive distributions.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "name": "Co-rewarding-II",
+      "description": "다른 모델의 보상 신호를 사용하여 훈련하는 방법",
+      "limitation": "동일한 모델에서 파생된 뷰로 인해 오류가 강하게 상관될 수 있음",
+      "evidence": [
+        {
+          "page": 2,
+          "section": "Related Work",
+          "quote": "Co-rewarding [Zhang et al., 2026b] brings this insight to label-free RL by deriving rewards from either paraphrased questions or a slowly updated model copy.",
+          "type": "quote"
+        }
+      ]
+    }
+  ],
+  "method_components": [
+    {
+      "name": "Co-Reinforcement Learning (Co-RL)",
+      "description": "여러 독립된 에이전트가 라벨이 없는 문제에 대해 독립적으로 완료를 생성하고, 다수결로 얻은 가짜 보상을 통해 서로를 감독하는 라벨 없는 다중 에이전트 강화 학습 방법",
+      "inputs": [
+        "라벨이 없는 문제 x"
+      ],
+      "outputs": [
+        "각 에이전트의 정책 업데이트"
+      ],
+      "implementation_hint": "에이전트는 서로의 보상 신호를 통해 최적화되며, 파라미터나 그래디언트를 공유하지 않음",
+      "role": "novel",
+      "evidence": [
+        {
+          "page": 4,
+          "section": "Method",
+          "quote": "We introduce Co-Reinforcement Learning (CO-RL), a label-free multi-agent reinforcement learning method in which multiple decoupled agents independently generate completions to unlabeled problems and supervise one another through majority-voted pseudo reward from its cohort.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "name": "Diverse Cohorts",
+      "description": "다양한 모델 패밀리, 크기, 입력 형식을 통해 코호트 다양성을 증가시켜 상관된 오류를 줄이고 교정 신호를 강화",
+      "inputs": [
+        "다양한 모델 패밀리와 크기"
+      ],
+      "outputs": [
+        "강화된 교정 신호"
+      ],
+      "implementation_hint": "정책 최적화, 모델 패밀리 및 크기, 입력 형식에서 다양성을 최대화",
+      "role": "novel",
+      "evidence": [
+        {
+          "page": 5,
+          "section": "Diverse Cohorts Enable Unsupervised Reasoner",
+          "quote": "We push this diversity as far as the framework allows: policy optimization (Sec 4.1), model families and sizes, and input formation.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "name": "Policy Optimization with GRPO",
+      "description": "각 에이전트는 자신의 롤아웃 그룹 내에서 보상을 정규화하여 그룹 상대적 이점을 얻고, 이를 GRPO 목표에 사용하여 에이전트를 최적화",
+      "inputs": [
+        "에이전트의 롤아웃 그룹"
+      ],
+      "outputs": [
+        "정책 업데이트"
+      ],
+      "implementation_hint": "GRPO를 사용하여 에이전트를 훈련",
+      "role": "standard",
+      "evidence": [
+        {
+          "page": 4,
+          "section": "Policy Optimization",
+          "quote": "For each agent, the rewards are normalized within its own rollout group to obtain group-relative advantages, which are then used in the GRPO objective to optimize the agent.",
+          "type": "quote"
+        }
+      ]
+    }
+  ],
+  "benchmarks": [
+    {
+      "dataset": "GSM8K",
+      "metrics": [
+        "Accuracy"
+      ],
+      "baseline_results": {
+        "TTRL": "80.4",
+        "RENT": "75.6",
+        "Intuitor": "74.9",
+        "Co-rewarding-II": "75.5"
+      },
+      "proposed_results": {
+        "CO-RL (Same family)": "78.5",
+        "CO-RL (Different family)": "80.1",
+        "CO-RL (Different family+)": "81.0"
+      },
+      "evidence": [
+        {
+          "page": 9,
+          "section": "Main Results",
+          "quote": "Table 1: Full performance across seven benchmarks for 3B models (%).",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "dataset": "MATH500",
+      "metrics": [
+        "Accuracy"
+      ],
+      "baseline_results": {
+        "TTRL": "66.4",
+        "RENT": "62.8",
+        "Intuitor": "64.2",
+        "Co-rewarding-II": "63.4"
+      },
+      "proposed_results": {
+        "CO-RL (Same family)": "66.0",
+        "CO-RL (Different family)": "66.8",
+        "CO-RL (Different family+)": "66.6"
+      },
+      "evidence": [
+        {
+          "page": 9,
+          "section": "Main Results",
+          "quote": "Table 1: Full performance across seven benchmarks for 3B models (%).",
+          "type": "quote"
+        }
+      ]
+    }
+  ],
+  "benchmark": null,
+  "claims": [
+    {
+      "claim_id": "C1",
+      "text": "CO-RL은 라벨 없는 다중 에이전트 강화 학습 방법으로, 에이전트들이 서로의 예측에서 보상을 학습한다.",
+      "claim_type": "method",
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "page": 4,
+          "section": "Method",
+          "quote": "We introduce Co-Reinforcement Learning (CO-RL), a label-free multi-agent reinforcement learning method in which multiple decoupled agents independently generate completions to unlabeled problems and supervise one another through majority-voted pseudo reward from its cohort.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "claim_id": "C2",
+      "text": "CO-RL은 다양한 모델 패밀리와 크기를 통해 코호트 다양성을 증가시켜 상관된 오류를 줄인다.",
+      "claim_type": "method",
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "page": 5,
+          "section": "Diverse Cohorts Enable Unsupervised Reasoner",
+          "quote": "We push this diversity as far as the framework allows: policy optimization (Sec 4.1), model families and sizes, and input formation.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "claim_id": "C3",
+      "text": "CO-RL은 기존의 자체 보상 방법보다 더 나은 성능을 보인다.",
+      "claim_type": "comparison",
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "page": 9,
+          "section": "Main Results",
+          "quote": "CO-RL outperforms all self-rewarding methods on language models.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "claim_id": "C4",
+      "text": "CO-RL은 다중 에이전트 RL 방법보다 더 나은 성능을 보인다.",
+      "claim_type": "comparison",
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "page": 10,
+          "section": "Main Results",
+          "quote": "CO-RL outperforms Multi-Agent RL.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "claim_id": "C5",
+      "text": "CO-RL은 텍스트 전용 모델을 넘어 비전-언어 모델에도 일반화된다.",
+      "claim_type": "result",
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "page": 10,
+          "section": "Main Results",
+          "quote": "CO-RL Transfers to Vision-Language Models.",
+          "type": "quote"
+        }
+      ]
+    }
+  ],
+  "extraction_mode": "full"
+}

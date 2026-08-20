@@ -1,0 +1,58 @@
+{
+  "arxiv_id": "2608.18171",
+  "one_line_takeaway": "이 논문은 Qwen3-1.7B와 Llama-3.2-1B의 도구 호출 성능 한계를 루프드 Transformer와 적응형 추론을 통해 개선한다.",
+  "core_deltas": [
+    {
+      "axis": "모델 구조",
+      "old_approach": "Qwen3-1.7B와 Llama-3.2-1B는 표준 Transformer 모델을 사용",
+      "new_approach": "루프드 Transformer를 사용하여 공유된 Transformer 블록을 반복적으로 적용",
+      "why_better": "테스트 시간의 계산을 증가시켜 복합적인 도구 호출에서의 성능을 개선할 수 있음",
+      "evidence": {
+        "page": null,
+        "section": null,
+        "quote": "Looped Transformers: 공유된 Transformer 블록을 반복적으로 적용하여 테스트 시간의 계산을 증가시키는 모델",
+        "type": "quote"
+      }
+    },
+    {
+      "axis": "추론 전략",
+      "old_approach": "고정된 계산 할당",
+      "new_approach": "적응형 추론을 통해 학습된 정지 정책이나 사후 기준을 사용하여 동적으로 계산을 할당",
+      "why_better": "각 토큰의 누적 종료 확률을 기반으로 선택된 루프 깊이를 통해 효율성을 높임",
+      "evidence": {
+        "page": null,
+        "section": null,
+        "quote": "Adaptive Inference: 루프드 Transformer가 학습된 정지 정책이나 사후 기준을 사용하여 동적으로 계산을 할당",
+        "type": "quote"
+      }
+    },
+    {
+      "axis": "도구 사용 공식화",
+      "old_approach": "복합적인 도구 호출에서의 구조적 예측 부족",
+      "new_approach": "도구 호출과 그 종속성에 대한 구조적 예측으로 구성된 공식화",
+      "why_better": "도구 사용 솔루션을 방향성 비순환 그래프로 표현하여 복합적인 도구 호출을 효과적으로 처리",
+      "evidence": {
+        "page": null,
+        "section": null,
+        "quote": "Compositional Tool Use Formalism: 도구 호출과 그 종속성에 대한 구조적 예측으로 구성된 공식화",
+        "type": "quote"
+      }
+    }
+  ],
+  "tradeoffs": [
+    {
+      "aspect": "계산 비용",
+      "benefit": "복합적인 도구 호출에서의 성능 향상",
+      "cost": "테스트 시간의 계산 증가",
+      "when_acceptable": "복합적인 도구 호출이 필요한 경우",
+      "evidence": {
+        "page": null,
+        "section": null,
+        "quote": "Looped Transformers: 공유된 Transformer 블록을 반복적으로 적용하여 테스트 시간의 계산을 증가시키는 모델",
+        "type": "quote"
+      }
+    }
+  ],
+  "when_to_use": "복합적인 도구 호출이 필요한 에이전트 시스템에서 성능을 개선하고자 할 때",
+  "when_not_to_use": "계산 자원이 제한된 환경에서는 사용하지 않는 것이 좋음"
+}

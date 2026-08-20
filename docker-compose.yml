@@ -7,10 +7,14 @@ services:
       - "8000:8080"
     volumes:
       - ./reports:/app/data/reports
+      - ./papers:/app/data/papers
+      - ./index:/app/data/index
     env_file:
       - .env
     environment:
       REPORT_BASE_DIR: /app/data/reports
+      PAPERS_BASE_DIR: /app/data/papers
+      INDEX_BASE_DIR: /app/data/index
       PYTHONPATH: /app/src
       SCHEDULER_ENABLED: "true"
     restart: unless-stopped

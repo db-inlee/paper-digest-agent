@@ -4,6 +4,7 @@ import hashlib
 import hmac
 import json
 import logging
+import os
 import re
 import subprocess
 import threading
@@ -69,12 +70,42 @@ def _send_report_to_slack(target_date: str) -> None:
         logger.error("Failed to send report to Slack: %s", exc)
 
 
+def resolve_rtc_dirs() -> tuple[str | None, str | None]:
+    """Locate the rtc source tree to run pipeline subprocesses against.
+
+    Without an explicit PYTHONPATH/cwd, ``python -m rtc...`` resolves through
+    whatever ``rtc`` happens to be installed (possibly another checkout), and
+    the pipeline then writes papers/index into that other tree. Candidates are
+    probed in order and the first one that actually contains ``rtc`` wins.
+
+    Returns:
+        (project_root, src_dir) as strings, or (None, None) when nothing matches.
+    """
+    candidates = [
+        os.environ.get("PYTHONPATH"),
+        Path(__file__).resolve().parents[3] / "src",
+        settings.report_base_dir.resolve().parent / "src",
+    ]
+
+    for candidate in candidates:
+        if not candidate:
+            continue
+        src_dir = Path(candidate)
+        if src_dir.joinpath("rtc").exists():
+            return str(src_dir.parent), str(src_dir)
+
+    return None, None
+
+
 def trigger_pipeline(target_date: str, send_slack: bool = True) -> bool:
     """Trigger pipeline in a background thread. Returns False if already running."""
     if pipeline_status["state"] == "running":
         return False
 
     pipeline_status.update(state="running", date=target_date, error=None)
+
+    project_root, src_dir = resolve_rtc_dirs()
+    env = {**os.environ, "PYTHONPATH": src_dir} if src_dir else None
 
     def _run() -> None:
         try:
@@ -83,6 +114,8 @@ def trigger_pipeline(target_date: str, send_slack: bool = True) -> bool:
                 capture_output=True,
                 text=True,
                 timeout=1800,
+                env=env,
+                cwd=project_root,
             )
             logger.info("Pipeline stdout: %s", result.stdout[-2000:] if result.stdout else "(empty)")
             logger.info("Pipeline stderr: %s", result.stderr[-2000:] if result.stderr else "(empty)")
@@ -1075,17 +1108,10 @@ def _run_paper_add(arxiv_id: str, title: str, abstract: str, run_date: str) -> N
     """Run deep analysis for a single paper in a background thread."""
     try:
         # Locate project root and src dir
-        import os
-        src_dir = os.environ.get("PYTHONPATH")
-        if not src_dir or not Path(src_dir).joinpath("rtc").exists():
-            candidate = settings.report_base_dir.resolve().parent / "src"
-            if candidate.joinpath("rtc").exists():
-                src_dir = str(candidate)
-            else:
-                candidate = Path(__file__).resolve().parent.parent.parent.parent.parent / "src"
-                src_dir = str(candidate)
+        project_root, src_dir = resolve_rtc_dirs()
+        if src_dir is None:
+            raise RuntimeError("Cannot locate the rtc source tree")
 
-        project_root = str(Path(src_dir).parent)
         deep_script = str(Path(src_dir) / "rtc" / "pipeline" / "deep.py")
         env = {**os.environ, "PYTHONPATH": src_dir}
         result = subprocess.run(

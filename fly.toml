@@ -6,6 +6,8 @@ primary_region = "nrt"  # Tokyo (한국에서 가장 가까운 리전)
 
 [env]
   REPORT_BASE_DIR = "/app/data/reports"
+  PAPERS_BASE_DIR = "/app/data/papers"
+  INDEX_BASE_DIR = "/app/data/index"
   PYTHONPATH = "/app/src"
   SCHEDULER_ENABLED = "true"
   PORT = "8080"

@@ -15,17 +15,21 @@ class SkimStore:
     papers/YYYY-MM-DD.yaml 형식으로 일별 스킴 결과를 저장합니다.
     """
 
-    def __init__(self, base_dir: Path):
+    def __init__(self, base_dir: Path, *, papers_dir: Path | None = None):
         """초기화.
 
         Args:
-            base_dir: 프로젝트 베이스 디렉토리
+            base_dir: 프로젝트 베이스 디렉토리 (레거시)
+            papers_dir: papers 디렉토리 경로 (우선 사용)
         """
-        self.papers_dir = base_dir / "papers"
+        self.papers_dir = papers_dir if papers_dir is not None else base_dir / "papers"
         self.papers_dir.mkdir(parents=True, exist_ok=True)
 
     def save(self, output: DailySkimOutput) -> Path:
         """일별 스킴 결과 저장.
+
+        A same-date rerun never blindly overwrites: existing paper records are
+        merged by arxiv_id so that no previously stored skim record is lost.
 
         Args:
             output: 저장할 스킴 결과
@@ -34,10 +38,11 @@ class SkimStore:
             저장된 파일 경로
         """
         path = self.papers_dir / f"{output.date}.yaml"
+        merged = self._merge_with_existing(output, path)
 
         # Pydantic 모델을 dict로 변환 (datetime 처리)
-        data = output.model_dump()
-        data["skimmed_at"] = output.skimmed_at.isoformat()
+        data = merged.model_dump()
+        data["skimmed_at"] = merged.skimmed_at.isoformat()
 
         # 각 paper의 datetime도 처리
         for paper in data.get("papers", []):
@@ -48,6 +53,69 @@ class SkimStore:
             yaml.dump(data, f, allow_unicode=True, default_flow_style=False, sort_keys=False)
 
         return path
+
+    def _merge_with_existing(
+        self, output: DailySkimOutput, path: Path
+    ) -> DailySkimOutput:
+        """Merge a fresh run with whatever is already stored for that date.
+
+        Papers and deep candidates are unioned by arxiv_id (the fresh record
+        wins on collision). Run-level counters describe the latest run only.
+        A file that cannot be parsed is moved aside instead of being dropped.
+
+        Args:
+            output: 새로 저장할 스킴 결과
+            path: 대상 yaml 경로
+
+        Returns:
+            병합된 스킴 결과 (기존 파일이 없으면 output 그대로)
+        """
+        if not path.exists():
+            return output
+
+        try:
+            existing = self.load(output.date)
+        except Exception:
+            self._backup_unreadable(path)
+            return output
+
+        if existing is None:
+            return output
+
+        # Papers: keep existing order, refresh on collision, append newcomers.
+        by_id = {paper.arxiv_id: paper for paper in existing.papers}
+        for paper in output.papers:
+            by_id[paper.arxiv_id] = paper
+
+        deep_candidates = list(existing.deep_candidates)
+        for arxiv_id in output.deep_candidates:
+            if arxiv_id not in deep_candidates:
+                deep_candidates.append(arxiv_id)
+
+        # Keyword snapshot: the fresh run wins unless it carries none.
+        effective_keywords = output.effective_keywords or existing.effective_keywords
+
+        return output.model_copy(
+            update={
+                "papers": list(by_id.values()),
+                "deep_candidates": deep_candidates,
+                "effective_keywords": effective_keywords,
+            }
+        )
+
+    def _backup_unreadable(self, path: Path) -> Path:
+        """Move an unparsable yaml aside so a fresh save can proceed.
+
+        Args:
+            path: 읽을 수 없는 yaml 경로
+
+        Returns:
+            백업된 파일 경로
+        """
+        stamp = datetime.now().strftime("%Y%m%d-%H%M%S")
+        backup = path.with_name(f"{path.name}.{stamp}.bak")
+        path.rename(backup)
+        return backup
 
     def load(self, date: str) -> Optional[DailySkimOutput]:
         """일별 스킴 결과 로드.

@@ -169,6 +169,28 @@ class Settings(BaseSettings):
         description="Maximum number of papers for deep analysis per day",
     )
 
+    # Trend Briefing
+    trend_section_enabled: bool = Field(
+        default=True,
+        alias="TREND_SECTION_ENABLED",
+        description="daily 리포트 상단에 트렌드 브리핑 섹션을 넣을지 여부",
+    )
+    trend_window_days: int = Field(
+        default=7,
+        alias="TREND_WINDOW_DAYS",
+        description="집계 창에 포함할 skim yaml 개수 (존재하는 최근 N일)",
+    )
+    trend_top_tags: int = Field(
+        default=5,
+        alias="TREND_TOP_TAGS",
+        description="태그 기반 축에서 보여줄 상위 개수",
+    )
+    trend_min_count: int = Field(
+        default=2,
+        alias="TREND_MIN_COUNT",
+        description="태그 기반 축의 최소 빈도 (1회성 태그 노이즈 차단)",
+    )
+
     # Venue/Conference Filter
     venue_filter_enabled: bool = Field(default=False, alias="VENUE_FILTER_ENABLED")
     venue_filter_conferences: list[str] = Field(
@@ -229,12 +251,19 @@ class Settings(BaseSettings):
     )
 
     # Paths
-    base_dir: Path = Field(default_factory=lambda: Path(__file__).parent.parent.parent)
+    base_dir: Path = Field(
+        default_factory=lambda: Path(__file__).parent.parent.parent,
+        alias="BASE_DIR",
+    )
     report_base_dir: Optional[Path] = Field(default=None, alias="REPORT_BASE_DIR")
+    papers_base_dir: Optional[Path] = Field(default=None, alias="PAPERS_BASE_DIR")
+    index_base_dir: Optional[Path] = Field(default=None, alias="INDEX_BASE_DIR")
 
     @property
     def papers_dir(self) -> Path:
         """papers/ 디렉토리 (스킴 결과 저장)."""
+        if self.papers_base_dir is not None:
+            return self.papers_base_dir
         return self.base_dir / "papers"
 
     @property
@@ -247,6 +276,8 @@ class Settings(BaseSettings):
     @property
     def index_dir(self) -> Path:
         """index/ 디렉토리 (인덱스 저장)."""
+        if self.index_base_dir is not None:
+            return self.index_base_dir
         return self.base_dir / "index"
 
     @property

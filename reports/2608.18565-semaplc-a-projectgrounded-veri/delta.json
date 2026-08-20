@@ -1,0 +1,58 @@
+{
+  "arxiv_id": "2608.18565",
+  "one_line_takeaway": "이 논문은 PLC 코드 생성에서 프로젝트 기반 생성과 외부 검증을 통한 신뢰성 향상을 목표로 하는 SemaPLC 프레임워크를 제안한다.",
+  "core_deltas": [
+    {
+      "axis": "프로젝트 기반 생성",
+      "old_approach": "기존에는 프로젝트 구조를 고려하지 않고 코드 생성",
+      "new_approach": "프로젝트 트랙에서 에이전트가 프로젝트 구조를 검색하고 관련 모듈을 찾아 기존 변수와 함수 블록을 재사용",
+      "why_better": "프로젝트 관습을 유지하면서 논리를 편집하여 코드의 일관성과 재사용성을 높인다",
+      "evidence": {
+        "page": null,
+        "section": null,
+        "quote": "Project Grounding: 프로젝트 트랙에서 에이전트가 프로젝트 구조를 검색하고 관련 모듈을 찾는다.",
+        "type": "quote"
+      }
+    },
+    {
+      "axis": "다중 소스 검증",
+      "old_approach": "단일 소스 또는 제한된 검증 방법 사용",
+      "new_approach": "명세 검사, 컴파일, 라이브 런타임 검증을 포함한 다중 소스 검증",
+      "why_better": "다양한 검증 소스를 통해 코드의 신뢰성을 높이고 오류를 줄인다",
+      "evidence": {
+        "page": null,
+        "section": null,
+        "quote": "Multi-Source Verification: 세 가지 종류의 외부 결과를 일급 증거로 취급하여 검증한다.",
+        "type": "quote"
+      }
+    },
+    {
+      "axis": "검증 게이트 반복",
+      "old_approach": "검증 결과에 따른 반복적 수정 과정이 명확하지 않음",
+      "new_approach": "검증 게이트는 제한된 재시도, 편집 무효화, 획득된 주장에 의해 관리",
+      "why_better": "명확한 검증 기준을 통해 반복적 수정 과정을 체계화하여 효율성을 높인다",
+      "evidence": {
+        "page": null,
+        "section": null,
+        "quote": "Verification-Gated Iteration: 검증 게이트는 세 가지 불변량에 의해 관리된다.",
+        "type": "quote"
+      }
+    }
+  ],
+  "tradeoffs": [
+    {
+      "aspect": "복잡성",
+      "benefit": "다양한 검증 소스를 통해 코드의 신뢰성을 높임",
+      "cost": "구현 복잡성이 증가하고 초기 설정 비용이 높아질 수 있음",
+      "when_acceptable": "신뢰성이 중요한 프로젝트에서 초기 설정 비용을 감수할 수 있을 때",
+      "evidence": {
+        "page": null,
+        "section": null,
+        "quote": null,
+        "type": "quote"
+      }
+    }
+  ],
+  "when_to_use": "PLC 코드 생성에서 프로젝트 기반의 구조적 일관성과 높은 신뢰성이 요구될 때",
+  "when_not_to_use": "단순한 PLC 코드 생성 작업으로 복잡한 검증 과정이 필요하지 않을 때"
+}

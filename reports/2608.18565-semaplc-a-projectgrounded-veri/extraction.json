@@ -1,0 +1,249 @@
+{
+  "arxiv_id": "2608.18565",
+  "title": "SemaPLC: A Project-Grounded, Verification-Gated Agent Harness for PLC Code Generation",
+  "problem_definition": {
+    "statement": "PLC 코드 생성에서 프로젝트에 기반한 생성과 외부 검증을 통한 완료 확인을 통해 신뢰성을 높이는 문제를 해결한다.",
+    "baseline_methods": [
+      "LLM4PLC",
+      "AutoPLC",
+      "Agents4PLC"
+    ],
+    "structural_limitation": "기존 시스템은 생성된 코드가 실행될 수 있음을 보여주기 위해 실행하지만, 얼마나 신뢰성 있게 실행되는지를 측정하지 않는다.",
+    "evidence": [
+      {
+        "page": 2,
+        "section": "Introduction",
+        "quote": "Prior systems execute generated code to show that it can run, not to measure how reliably it runs.",
+        "type": "quote"
+      }
+    ]
+  },
+  "baselines": [
+    {
+      "name": "LLM4PLC",
+      "description": "LLM 기반의 ST 생성으로 컴파일러와 SMV 피드백 및 사용자 주도 반복을 활용한다.",
+      "limitation": "런타임에서 검증된 올바른 솔루션을 제공하지 못한다.",
+      "evidence": [
+        {
+          "page": 6,
+          "section": "Results",
+          "quote": "Baselines: × No runtime-verified correct solution",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "name": "AutoPLC",
+      "description": "벤더 인식 ST를 대상으로 사례 검색, API 추천 및 벤더 IDE에서의 컴파일러 기반 디버깅을 수행한다.",
+      "limitation": "컴파일 실패로 인해 런타임에 도달하지 못한다.",
+      "evidence": [
+        {
+          "page": 6,
+          "section": "Results",
+          "quote": "AutoPLC × Compile failure",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "name": "Agents4PLC",
+      "description": "PLCverif 검증 및 테스트베드 데모를 포함한 5-에이전트 폐쇄 루프를 도입한다.",
+      "limitation": "잘못된 오류 결과를 처리한다.",
+      "evidence": [
+        {
+          "page": 6,
+          "section": "Results",
+          "quote": "Agents4PLC × Wrong fault result",
+          "type": "quote"
+        }
+      ]
+    }
+  ],
+  "method_components": [
+    {
+      "name": "Project Grounding",
+      "description": "프로젝트 트랙에서 에이전트가 프로젝트 구조를 검색하고 관련 모듈을 찾는다. 기존 변수와 함수 블록을 재사용하고, 확립된 인터페이스를 재정의하지 않으며, 프로젝트 관습을 유지하면서 논리를 편집한다.",
+      "inputs": [
+        "프로젝트 구조",
+        "관련 모듈"
+      ],
+      "outputs": [
+        "기반이 된 컨텍스트"
+      ],
+      "implementation_hint": "GROUND 단계에서 생성이 작동하는 기반이 된 컨텍스트를 출력한다.",
+      "role": "novel",
+      "evidence": [
+        {
+          "page": 4,
+          "section": "Project Grounding and PLC Skills",
+          "quote": "On the project track, the agent retrieves the project structure and locates the relevant modules.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "name": "Multi-Source Verification",
+      "description": "세 가지 종류의 외부 결과를 일급 증거로 취급하여 검증한다: 명세 검사, 컴파일, 라이브 런타임 검증.",
+      "inputs": [
+        "명세",
+        "컴파일 결과",
+        "라이브 런타임 결과"
+      ],
+      "outputs": [
+        "검증 결과"
+      ],
+      "implementation_hint": "각 결과는 체크리스트 스킬 문서로 인코딩되어 결함을 타겟으로 한다.",
+      "role": "novel",
+      "evidence": [
+        {
+          "page": 4,
+          "section": "Multi-Source Verification",
+          "quote": "SEMAPLC consumes three kinds of verification results uniformly.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "name": "Verification-Gated Iteration",
+      "description": "검증 게이트는 세 가지 불변량에 의해 관리된다: 제한된 재시도, 편집 무효화, 획득된 주장.",
+      "inputs": [
+        "검증 결과"
+      ],
+      "outputs": [
+        "수정된 구현"
+      ],
+      "implementation_hint": "각 결과는 도구 호출 로그와 교차 검증된 기계 판독 가능한 센티넬로서의 결과를 요구한다.",
+      "role": "novel",
+      "evidence": [
+        {
+          "page": 5,
+          "section": "Verification-Gated Iteration",
+          "quote": "Algorithm 1 makes the loop precise. The gate is governed by three invariants.",
+          "type": "quote"
+        }
+      ]
+    }
+  ],
+  "benchmarks": [
+    {
+      "dataset": "Function Track",
+      "metrics": [
+        "Strict Verified Pass Rate"
+      ],
+      "baseline_results": {
+        "LLM4PLC": "30.2",
+        "AutoPLC": "62.4",
+        "Agents4PLC": "63.9"
+      },
+      "proposed_results": {
+        "SEMAPLC": "72.6"
+      },
+      "evidence": [
+        {
+          "page": 6,
+          "section": "RQ1: Function-Level Reliability",
+          "quote": "SEMAPLC attains the highest strict verified pass rate on all seven models.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "dataset": "Project-Context Track",
+      "metrics": [
+        "Integrated Compilation",
+        "Static Behavior",
+        "Dynamic Behavior"
+      ],
+      "baseline_results": {
+        "LLM4PLC": "58.7",
+        "AutoPLC": "81.5",
+        "Agents4PLC": "71.2"
+      },
+      "proposed_results": {
+        "SEMAPLC": "89.4"
+      },
+      "evidence": [
+        {
+          "page": 7,
+          "section": "RQ2: Project-Grounded Reliability",
+          "quote": "On integrated compilation, SEMAPLC builds 89.4% of programs on average.",
+          "type": "quote"
+        }
+      ]
+    }
+  ],
+  "benchmark": null,
+  "claims": [
+    {
+      "claim_id": "C1",
+      "text": "SEMAPLC는 프로젝트에 기반한 생성과 외부 검증을 통해 PLC 코드 생성의 신뢰성을 높인다.",
+      "claim_type": "method",
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "page": 1,
+          "section": "Abstract",
+          "quote": "We present SEMAPLC, a project-grounded and verification-gated agent harness.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "claim_id": "C2",
+      "text": "SEMAPLC는 모든 모델에서 가장 높은 엄격한 검증 통과율을 달성한다.",
+      "claim_type": "result",
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "page": 6,
+          "section": "RQ1: Function-Level Reliability",
+          "quote": "SEMAPLC attains the highest strict verified pass rate on all seven models.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "claim_id": "C3",
+      "text": "SEMAPLC는 프로젝트 트랙에서 통합 컴파일, 정적 행동, 동적 행동에서 가장 높은 평균을 기록한다.",
+      "claim_type": "result",
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "page": 7,
+          "section": "RQ2: Project-Grounded Reliability",
+          "quote": "On integrated compilation, SEMAPLC builds 89.4% of programs on average.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "claim_id": "C4",
+      "text": "SEMAPLC의 동적 행동은 모든 모델에서 가장 우수하며, 가장 강력한 모델에서는 그 차이가 좁혀진다.",
+      "claim_type": "comparison",
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "page": 7,
+          "section": "RQ2: Project-Grounded Reliability",
+          "quote": "The advantage narrows as models strengthen: on GPT-5.5, SEMAPLC leads Agents4PLC by only 1.8 dynamic points.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "claim_id": "C5",
+      "text": "SEMAPLC는 런타임 검증을 통해 결함을 감지하고 수정하며, 런타임에서 검증된 솔루션을 제공한다.",
+      "claim_type": "method",
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "page": 6,
+          "section": "Results",
+          "quote": "Only SemaPLC detects, repairs, and runtime-verifies the defect.",
+          "type": "quote"
+        }
+      ]
+    }
+  ],
+  "extraction_mode": "full"
+}

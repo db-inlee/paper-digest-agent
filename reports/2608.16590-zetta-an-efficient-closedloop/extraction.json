@@ -1,0 +1,219 @@
+{
+  "arxiv_id": "2608.16590",
+  "title": "Zetta ζ: An Efficient Closed-Loop Embodied Harness for Self-Evolving Physical Intelligence",
+  "problem_definition": {
+    "statement": "기존의 엔드 투 엔드 정책 모델이 물리적 실행에서 폐쇄 루프 학습을 실현하지 못하는 문제를 해결하기 위해, Zetta는 코드 기반의 런타임 비평가와 복구 기술을 온라인으로 진화시키는 폐쇄 루프 구현을 제안한다.",
+    "baseline_methods": [],
+    "structural_limitation": "기존의 구현은 주로 오픈 루프 방식으로, 에피소드가 완료된 후에만 반영하며, 물리적 상호작용은 빠르게 변화하는 로봇-환경 상태를 추적해야 한다.",
+    "evidence": [
+      {
+        "page": 3,
+        "section": "Introduction",
+        "quote": "Existing embodied agent harnesses therefore remain largely open-loop: once execution begins, the agent does not continuously condition its decisions on the evolving robot-environment state, but instead follows fixed skills or preplanned trajectories and reflects only after the episode is completed.",
+        "type": "quote"
+      }
+    ]
+  },
+  "baselines": [
+    {
+      "name": "RPent",
+      "description": "기존의 정책 모델로, Zetta와 비교하여 추론 속도가 느리다.",
+      "limitation": "Zetta에 비해 추론 속도가 11.1배 느리다.",
+      "evidence": [
+        {
+          "page": 3,
+          "section": "Abstract",
+          "quote": "The Zetta inference latency decreases by 91% compared to RPent, i.e., an 11.1× speedup.",
+          "type": "quote"
+        }
+      ]
+    }
+  ],
+  "method_components": [
+    {
+      "name": "Critic-Governed Action Loop",
+      "description": "학습된 비평가를 행동 빈도에서 실행하고 필요한 경우 대응하는 복구 기술을 호출한다.",
+      "inputs": [
+        "학습된 비평가"
+      ],
+      "outputs": [
+        "대응하는 복구 기술 호출"
+      ],
+      "implementation_hint": "비평가가 행동 빈도에서 실행됨",
+      "role": "novel",
+      "evidence": [
+        {
+          "page": 3,
+          "section": "Introduction",
+          "quote": "First, a Critic-Governed Action Loop executes learned critics at action frequency and invokes the corresponding recovery skills when necessary.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "name": "Rollout-Batch Candidate Optimization Loop",
+      "description": "각 반복에서 실패를 클러스터링하고 진단한 후 후보 비평가와 복구를 제안한다.",
+      "inputs": [
+        "실패 클러스터링",
+        "진단"
+      ],
+      "outputs": [
+        "후보 비평가",
+        "복구 제안"
+      ],
+      "implementation_hint": "SkillOpt와 EmbodiSkill을 사용하여 안정적인 코드 공간 업데이트 수행",
+      "role": "novel",
+      "evidence": [
+        {
+          "page": 3,
+          "section": "Introduction",
+          "quote": "Second, a Rollout-Batch Candidate Optimization Loop clusters and diagnoses failures from each iteration, then proposes candidate critics and recoveries.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "name": "Validation-Gated Skill Update Loop",
+      "description": "성공률을 개선하고 롤아웃 전반에 걸쳐 일반화되는 비평가와 복구 후보만을 허용하여 기술 메모리에 추가한다.",
+      "inputs": [
+        "비평가 후보",
+        "복구 후보"
+      ],
+      "outputs": [
+        "기술 메모리 업데이트"
+      ],
+      "implementation_hint": "성공률 개선 및 일반화된 후보만 허용",
+      "role": "novel",
+      "evidence": [
+        {
+          "page": 3,
+          "section": "Introduction",
+          "quote": "Third, a Validation-Gated Skill Update Loop admits only critic and recovery candidates that improve success rate and generalize across rollouts, and then adds them to the skill memory.",
+          "type": "quote"
+        }
+      ]
+    }
+  ],
+  "benchmarks": [
+    {
+      "dataset": "LIBERO-Pro",
+      "metrics": [
+        "Success Rate"
+      ],
+      "baseline_results": {
+        "Goal (T)": "31.0%",
+        "Goal (S)": "38.0%",
+        "LIBERO-10 (T)": "50.0%",
+        "LIBERO-10 (S)": "9.0%"
+      },
+      "proposed_results": {
+        "Goal (T)": "92.5%",
+        "Goal (S)": "89.0%",
+        "LIBERO-10 (T)": "63.0%",
+        "LIBERO-10 (S)": "40.0%"
+      },
+      "evidence": [
+        {
+          "page": 26,
+          "section": "Results on Simulation benchmark",
+          "quote": "Compared with the frozen 𝜋0.5 baseline, Zetta improves the overall macro-average from 32.00% to 71.13%.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "dataset": "RoboCasa",
+      "metrics": [
+        "Success Rate"
+      ],
+      "baseline_results": {
+        "Average": "73.56%"
+      },
+      "proposed_results": {
+        "Average": "93.56%"
+      },
+      "evidence": [
+        {
+          "page": 26,
+          "section": "Results on Simulation benchmark",
+          "quote": "Compared with the frozen GR00T post-trained VLA, Zetta improves the macro-average success rate from 73.56% to 93.56%.",
+          "type": "quote"
+        }
+      ]
+    }
+  ],
+  "benchmark": null,
+  "claims": [
+    {
+      "claim_id": "claim_1",
+      "text": "Zetta는 코드 기반의 런타임 비평가와 복구 기술을 온라인으로 진화시키는 폐쇄 루프 구현을 제안한다.",
+      "claim_type": "method",
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "page": 3,
+          "section": "Introduction",
+          "quote": "We present Zetta, a closed-loop embodied harness that evolves code-based runtime critics and recovery skills online while keeping the base policy frozen.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "claim_id": "claim_2",
+      "text": "Zetta는 LIBERO-Pro와 RoboCasa에서 각각 90.8%와 93.6%의 성공률을 달성한다.",
+      "claim_type": "result",
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "page": 3,
+          "section": "Abstract",
+          "quote": "Zetta achieves state-of-the-art success on LIBERO-Pro and RoboCasa under our current rollout budget, reaching 90.8% and 93.6%.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "claim_id": "claim_3",
+      "text": "Zetta는 기존의 정책 모델과 비교하여 11.1배의 추론 속도 향상을 제공한다.",
+      "claim_type": "efficiency",
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "page": 3,
+          "section": "Abstract",
+          "quote": "The Zetta inference latency decreases by 91% compared to RPent, i.e., an 11.1× speedup.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "claim_id": "claim_4",
+      "text": "Zetta는 동일한 작업에서 지속적인 개선을 가능하게 하며, 제로샷 기술 전이를 지원한다.",
+      "claim_type": "method",
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "page": 3,
+          "section": "Abstract",
+          "quote": "Zetta enables sustained same-task improvement, zero-shot skill transfer, robotic 'Aha moment', and accelerated agent execution.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "claim_id": "claim_5",
+      "text": "Z-Infra는 에이전트 논리를 이종 하드웨어 리소스에서 분리하여 확장 가능한 롤아웃 생성을 지원한다.",
+      "claim_type": "architecture",
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "page": 3,
+          "section": "Introduction",
+          "quote": "We therefore propose and realize Z-Infra, to our knowledge the first rollout infrastructure designed specifically for self-evolving embodied agents.",
+          "type": "quote"
+        }
+      ]
+    }
+  ],
+  "extraction_mode": "full"
+}

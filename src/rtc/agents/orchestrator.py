@@ -13,7 +13,6 @@ from rtc.config import get_settings
 from rtc.schemas.skim import SkimSummary
 from rtc.storage.deep_store import DeepStore
 from rtc.storage.index_store import IndexStore
-from rtc.storage.skim_store import SkimStore
 
 
 @dataclass
@@ -55,9 +54,8 @@ class Orchestrator(BaseAgent[OrchestratorInput, OrchestratorOutput]):
 
     def __init__(self):
         self.settings = get_settings()
-        self.skim_store = SkimStore(self.settings.base_dir)
         self.deep_store = DeepStore(self.settings.base_dir, reports_dir=self.settings.reports_dir)
-        self.index_store = IndexStore(self.settings.base_dir)
+        self.index_store = IndexStore(self.settings.base_dir, index_dir=self.settings.index_dir)
 
     async def run(self, input: OrchestratorInput) -> OrchestratorOutput:
         """전체 파이프라인 실행.

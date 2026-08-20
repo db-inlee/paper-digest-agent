@@ -1,0 +1,57 @@
+{
+  "arxiv_id": "2608.18565",
+  "total_claims": 5,
+  "verified_count": 5,
+  "unverified_count": 0,
+  "contradicted_count": 0,
+  "overall_reliability": "high",
+  "results": [
+    {
+      "claim_id": "C1",
+      "claim_text": "SEMAPLC는 프로젝트에 기반한 생성과 외부 검증을 통해 PLC 코드 생성의 신뢰성을 높인다.",
+      "status": "verified",
+      "confidence": 1.0,
+      "evidence_found": "논문에서 SEMAPLC의 프로젝트 기반 생성과 외부 검증을 통한 신뢰성 향상에 대한 설명이 있음.",
+      "notes": "논문 1페이지, 2페이지에서 SEMAPLC의 방법론 설명.",
+      "correction_hint": null
+    },
+    {
+      "claim_id": "C2",
+      "claim_text": "SEMAPLC는 모든 모델에서 가장 높은 엄격한 검증 통과율을 달성한다.",
+      "status": "verified",
+      "confidence": 1.0,
+      "evidence_found": "표 1에서 SEMAPLC가 모든 모델에서 가장 높은 검증 통과율을 기록한 결과가 명시됨.",
+      "notes": "논문 6페이지, 표 1.",
+      "correction_hint": null
+    },
+    {
+      "claim_id": "C3",
+      "claim_text": "SEMAPLC는 프로젝트 트랙에서 통합 컴파일, 정적 행동, 동적 행동에서 가장 높은 평균을 기록한다.",
+      "status": "verified",
+      "confidence": 1.0,
+      "evidence_found": "표 2에서 SEMAPLC가 프로젝트 트랙에서 가장 높은 평균을 기록한 결과가 명시됨.",
+      "notes": "논문 7페이지, 표 2.",
+      "correction_hint": null
+    },
+    {
+      "claim_id": "C4",
+      "claim_text": "SEMAPLC의 동적 행동은 모든 모델에서 가장 우수하며, 가장 강력한 모델에서는 그 차이가 좁혀진다.",
+      "status": "verified",
+      "confidence": 1.0,
+      "evidence_found": "논문에서 SEMAPLC의 동적 행동이 모든 모델에서 우수하다는 내용과 강력한 모델에서의 차이가 좁혀진다는 설명이 있음.",
+      "notes": "논문 7페이지, 8페이지.",
+      "correction_hint": null
+    },
+    {
+      "claim_id": "C5",
+      "claim_text": "SEMAPLC는 런타임 검증을 통해 결함을 감지하고 수정하며, 런타임에서 검증된 솔루션을 제공한다.",
+      "status": "verified",
+      "confidence": 1.0,
+      "evidence_found": "논문에서 SEMAPLC가 런타임 검증을 통해 결함을 감지하고 수정하는 방법에 대한 설명이 있음.",
+      "notes": "논문 4페이지, 5페이지.",
+      "correction_hint": null
+    }
+  ],
+  "summary": "모든 클레임이 논문에서 지지되며, 실험 결과와 방법론이 명확하게 설명됨.",
+  "corrections_needed": []
+}
