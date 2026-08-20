@@ -11,10 +11,23 @@ from rtc.schemas.delta_v2 import DeltaOutput
 from rtc.schemas.extraction_v2 import ExtractionOutput
 from rtc.schemas.github_method import GitHubMethodOutput
 from rtc.schemas.scoring_v2 import ScoringOutput
-from rtc.schemas.skim import SkimSummary
+from rtc.schemas.skim import DailySkimOutput, SkimSummary
 from rtc.storage.code_store import CodeStore
 from rtc.storage.deep_store import DeepStore
 from rtc.storage.report_store import ReportStore
+from rtc.storage.skim_store import SkimStore
+from rtc.trend import aggregate_trends, render_trend_section
+
+
+def _is_iso_date(value: str) -> bool:
+    """True for a plain YYYY-MM-DD stem, so stray yaml files cannot join a window."""
+    if len(value) != 10:
+        return False
+    try:
+        datetime.strptime(value, "%Y-%m-%d")
+    except ValueError:
+        return False
+    return True
 
 
 @dataclass
@@ -120,8 +133,17 @@ class DailyReportAgent(BaseAgent[DailyReportInput, DailyReportOutput]):
             and p.category in {"agent", "rag", "reasoning"}
         ]
 
+        # 트렌드 브리핑 (토글 off면 이 경로 자체를 타지 않음)
+        trend_md = (
+            self._build_trend_section()
+            if self.settings.trend_section_enabled
+            else None
+        )
+
         # 마크다운 생성
-        markdown = self._generate_markdown(input.run_date, papers_data, skim_only)
+        markdown = self._generate_markdown(
+            input.run_date, papers_data, skim_only, trend_md
+        )
 
         # 저장
         report_path = self.report_store.save_daily_report(input.run_date, markdown)
@@ -148,11 +170,78 @@ class DailyReportAgent(BaseAgent[DailyReportInput, DailyReportOutput]):
 
         return create_paper_slug(arxiv_id, title)
 
+    def _build_trend_section(self) -> Optional[str]:
+        """Aggregate the recent skim window and render it, or None.
+
+        The SkimStore is built here rather than in __init__ because its
+        constructor creates the papers directory; with the toggle off nothing
+        about the trend path should run at all. Any failure degrades to no
+        section - a trend bug must never take the daily report down with it.
+        """
+        try:
+            window, previous = self._load_trend_window()
+            if not window:
+                return None
+
+            summary = aggregate_trends(
+                window,
+                previous,
+                self._resolve_trend_vocab(window),
+                top_tags=self.settings.trend_top_tags,
+                min_count=self.settings.trend_min_count,
+            )
+            return render_trend_section(summary) or None
+        except Exception as e:  # noqa: BLE001 - report generation must survive
+            print(f"  [Warn] Trend section skipped: {e}")
+            return None
+
+    def _load_trend_window(self) -> tuple[list[DailySkimOutput], list[DailySkimOutput]]:
+        """Load the most recent N stored skim files, plus the N before them.
+
+        The window is defined by files that exist, not by the calendar, so gaps
+        in the schedule shrink the window instead of emptying it.
+        """
+        store = SkimStore(self.settings.base_dir, papers_dir=self.settings.papers_dir)
+        dates = [d for d in store.list_dates() if _is_iso_date(d)]
+
+        size = max(self.settings.trend_window_days, 0)
+        if not size:
+            return [], []
+
+        window = self._load_dates(store, dates[:size])
+        previous = self._load_dates(store, dates[size : size * 2])
+        return window, previous
+
+    @staticmethod
+    def _load_dates(store: SkimStore, dates: list[str]) -> list[DailySkimOutput]:
+        """Load each date, skipping anything that no longer parses."""
+        loaded = []
+        for date in dates:
+            try:
+                output = store.load(date)
+            except Exception:  # noqa: BLE001 - a broken file must not sink the window
+                continue
+            if output is not None:
+                loaded.append(output)
+        return loaded
+
+    def _resolve_trend_vocab(self, window: list[DailySkimOutput]) -> list[str]:
+        """Resolve the vocabulary that decides what counts as an outside signal.
+
+        Stored snapshots win. Files written before the snapshot field existed
+        carry none, so fall back to the currently configured vocabulary.
+        """
+        snapshot = {kw for out in window for kw in (out.effective_keywords or [])}
+        if snapshot:
+            return sorted(snapshot)
+        return self.settings.get_effective_hf_keywords()
+
     def _generate_markdown(
         self,
         run_date: str,
         papers: list[PaperReportData],
         skim_only: list[SkimSummary] | None = None,
+        trend_md: str | None = None,
     ) -> str:
         """마크다운 리포트 생성.
 
@@ -165,11 +254,18 @@ class DailyReportAgent(BaseAgent[DailyReportInput, DailyReportOutput]):
             "> 이 리포트는 논문을 상세히 분석하기 위한 것이 아니라,",
             "> 최근 연구 흐름을 빠르게 파악하기 위한 데일리 요약입니다.",
             "",
+        ]
+
+        # 트렌드 브리핑은 헤더 바로 아래, 논문 섹션 위
+        if trend_md:
+            lines.append(trend_md)
+
+        lines.extend([
             f"## 📚 오늘의 논문 ({len(papers)}편)",
             "",
             "---",
             "",
-        ]
+        ])
 
         for i, paper in enumerate(papers, 1):
             lines.extend(self._render_paper(i, paper))
