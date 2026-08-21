@@ -169,6 +169,17 @@ class Settings(BaseSettings):
         description="Maximum number of papers for deep analysis per day",
     )
 
+    # Ranking-based Selection
+    ranking_enabled: bool = Field(
+        default=False,
+        alias="RANKING_ENABLED",
+        description=(
+            "deep 후보를 상대 순위로 선별할지 여부 (off면 기존 gatekeeper 정렬). "
+            "LLM listwise 순위가 위치 편향(입력 순서 추종)으로 판명되어 "
+            "프롬프트 재설계 전까지 기본 off"
+        ),
+    )
+
     # Trend Briefing
     trend_section_enabled: bool = Field(
         default=True,
@@ -220,6 +231,7 @@ class Settings(BaseSettings):
     agent_models: dict[str, str] = Field(
         default={
             "skim": "gpt-4o-mini",
+            "ranking": "gpt-4o-mini",
             "scoring": "gpt-4o-mini",
             "extraction": "gpt-4o",
             "delta": "gpt-4o",

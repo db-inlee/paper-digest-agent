@@ -10,6 +10,7 @@ from rtc.config import get_settings
 from rtc.schemas.delta_v2 import DeltaOutput
 from rtc.schemas.extraction_v2 import ExtractionOutput
 from rtc.schemas.github_method import GitHubMethodOutput
+from rtc.schemas.ranking import RankedPaper
 from rtc.schemas.scoring_v2 import ScoringOutput
 from rtc.schemas.skim import DailySkimOutput, SkimSummary
 from rtc.storage.code_store import CodeStore
@@ -17,6 +18,29 @@ from rtc.storage.deep_store import DeepStore
 from rtc.storage.report_store import ReportStore
 from rtc.storage.skim_store import SkimStore
 from rtc.trend import aggregate_trends, render_trend_section
+
+
+# Markers the notifier report parser keys on. Ranking reasons are free text
+# written by an LLM, so they are stripped before they reach the report.
+FORBIDDEN_REPORT_MARKERS = ("⭐", "**arXiv**:", "총점:")
+
+
+def _sanitize_reason(text: str, *, for_table: bool = False) -> str:
+    """Flatten a ranking reason into a report-safe single line.
+
+    Args:
+        text: 원본 이유 텍스트
+        for_table: 표 셀이면 파이프를 이스케이프한다
+
+    Returns:
+        정리된 한 줄 텍스트
+    """
+    cleaned = " ".join(text.split())
+    for marker in FORBIDDEN_REPORT_MARKERS:
+        cleaned = cleaned.replace(marker, "")
+    if for_table:
+        cleaned = cleaned.replace("|", "/")
+    return cleaned.strip()
 
 
 def _is_iso_date(value: str) -> bool:
@@ -118,11 +142,9 @@ class DailyReportAgent(BaseAgent[DailyReportInput, DailyReportOutput]):
             )
             papers_data.append(paper_data)
 
-        # 점수순 정렬
-        papers_data.sort(
-            key=lambda p: p.scoring.total if p.scoring else 0,
-            reverse=True,
-        )
+        # 순위 우선 정렬 (순위 없으면 기존 점수순)
+        ranking = self._load_ranking(input.run_date)
+        papers_data.sort(key=lambda p: self._order_key(p, ranking))
 
         # 스킴만 통과한 나머지 논문 추출
         deep_ids = set(input.deep_completed)
@@ -142,7 +164,7 @@ class DailyReportAgent(BaseAgent[DailyReportInput, DailyReportOutput]):
 
         # 마크다운 생성
         markdown = self._generate_markdown(
-            input.run_date, papers_data, skim_only, trend_md
+            input.run_date, papers_data, skim_only, trend_md, ranking
         )
 
         # 저장
@@ -169,6 +191,44 @@ class DailyReportAgent(BaseAgent[DailyReportInput, DailyReportOutput]):
         from rtc.storage.deep_store import create_paper_slug
 
         return create_paper_slug(arxiv_id, title)
+
+    def _load_ranking(self, run_date: str) -> dict[str, RankedPaper]:
+        """Load today's stored ranking as an arxiv_id lookup.
+
+        Returns an empty mapping when the toggle is off, when the day was never
+        ranked, or when the file cannot be read - the report then keeps its
+        previous score-ordered behaviour. Papers missing from the mapping are a
+        normal case: a same-date rerun unions ``papers`` while ``ranking``
+        describes only the latest run's candidates.
+        """
+        if not self.settings.ranking_enabled:
+            return {}
+
+        # Reading must not create anything: SkimStore's constructor makes the
+        # papers directory, so a run with nothing stored stays a pure read.
+        if not self.settings.papers_dir.exists():
+            return {}
+
+        try:
+            store = SkimStore(self.settings.base_dir, papers_dir=self.settings.papers_dir)
+            output = store.load(run_date)
+        except Exception as e:  # noqa: BLE001 - a bad file must not sink the report
+            print(f"  [Warn] Ranking not loaded: {e}")
+            return {}
+
+        if output is None or not output.ranking:
+            return {}
+        return {entry.arxiv_id: entry for entry in output.ranking}
+
+    @staticmethod
+    def _order_key(
+        paper: PaperReportData, ranking: dict[str, RankedPaper]
+    ) -> tuple[int, int, int]:
+        """Sort ranked papers first (rank asc), then the rest by score desc."""
+        entry = ranking.get(paper.arxiv_id)
+        if entry is not None:
+            return (0, entry.rank, 0)
+        return (1, 0, -(paper.scoring.total if paper.scoring else 0))
 
     def _build_trend_section(self) -> Optional[str]:
         """Aggregate the recent skim window and render it, or None.
@@ -242,6 +302,7 @@ class DailyReportAgent(BaseAgent[DailyReportInput, DailyReportOutput]):
         papers: list[PaperReportData],
         skim_only: list[SkimSummary] | None = None,
         trend_md: str | None = None,
+        ranking: dict[str, RankedPaper] | None = None,
     ) -> str:
         """마크다운 리포트 생성.
 
@@ -268,12 +329,12 @@ class DailyReportAgent(BaseAgent[DailyReportInput, DailyReportOutput]):
         ])
 
         for i, paper in enumerate(papers, 1):
-            lines.extend(self._render_paper(i, paper))
+            lines.extend(self._render_paper(i, paper, ranking))
             lines.append("")
 
         # 스킴 요약 섹션
         if skim_only:
-            lines.extend(self._render_skim_summary_section(skim_only))
+            lines.extend(self._render_skim_summary_section(skim_only, ranking))
 
         # 푸터
         lines.extend([
@@ -284,26 +345,56 @@ class DailyReportAgent(BaseAgent[DailyReportInput, DailyReportOutput]):
 
         return "\n".join(lines)
 
-    def _render_skim_summary_section(self, papers: list[SkimSummary]) -> list[str]:
-        """스킴만 통과한 논문을 테이블 형식으로 렌더링."""
+    def _render_skim_summary_section(
+        self,
+        papers: list[SkimSummary],
+        ranking: dict[str, RankedPaper] | None = None,
+    ) -> list[str]:
+        """스킴만 통과한 논문을 테이블 형식으로 렌더링.
+
+        탈락 사유는 반드시 **마지막 열**로만 붙인다. notifier의 표 파서는 앞
+        다섯 칸만 소비하므로(converter.py), 중간에 끼우면 마지막으로 읽히는
+        한줄 요약 자리가 사유로 오염된다.
+        """
+        reasons = {
+            paper.arxiv_id: _sanitize_reason(ranking[paper.arxiv_id].reason, for_table=True)
+            for paper in papers
+            if ranking and paper.arxiv_id in ranking
+        }
+        with_reasons = bool(reasons)
+
+        header = "| # | 논문 | 키워드 | 카테고리 | 한줄 요약 |"
+        divider = "|---|------|--------|----------|-----------|"
+        if with_reasons:
+            header += " 선정 제외 사유 |"
+            divider += "-----------|"
+
         lines = [
             "---",
             "",
             f"## 📋 기타 주목할 논문",
             "",
-            "| # | 논문 | 키워드 | 카테고리 | 한줄 요약 |",
-            "|---|------|--------|----------|-----------|",
+            header,
+            divider,
         ]
 
         for i, paper in enumerate(papers, 1):
             keywords = ", ".join(f"`{kw}`" for kw in paper.matched_keywords) if paper.matched_keywords else ""
             title_link = f"[{paper.title}]({paper.link})"
-            lines.append(f"| {i} | {title_link} | {keywords} | {paper.category} | {paper.one_liner} |")
+            row = f"| {i} | {title_link} | {keywords} | {paper.category} | {paper.one_liner} |"
+            if with_reasons:
+                row += f" {reasons.get(paper.arxiv_id, '')} |"
+            lines.append(row)
 
         lines.append("")
         return lines
 
-    def _render_paper(self, index: int, paper: PaperReportData) -> list[str]:
+    def _render_paper(
+        self,
+        index: int,
+        paper: PaperReportData,
+        ranking: dict[str, RankedPaper] | None = None,
+    ) -> list[str]:
         """개별 논문 렌더링 (상세 버전)."""
         lines = []
 
@@ -322,6 +413,11 @@ class DailyReportAgent(BaseAgent[DailyReportInput, DailyReportOutput]):
                 lines.append(f"**GitHub**: [{paper.skim.github_url}]({paper.skim.github_url})")
             if paper.skim.matched_keywords:
                 lines.append(f"**매칭 키워드**: {', '.join(paper.skim.matched_keywords)}")
+            entry = (ranking or {}).get(paper.arxiv_id)
+            if entry is not None:
+                lines.append(
+                    f"**선정 이유** (순위 {entry.rank}위): {_sanitize_reason(entry.reason)}"
+                )
             lines.append("")
 
         # 2. 왜 이 논문인가? (점수 상세 + 평가 근거 + 주요 강점)
