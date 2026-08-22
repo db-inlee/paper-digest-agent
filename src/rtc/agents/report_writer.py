@@ -8,7 +8,7 @@ from rtc.agents.base import BaseAgent
 from rtc.config import get_settings
 from rtc.llm import get_llm_client
 from rtc.schemas.delta_v2 import DeltaOutput
-from rtc.schemas.extraction_v2 import ExtractionOutput
+from rtc.schemas.extraction_v2 import CLAIM_TYPE_LABELS, ExtractionOutput
 from rtc.schemas.scoring_v2 import ScoringOutput
 from rtc.schemas.skim import SkimSummary
 
@@ -218,16 +218,9 @@ class ReportWriter(BaseAgent[ReportInput, str]):
                 by_type[c.claim_type] = []
             by_type[c.claim_type].append(c)
 
-        type_labels = {
-            "method": "방법론 클레임",
-            "result": "결과 클레임",
-            "comparison": "비교 클레임",
-            "limitation": "한계 클레임",
-        }
-
         lines = []
         for claim_type, claims in by_type.items():
-            label = type_labels.get(claim_type, claim_type)
+            label = CLAIM_TYPE_LABELS.get(claim_type, claim_type)
             lines.append(f"### {label}")
             for c in claims:
                 evidence = c.evidence[0].to_pointer() if c.evidence else ""

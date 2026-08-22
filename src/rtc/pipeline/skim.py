@@ -8,9 +8,11 @@ from langsmith.run_helpers import traceable
 
 from rtc.agents.fetcher import CandidateFetcher, FetchInput
 from rtc.agents.gatekeeper import Gatekeeper
+from rtc.agents.ranking_agent import RankingAgent, RankingInput
 from rtc.agents.skim import UltraSkimAgent
 from rtc.config import get_settings
 from rtc.schemas import PaperCandidate
+from rtc.schemas.ranking import RankedPaper, RankingMethod
 from rtc.schemas.skim import BatchSkimResult, DailySkimOutput, SkimSummary
 from rtc.storage.skim_store import SkimStore
 
@@ -47,6 +49,10 @@ class SkimState(TypedDict, total=False):
 
     # 어휘 스냅샷
     effective_keywords: list[str]
+
+    # 상대 순위
+    ranking: Optional[list[RankedPaper]]
+    ranking_method: Optional[RankingMethod]
 
     # 에러
     errors: Annotated[list[dict], merge_errors]
@@ -145,6 +151,60 @@ async def gate_node(state: SkimState) -> dict:
         }
 
 
+async def rank_node(state: SkimState) -> dict:
+    """상대 순위 노드 (LLM).
+
+    gate가 이미 채워 둔 ``deep_candidates``를 **순위가 성공했을 때만** 덮어씁니다.
+    호출 실패·파싱 실패·건전성 위반이면 아무것도 반환하지 않아 기존 선별이
+    그대로 남습니다. 토글이 꺼져 있으면 LLM을 호출하지 않고 즉시 빠집니다.
+    """
+    settings = get_settings()
+    if not settings.ranking_enabled:
+        return {}
+
+    skim_result = state.get("skim_result")
+    if skim_result is None:
+        return {}
+
+    # 필터 정의를 복제하지 않기 위해 gatekeeper의 1~2단계 결과를 재사용한다
+    # (비-LLM 순수 계산이라 재실행 비용이 없다).
+    gatekeeper = Gatekeeper(
+        interest_threshold=settings.skim_interest_threshold,
+        max_deep_papers=settings.max_deep_papers_per_day,
+    )
+    qualified = (await gatekeeper.run(skim_result)).qualified
+    if len(qualified) < 2:
+        return {}
+
+    agent = RankingAgent()
+    try:
+        result = await agent.run(
+            RankingInput(
+                run_date=state.get("run_date", ""),
+                papers=qualified,
+                candidates=state.get("candidates", []),
+                top_n=settings.max_deep_papers_per_day,
+            )
+        )
+    except Exception as e:
+        return {
+            "ranking_method": "fallback",
+            "errors": [{"node": "rank", "error": str(e)}],
+        }
+
+    if not result.ok:
+        return {
+            "ranking_method": "fallback",
+            "errors": [{"node": "rank", "error": result.error or "Ranking unusable"}],
+        }
+
+    return {
+        "deep_candidates": result.top_ids(settings.max_deep_papers_per_day),
+        "ranking": result.ranked,
+        "ranking_method": result.method,
+    }
+
+
 async def save_skim_node(state: SkimState) -> dict:
     """스킴 결과 저장 노드."""
     run_date = state.get("run_date", datetime.now().strftime("%Y-%m-%d"))
@@ -167,6 +227,8 @@ async def save_skim_node(state: SkimState) -> dict:
         effective_keywords=state.get("effective_keywords", []),
         papers=all_papers,
         deep_candidates=deep_candidates,
+        ranking=state.get("ranking"),
+        ranking_method=state.get("ranking_method"),
     )
 
     # 저장
@@ -205,6 +267,7 @@ def build_skim_pipeline() -> StateGraph:
     graph.add_node("fetch", fetch_node)
     graph.add_node("skim", skim_node)
     graph.add_node("gate", gate_node)
+    graph.add_node("rank", rank_node)
     graph.add_node("save_skim", save_skim_node)
 
     # 엔트리 포인트
@@ -220,7 +283,8 @@ def build_skim_pipeline() -> StateGraph:
         },
     )
     graph.add_edge("skim", "gate")
-    graph.add_edge("gate", "save_skim")
+    graph.add_edge("gate", "rank")
+    graph.add_edge("rank", "save_skim")
     graph.add_edge("save_skim", END)
 
     return graph
@@ -278,6 +342,7 @@ if __name__ == "__main__":
     print(f"Total after filter: {result.get('total_after_filter', 0)}")
     print(f"Total skimmed: {result.get('total_skimmed', 0)}")
     print(f"Deep candidates: {result.get('deep_candidates', [])}")
+    print(f"Ranking method: {result.get('ranking_method') or 'disabled'}")
 
     if result.get("errors"):
         print(f"\nErrors:")

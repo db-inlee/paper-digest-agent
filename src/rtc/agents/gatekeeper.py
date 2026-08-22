@@ -1,6 +1,7 @@
 """Gatekeeper 에이전트 - Deep 분석 대상 결정 (비-LLM)."""
 
 from dataclasses import dataclass
+from dataclasses import field as dc_field
 
 from rtc.agents.base import BaseAgent
 from rtc.config import get_settings
@@ -15,6 +16,8 @@ class GatekeeperOutput:
     all_papers: list[SkimSummary]  # 전체 스킴 결과
     filtered_count: int  # 필터링된 논문 수
     reason: str  # 선택 이유
+    # 카테고리·임계 통과 풀. 순위 층이 필터 정의를 복제하지 않고 재사용한다.
+    qualified: list[SkimSummary] = dc_field(default_factory=list)
 
 
 class Gatekeeper(BaseAgent[BatchSkimResult, GatekeeperOutput]):
@@ -61,6 +64,7 @@ class Gatekeeper(BaseAgent[BatchSkimResult, GatekeeperOutput]):
                 all_papers=[],
                 filtered_count=0,
                 reason="스킴된 논문 없음",
+                qualified=[],
             )
 
         # 1. 관심 카테고리 필터링 (agent, rag, reasoning만)
@@ -98,6 +102,7 @@ class Gatekeeper(BaseAgent[BatchSkimResult, GatekeeperOutput]):
             all_papers=papers,
             filtered_count=len(qualified),
             reason=reason,
+            qualified=qualified,
         )
 
     def get_paper_by_id(

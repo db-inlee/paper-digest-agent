@@ -97,6 +97,19 @@ class ClaimWithEvidence(BaseModel):
     evidence: list[Evidence] = Field(default_factory=list)
 
 
+# 표시용 라벨. 매핑은 편의일 뿐이며, 렌더러는 여기에 없는 값도 원문 그대로 출력해야 한다
+# (매핑이 없다는 이유로 클레임이 사라지면 안 됨).
+CLAIM_TYPE_LABELS: dict[str, str] = {
+    "method": "방법론 클레임",
+    "result": "결과 클레임",
+    "comparison": "비교 클레임",
+    "limitation": "한계 클레임",
+    "architecture": "구조 클레임",
+    "efficiency": "효율 클레임",
+    "ablation": "어블레이션 클레임",
+}
+
+
 class ExtractionOutput(BaseModel):
     """Extraction Agent 출력 - extraction.json 스키마."""
 

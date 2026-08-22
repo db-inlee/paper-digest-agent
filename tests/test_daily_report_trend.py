@@ -68,14 +68,19 @@ def test_empty_trend_md_renders_no_section(agent):
 
 
 @pytest.mark.asyncio
-async def test_toggle_off_produces_the_untouched_report(agent, monkeypatch):
+async def test_toggle_off_produces_the_untouched_report(agent, monkeypatch, make_summary):
     monkeypatch.setattr(agent.settings, "trend_section_enabled", False)
 
     result = await agent.run(DailyReportInput("2026-01-01", [], []))
     markdown = (agent.report_store.get_report_path("2026-01-01")).read_text(encoding="utf-8")
 
+    # 저장된 그날 스킴에 qualified 논문이 하나 있으므로 기타 표에 실린다.
+    expected = agent._generate_markdown(
+        "2026-01-01", [], [make_summary("2601.00001")], None
+    )
+
     assert TREND_MARKER not in markdown
-    assert body(markdown) == body(agent._generate_markdown("2026-01-01", [], [], None))
+    assert body(markdown) == body(expected)
     assert result.total_papers == 0
 
 

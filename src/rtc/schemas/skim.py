@@ -5,6 +5,8 @@ from typing import Literal, Optional
 
 from pydantic import BaseModel, Field
 
+from rtc.schemas.ranking import RankedPaper, RankingMethod
+
 
 class SkimSummary(BaseModel):
     """Ultra-Skim 결과 (단일 논문)."""
@@ -71,6 +73,14 @@ class DailySkimOutput(BaseModel):
     papers: list[SkimSummary] = Field(default_factory=list)
     deep_candidates: list[str] = Field(
         default_factory=list, description="Deep 분석 대상 arxiv_ids"
+    )
+    # 순위는 그 실행의 후보만 설명한다. 같은 날 재실행 후 papers가 합집합으로
+    # 커지면 ranking이 없는 논문이 생기는데, 이는 정상 케이스다.
+    ranking: Optional[list[RankedPaper]] = Field(
+        default=None, description="상대 순위 결과 (없으면 순위 미적용)"
+    )
+    ranking_method: Optional[RankingMethod] = Field(
+        default=None, description="llm | fallback"
     )
     skimmed_at: datetime = Field(default_factory=datetime.now)
 
