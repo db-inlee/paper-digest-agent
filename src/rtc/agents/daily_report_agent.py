@@ -8,7 +8,7 @@ from typing import Optional
 from rtc.agents.base import BaseAgent
 from rtc.config import get_settings
 from rtc.schemas.delta_v2 import DeltaOutput
-from rtc.schemas.extraction_v2 import ExtractionOutput
+from rtc.schemas.extraction_v2 import CLAIM_TYPE_LABELS, ExtractionOutput
 from rtc.schemas.github_method import GitHubMethodOutput
 from rtc.schemas.ranking import RankedPaper
 from rtc.schemas.scoring_v2 import ScoringOutput
@@ -23,6 +23,10 @@ from rtc.trend import aggregate_trends, render_trend_section
 # Markers the notifier report parser keys on. Ranking reasons are free text
 # written by an LLM, so they are stripped before they reach the report.
 FORBIDDEN_REPORT_MARKERS = ("⭐", "**arXiv**:", "총점:")
+
+# 인용 검증에 실패한 판정임을 독자에게 알리는 접미. delta_quote 자체는
+# 리포트에 노출하지 않고 yaml에만 남긴다(감사용).
+UNVERIFIED_SUFFIX = " (인용 근거 미검증)"
 
 
 def _sanitize_reason(text: str, *, for_table: bool = False) -> str:
@@ -41,6 +45,22 @@ def _sanitize_reason(text: str, *, for_table: bool = False) -> str:
     if for_table:
         cleaned = cleaned.replace("|", "/")
     return cleaned.strip()
+
+
+def _reason_text(entry: RankedPaper, *, for_table: bool = False) -> str:
+    """Render an entry's reason, flagging judgements whose citation failed.
+
+    Args:
+        entry: 순위 항목
+        for_table: 표 셀 여부
+
+    Returns:
+        렌더용 이유 텍스트
+    """
+    text = _sanitize_reason(entry.reason, for_table=for_table)
+    if entry.verified:
+        return text
+    return f"{text}{UNVERIFIED_SUFFIX}"
 
 
 def _is_iso_date(value: str) -> bool:
@@ -112,44 +132,26 @@ class DailyReportAgent(BaseAgent[DailyReportInput, DailyReportOutput]):
         Returns:
             출력 데이터
         """
-        papers_data: list[PaperReportData] = []
+        # 그날 저장된 스킴 결과가 정본이다. 재실행이 이전 실행의 논문을 지우지
+        # 않도록, 저장된 목록과 이번 실행이 아는 목록의 합집합으로 재구성한다.
+        day = self._load_day_skim(input.run_date)
+        skim_pool = self._merge_skim_pool(day, input.all_papers)
+        target_ids = self._collect_target_ids(day, input.deep_completed)
 
-        # 중복 제거
-        seen_ids: set[str] = set()
-        unique_completed = []
-        for aid in input.deep_completed:
-            if aid not in seen_ids:
-                seen_ids.add(aid)
-                unique_completed.append(aid)
-
-        # 각 논문 데이터 수집
-        for arxiv_id in unique_completed:
-            skim = self._find_skim(arxiv_id, input.all_papers)
-            if not skim:
-                continue
-
-            slug = self._get_paper_slug(arxiv_id, skim.title)
-
-            paper_data = PaperReportData(
-                slug=slug,
-                arxiv_id=arxiv_id,
-                title=skim.title,
-                skim=skim,
-                extraction=self.deep_store.load_extraction(slug),
-                delta=self.deep_store.load_delta(slug),
-                scoring=self.deep_store.load_scoring(slug),
-                github_method=self.code_store.load_github_method(slug),
-            )
-            papers_data.append(paper_data)
+        papers_data = [
+            data
+            for arxiv_id in target_ids
+            if (data := self._build_paper_data(arxiv_id, skim_pool)) is not None
+        ]
 
         # 순위 우선 정렬 (순위 없으면 기존 점수순)
         ranking = self._load_ranking(input.run_date)
         papers_data.sort(key=lambda p: self._order_key(p, ranking))
 
         # 스킴만 통과한 나머지 논문 추출
-        deep_ids = set(input.deep_completed)
+        deep_ids = {p.arxiv_id for p in papers_data}
         skim_only = [
-            p for p in input.all_papers
+            p for p in skim_pool.values()
             if p.arxiv_id not in deep_ids
             and p.interest_score >= 4
             and p.category in {"agent", "rag", "reasoning"}
@@ -192,6 +194,109 @@ class DailyReportAgent(BaseAgent[DailyReportInput, DailyReportOutput]):
 
         return create_paper_slug(arxiv_id, title)
 
+    def _load_day_skim(self, run_date: str) -> Optional[DailySkimOutput]:
+        """Load the stored skim output for a date, or None.
+
+        Reading must not create anything: SkimStore's constructor makes the
+        papers directory, so a run with nothing stored stays a pure read.
+        A missing or unreadable file is not fatal - the caller falls back to
+        whatever the current run passed in.
+        """
+        if not self.settings.papers_dir.exists():
+            return None
+        try:
+            store = SkimStore(self.settings.base_dir, papers_dir=self.settings.papers_dir)
+            return store.load(run_date)
+        except Exception as e:  # noqa: BLE001 - a bad file must not sink the report
+            print(f"  [Warn] Skim output not loaded for {run_date}: {e}")
+            return None
+
+    @staticmethod
+    def _merge_skim_pool(
+        day: Optional[DailySkimOutput], run_papers: list[SkimSummary]
+    ) -> dict[str, SkimSummary]:
+        """arxiv_id -> SkimSummary, stored first then this run's records.
+
+        The stored file is the merged view of every run for that date; the
+        current run may still know a paper the file does not (a lost yaml).
+        """
+        pool: dict[str, SkimSummary] = {}
+        for paper in (day.papers if day else []):
+            pool[paper.arxiv_id] = paper
+        for paper in run_papers:
+            pool.setdefault(paper.arxiv_id, paper)
+        return pool
+
+    @staticmethod
+    def _collect_target_ids(
+        day: Optional[DailySkimOutput], deep_completed: list[str]
+    ) -> list[str]:
+        """Union of the stored deep candidates and this run's completions.
+
+        Stored order comes first so a rerun appends rather than reshuffles.
+        Duplicates are dropped while preserving first appearance.
+        """
+        ordered: list[str] = []
+        seen: set[str] = set()
+        for arxiv_id in list(day.deep_candidates if day else []) + list(deep_completed):
+            if arxiv_id not in seen:
+                seen.add(arxiv_id)
+                ordered.append(arxiv_id)
+        return ordered
+
+    def _resolve_slug(self, arxiv_id: str, title: Optional[str]) -> Optional[str]:
+        """Find the stored directory for a paper.
+
+        The slug is recomputed with the same pure function the pipeline used at
+        save time. When the title differs from what was stored (a manually
+        added paper, a reworded record), fall back to matching the directory by
+        its arxiv_id prefix.
+        """
+        if title:
+            slug = self._get_paper_slug(arxiv_id, title)
+            if self.deep_store.paper_exists(slug):
+                return slug
+
+        prefix = f"{arxiv_id}-"
+        for candidate in self.deep_store.list_papers():
+            if candidate.startswith(prefix):
+                return candidate
+        return None
+
+    def _build_paper_data(
+        self, arxiv_id: str, skim_pool: dict[str, SkimSummary]
+    ) -> Optional[PaperReportData]:
+        """Assemble one paper from its stored artifacts, or None to skip it.
+
+        A paper is skipped when it has no stored directory (selected but never
+        analysed) and when its artifacts cannot be loaded - older files predate
+        current schema constraints and must not take the whole report down.
+        """
+        skim = skim_pool.get(arxiv_id)
+        slug = self._resolve_slug(arxiv_id, skim.title if skim else None)
+        if slug is None:
+            return None
+
+        try:
+            extraction = self.deep_store.load_extraction(slug)
+            delta = self.deep_store.load_delta(slug)
+            scoring = self.deep_store.load_scoring(slug)
+            github_method = self.code_store.load_github_method(slug)
+        except Exception as e:  # noqa: BLE001 - one bad artifact must not sink the report
+            print(f"  [Warn] Artifacts not loaded for {arxiv_id} ({slug}): {e}")
+            return None
+
+        return PaperReportData(
+            slug=slug,
+            arxiv_id=arxiv_id,
+            title=skim.title if skim else (extraction.title if extraction else arxiv_id),
+            skim=skim,
+            extraction=extraction,
+            delta=delta,
+            scoring=scoring,
+            github_method=github_method,
+        )
+
     def _load_ranking(self, run_date: str) -> dict[str, RankedPaper]:
         """Load today's stored ranking as an arxiv_id lookup.
 
@@ -204,18 +309,7 @@ class DailyReportAgent(BaseAgent[DailyReportInput, DailyReportOutput]):
         if not self.settings.ranking_enabled:
             return {}
 
-        # Reading must not create anything: SkimStore's constructor makes the
-        # papers directory, so a run with nothing stored stays a pure read.
-        if not self.settings.papers_dir.exists():
-            return {}
-
-        try:
-            store = SkimStore(self.settings.base_dir, papers_dir=self.settings.papers_dir)
-            output = store.load(run_date)
-        except Exception as e:  # noqa: BLE001 - a bad file must not sink the report
-            print(f"  [Warn] Ranking not loaded: {e}")
-            return {}
-
+        output = self._load_day_skim(run_date)
         if output is None or not output.ranking:
             return {}
         return {entry.arxiv_id: entry for entry in output.ranking}
@@ -357,7 +451,7 @@ class DailyReportAgent(BaseAgent[DailyReportInput, DailyReportOutput]):
         한줄 요약 자리가 사유로 오염된다.
         """
         reasons = {
-            paper.arxiv_id: _sanitize_reason(ranking[paper.arxiv_id].reason, for_table=True)
+            paper.arxiv_id: _reason_text(ranking[paper.arxiv_id], for_table=True)
             for paper in papers
             if ranking and paper.arxiv_id in ranking
         }
@@ -416,7 +510,7 @@ class DailyReportAgent(BaseAgent[DailyReportInput, DailyReportOutput]):
             entry = (ranking or {}).get(paper.arxiv_id)
             if entry is not None:
                 lines.append(
-                    f"**선정 이유** (순위 {entry.rank}위): {_sanitize_reason(entry.reason)}"
+                    f"**선정 이유** (순위 {entry.rank}위): {_reason_text(entry)}"
                 )
             lines.append("")
 
@@ -586,21 +680,17 @@ class DailyReportAgent(BaseAgent[DailyReportInput, DailyReportOutput]):
 
         lines.append("## 주요 클레임")
 
-        # 유형별 그룹화
-        claim_types = {
-            "method": "방법론 클레임",
-            "result": "결과 클레임",
-            "comparison": "비교 클레임",
-            "limitation": "한계 클레임",
-        }
+        # 데이터를 순회한다. 라벨 매핑을 순회하면 매핑에 없는 claim_type의 클레임이
+        # 조용히 사라진다 - 매핑은 표시 편의일 뿐 필터가 아니다.
+        by_type: dict[str, list] = {}
+        for claim in extraction.claims:
+            by_type.setdefault(claim.claim_type, []).append(claim)
 
-        for claim_type, label in claim_types.items():
-            type_claims = [c for c in extraction.claims if c.claim_type == claim_type]
-            if type_claims:
-                lines.append(f"### {label}")
-                for claim in type_claims:
-                    lines.append(f"- {claim.text}")
-                lines.append("")
+        for claim_type, type_claims in by_type.items():
+            lines.append(f"### {CLAIM_TYPE_LABELS.get(claim_type, claim_type)}")
+            for claim in type_claims:
+                lines.append(f"- {claim.text}")
+            lines.append("")
 
         return lines
 
