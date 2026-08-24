@@ -12,6 +12,7 @@ from rich.table import Table
 
 from .config import settings
 from .converter import parse_report, to_slack_payload, to_slack_payload_interactive
+from .enrich import enrich_papers
 from .reader import get_latest_report_date, list_available_reports, read_daily_report
 from .sender import SlackSendError, send_to_slack_sync
 from .storage import vote_store
@@ -54,6 +55,7 @@ def send(
         rprint(f"[blue]Reading report for {date}...[/blue]")
         content = read_daily_report(date)
         papers, skim_papers = parse_report(content)
+        papers = enrich_papers(papers)
 
         if not papers:
             rprint("[yellow]No papers found in the report.[/yellow]")
@@ -74,7 +76,7 @@ def send(
                     "idea_count": votes["idea_count"],
                     "pass_count": votes["pass_count"],
                 }
-            payload = to_slack_payload_interactive(papers, date, vote_counts)
+            payload = to_slack_payload_interactive(papers, date, vote_counts, skim_papers)
             rprint("[cyan]Interactive mode: voting buttons included[/cyan]")
         else:
             payload = to_slack_payload(papers, date, skim_papers)

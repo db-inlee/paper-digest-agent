@@ -24,6 +24,7 @@ from pydantic import BaseModel
 from .analysis import find_paper_dir, load_paper_detail
 from .config import settings
 from .converter import parse_report, to_slack_blocks_interactive, to_slack_payload_interactive
+from .enrich import enrich_papers
 from .reader import list_available_reports, read_daily_report
 from .scheduler import start_scheduler, stop_scheduler
 from .storage import comment_store, vote_store
@@ -48,6 +49,7 @@ def _send_report_to_slack(target_date: str) -> None:
 
         content = read_daily_report(target_date)
         papers, skim_papers = parse_report(content)
+        papers = enrich_papers(papers)
         if not papers and not skim_papers:
             logger.warning("No papers found in report for %s, skipping Slack send", target_date)
             return
@@ -451,9 +453,12 @@ async def update_message_votes(payload: dict[str, Any], report_date: str) -> Non
         return
 
     try:
-        # Re-parse the report to get paper info
+        # Re-parse the report to get paper info. The skim list has to be carried
+        # through as well: replace_original swaps the whole message, so dropping
+        # it here would delete the skim section on the first vote.
         content = read_daily_report(report_date)
-        papers, _ = parse_report(content)
+        papers, skim_papers = parse_report(content)
+        papers = enrich_papers(papers)
 
         # Get current vote counts for all papers
         vote_counts = {}
@@ -466,7 +471,7 @@ async def update_message_votes(payload: dict[str, Any], report_date: str) -> Non
             }
 
         # Generate updated blocks
-        new_blocks = to_slack_blocks_interactive(papers, report_date, vote_counts)
+        new_blocks = to_slack_blocks_interactive(papers, report_date, vote_counts, skim_papers)
 
         # Send update via response_url
         async with httpx.AsyncClient() as client:

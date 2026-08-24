@@ -1,54 +1,21 @@
-"""Markdown parser and Slack Block Kit converter."""
+"""Markdown parser and Slack Block Kit converter.
+
+Block budget: Slack caps a message at 50 blocks and a section at 3000
+characters. A paper is rendered as one combined section rather than one block
+per field, because the per-paper text averages ~780 characters - a fraction of
+the section limit - while one block per field burned the block budget at five
+papers and silently dropped the whole message.
+"""
 
 import re
 from typing import Any
 
-from .models import PaperSummary, SkimPaper
+from .models import BenchmarkEntry, PaperSummary, SkimPaper
 
-
-def _condense_methodology(raw: str) -> str:
-    """Condense verbose methodology into compact Slack-friendly format.
-
-    Extracts component names and descriptions only,
-    skipping inputs/outputs/implementation hints.
-    """
-    lines = raw.split("\n")
-    components: list[tuple[str, str]] = []
-    current_name: str | None = None
-    current_desc: list[str] = []
-
-    for line in lines:
-        stripped = line.strip()
-        # Component header: **Name**
-        bold_match = re.match(r"^\*\*(.+?)\*\*$", stripped)
-        if bold_match:
-            if current_name:
-                components.append((current_name, " ".join(current_desc).strip()))
-            current_name = bold_match.group(1)
-            current_desc = []
-            continue
-
-        # Skip detail lines
-        if stripped.startswith("- **입력**") or stripped.startswith("- **출력**") or stripped.startswith("- **구현 힌트**"):
-            continue
-
-        # Collect description (non-empty, non-bullet)
-        if current_name and stripped and not stripped.startswith("- "):
-            current_desc.append(stripped)
-
-    if current_name:
-        components.append((current_name, " ".join(current_desc).strip()))
-
-    if not components:
-        return raw[:300] + "…" if len(raw) > 300 else raw
-
-    result = []
-    for name, desc in components:
-        if desc:
-            result.append(f"• *{name}*: {desc}")
-        else:
-            result.append(f"• *{name}*")
-    return "\n".join(result)
+SECTION_TEXT_LIMIT = 3000
+_SECTION_TEXT_MARGIN = 100
+MAX_SKIM_KEYWORDS = 3
+SKIM_ONE_LINER_LIMIT = 60
 
 
 def parse_report(
@@ -209,75 +176,99 @@ def _parse_skim_summary_section(content: str) -> list[SkimPaper]:
     return papers
 
 
-def to_slack_blocks(
-    papers: list[PaperSummary],
-    date: str,
-    skim_papers: list[SkimPaper] | None = None,
-) -> list[dict[str, Any]]:
-    """Convert paper summaries to Slack Block Kit format.
+def _format_benchmark(entry: BenchmarkEntry) -> str:
+    """Render one benchmark row.
 
-    Args:
-        papers: List of parsed paper summaries.
-        date: Report date string.
-        skim_papers: Optional list of skim-only papers.
-
-    Returns:
-        Slack Block Kit blocks list.
+    Result dict keys carry two different meanings across the corpus: metric
+    names for ~24% of entries and system names for the rest. When both sides
+    share keys they are metric names, so baseline and proposed can be shown as a
+    direct before/after; otherwise the two sides are listed separately because
+    pairing them would invent a comparison the data does not make.
     """
-    blocks: list[dict[str, Any]] = []
-
-    # Header
-    blocks.append({
-        "type": "header",
-        "text": {
-            "type": "plain_text",
-            "text": f"📚 Paper Digest - {date}",
-            "emoji": True
-        }
-    })
-
-    blocks.append({
-        "type": "context",
-        "elements": [{
-            "type": "mrkdwn",
-            "text": f"오늘의 논문 *{len(papers)}*편"
-        }]
-    })
-
-    blocks.append({"type": "divider"})
-
-    # Each paper
-    for i, paper in enumerate(papers):
-        blocks.extend(_paper_to_blocks(paper, i + 1))
-
-    # 스킴 요약 섹션
-    if skim_papers:
-        blocks.extend(_skim_papers_to_blocks(skim_papers))
-
-    return blocks
+    shared = entry.shared_metric_keys
+    if shared:
+        body = " · ".join(
+            f"{key} {entry.baseline_results[key]}→{entry.proposed_results[key]}"
+            for key in shared[:3]
+        )
+    else:
+        baseline = " / ".join(f"{k} {v}" for k, v in list(entry.baseline_results.items())[:2])
+        proposed = ", ".join(f"{k} {v}" for k, v in list(entry.proposed_results.items())[:2])
+        body = f"{baseline} → *{proposed}*" if baseline else f"*{proposed}*"
+    return f"• *{entry.dataset}*: {body}"
 
 
-def _paper_to_blocks(paper: PaperSummary, index: int) -> list[dict[str, Any]]:
-    """Convert a single paper to Slack blocks.
+def _paper_body_text(paper: PaperSummary) -> str:
+    """Build the combined body section shared by both block variants.
 
-    Args:
-        paper: Paper summary.
-        index: Paper index (1-based).
-
-    Returns:
-        List of Slack blocks for this paper.
+    Sections with no data are skipped entirely, matching how every other
+    renderer in this project treats empty values.
     """
-    blocks: list[dict[str, Any]] = []
+    parts: list[str] = []
 
-    # Title with stars and GitHub badge
+    meta = [f"⭐ {paper.score}/{paper.max_score}"]
+    if paper.matched_keywords:
+        meta.append("🏷️ " + " · ".join(f"`{kw}`" for kw in paper.matched_keywords))
+    parts.append("  ·  ".join(meta))
+
+    if paper.headline:
+        parts.append(f"📝 {paper.headline}")
+
+    if paper.problem:
+        parts.append(f"🔍 *문제:* {paper.problem}")
+
+    if paper.delta_axes:
+        lines = ["🔀 *델타*"]
+        for axis in paper.delta_axes:
+            lines.append(f"• *{axis.axis}*: {axis.old_approach} → {axis.new_approach}")
+            if axis.hint:
+                lines.append(f"   _구현: {axis.hint}_")
+        parts.append("\n".join(lines))
+
+    if paper.benchmarks:
+        header = "📊 *벤치마크*"
+        if paper.benchmark_total > len(paper.benchmarks):
+            header += f" ({paper.benchmark_total}개 중 {len(paper.benchmarks)}개)"
+        parts.append("\n".join([header] + [_format_benchmark(b) for b in paper.benchmarks]))
+
+    recommendations = []
+    if paper.when_to_use:
+        recommendations.append(f"✅ *권장:* {paper.when_to_use}")
+    if paper.when_not_to_use:
+        recommendations.append(f"❌ *비권장:* {paper.when_not_to_use}")
+    if recommendations:
+        parts.append("\n".join(recommendations))
+
+    footer = []
+    if paper.verification:
+        verification = f"🔎 검증 {paper.verification.verified_count}/{paper.verification.total_claims}"
+        if paper.verification.unverified_count:
+            verification += f" (미검증 {paper.verification.unverified_count})"
+        if paper.verification.contradicted_count:
+            verification += f" ⚠️ 모순 {paper.verification.contradicted_count}"
+        footer.append(verification)
+    if paper.github_url:
+        footer.append(f"💻 <{paper.github_url}|GitHub>")
+    if footer:
+        parts.append("  ·  ".join(footer))
+
+    return _truncate_section("\n".join(parts))
+
+
+def _truncate_section(text: str) -> str:
+    """Keep a section under Slack's 3000 character cap."""
+    if len(text) <= SECTION_TEXT_LIMIT:
+        return text
+    return text[:SECTION_TEXT_LIMIT - 1].rstrip() + "…"
+
+
+def _paper_title_block(paper: PaperSummary, index: int) -> dict[str, Any]:
     github_badge = " :github:" if paper.has_github else ""
-    title_text = f"*{index}. {paper.title}*  {paper.star_emoji}{github_badge}"
-
-    blocks.append({
+    return {
         "type": "section",
         "text": {
             "type": "mrkdwn",
-            "text": title_text
+            "text": f"*{index}. {paper.title}*  {paper.star_emoji}{github_badge}"
         },
         "accessory": {
             "type": "button",
@@ -289,250 +280,21 @@ def _paper_to_blocks(paper: PaperSummary, index: int) -> list[dict[str, Any]]:
             "url": paper.arxiv_url,
             "action_id": f"arxiv-{paper.arxiv_id}"
         }
-    })
-
-    # Score and matched keywords
-    score_fields = [
-        {
-            "type": "mrkdwn",
-            "text": f"*총점:* {paper.score}/{paper.max_score}"
-        },
-        {
-            "type": "mrkdwn",
-            "text": f"*arXiv:* {paper.arxiv_id}"
-        }
-    ]
-    blocks.append({
-        "type": "section",
-        "fields": score_fields
-    })
-
-    if paper.matched_keywords:
-        blocks.append({
-            "type": "context",
-            "elements": [{
-                "type": "mrkdwn",
-                "text": f"🏷️ 매칭 키워드: {' · '.join(f'`{kw}`' for kw in paper.matched_keywords)}"
-            }]
-        })
-
-    # Summary
-    if paper.summary:
-        blocks.append({
-            "type": "section",
-            "text": {
-                "type": "mrkdwn",
-                "text": f"📝 {paper.summary}"
-            }
-        })
-
-    # Problem definition
-    if paper.problem:
-        blocks.append({
-            "type": "section",
-            "text": {
-                "type": "mrkdwn",
-                "text": f"🔍 *문제 정의:* {paper.problem}"
-            }
-        })
-
-    # Core contributions
-    if paper.contributions:
-        blocks.append({
-            "type": "section",
-            "text": {
-                "type": "mrkdwn",
-                "text": f"🎯 *핵심 기여:*\n{paper.contributions}"
-            }
-        })
-
-    # Methodology (condensed)
-    if paper.methodology:
-        condensed = _condense_methodology(paper.methodology)
-        method_text = f"⚙️ *방법론:*\n{condensed}"
-        if len(method_text) > 2900:
-            method_text = method_text[:2900] + "…"
-        blocks.append({
-            "type": "section",
-            "text": {
-                "type": "mrkdwn",
-                "text": method_text
-            }
-        })
-
-    # When to use / not to use
-    recommendations = []
-    if paper.when_to_use:
-        recommendations.append(f"✅ *사용 권장:* {paper.when_to_use}")
-    if paper.when_not_to_use:
-        recommendations.append(f"❌ *사용 비권장:* {paper.when_not_to_use}")
-
-    if recommendations:
-        blocks.append({
-            "type": "section",
-            "text": {
-                "type": "mrkdwn",
-                "text": "\n".join(recommendations)
-            }
-        })
-
-    # GitHub link if available
-    if paper.github_url:
-        blocks.append({
-            "type": "context",
-            "elements": [{
-                "type": "mrkdwn",
-                "text": f"💻 <{paper.github_url}|GitHub Repository>"
-            }]
-        })
-
-    blocks.append({"type": "divider"})
-
-    return blocks
+    }
 
 
-def _paper_to_blocks_interactive(
+def _vote_actions_block(
     paper: PaperSummary,
     index: int,
     report_date: str,
-    applicable_count: int = 0,
-    idea_count: int = 0,
-    pass_count: int = 0,
-) -> list[dict[str, Any]]:
-    """Convert a single paper to Slack blocks with voting buttons.
-
-    Args:
-        paper: Paper summary.
-        index: Paper index (1-based).
-        report_date: Report date for action value.
-        applicable_count: Current applicable vote count.
-        idea_count: Current idea vote count.
-        pass_count: Current pass vote count.
-
-    Returns:
-        List of Slack blocks for this paper.
-    """
-    blocks: list[dict[str, Any]] = []
-
-    # Title with stars and GitHub badge
-    github_badge = " :github:" if paper.has_github else ""
-    title_text = f"*{index}. {paper.title}*  {paper.star_emoji}{github_badge}"
-
-    blocks.append({
-        "type": "section",
-        "text": {
-            "type": "mrkdwn",
-            "text": title_text
-        },
-        "accessory": {
-            "type": "button",
-            "text": {
-                "type": "plain_text",
-                "text": "arXiv",
-                "emoji": True
-            },
-            "url": paper.arxiv_url,
-            "action_id": f"arxiv-{paper.arxiv_id}"
-        }
-    })
-
-    # Score and matched keywords
-    blocks.append({
-        "type": "section",
-        "fields": [
-            {
-                "type": "mrkdwn",
-                "text": f"*총점:* {paper.score}/{paper.max_score}"
-            },
-            {
-                "type": "mrkdwn",
-                "text": f"*arXiv:* {paper.arxiv_id}"
-            }
-        ]
-    })
-
-    if paper.matched_keywords:
-        blocks.append({
-            "type": "context",
-            "elements": [{
-                "type": "mrkdwn",
-                "text": f"🏷️ 매칭 키워드: {' · '.join(f'`{kw}`' for kw in paper.matched_keywords)}"
-            }]
-        })
-
-    # Summary
-    if paper.summary:
-        blocks.append({
-            "type": "section",
-            "text": {
-                "type": "mrkdwn",
-                "text": f"📝 {paper.summary}"
-            }
-        })
-
-    # Problem definition
-    if paper.problem:
-        blocks.append({
-            "type": "section",
-            "text": {
-                "type": "mrkdwn",
-                "text": f"🔍 *문제 정의:* {paper.problem}"
-            }
-        })
-
-    # Core contributions
-    if paper.contributions:
-        blocks.append({
-            "type": "section",
-            "text": {
-                "type": "mrkdwn",
-                "text": f"🎯 *핵심 기여:*\n{paper.contributions}"
-            }
-        })
-
-    # Methodology (condensed)
-    if paper.methodology:
-        condensed = _condense_methodology(paper.methodology)
-        method_text = f"⚙️ *방법론:*\n{condensed}"
-        if len(method_text) > 2900:
-            method_text = method_text[:2900] + "…"
-        blocks.append({
-            "type": "section",
-            "text": {
-                "type": "mrkdwn",
-                "text": method_text
-            }
-        })
-
-    # When to use / not to use
-    recommendations = []
-    if paper.when_to_use:
-        recommendations.append(f"✅ *사용 권장:* {paper.when_to_use}")
-    if paper.when_not_to_use:
-        recommendations.append(f"❌ *사용 비권장:* {paper.when_not_to_use}")
-
-    if recommendations:
-        blocks.append({
-            "type": "section",
-            "text": {
-                "type": "mrkdwn",
-                "text": "\n".join(recommendations)
-            }
-        })
-
-    # GitHub link if available
-    if paper.github_url:
-        blocks.append({
-            "type": "context",
-            "elements": [{
-                "type": "mrkdwn",
-                "text": f"💻 <{paper.github_url}|GitHub Repository>"
-            }]
-        })
-
-    # Voting buttons with counts (3 buttons + comment)
+    applicable_count: int,
+    idea_count: int,
+    pass_count: int,
+) -> dict[str, Any]:
+    """Voting buttons. The action_id and value format are a wire contract with
+    the interaction handler in server.py and must not change."""
     action_value = f"{report_date}|{paper.arxiv_id}|{paper.title}"
-    blocks.append({
+    return {
         "type": "actions",
         "block_id": f"vote-{index}-{paper.arxiv_id}",
         "elements": [
@@ -578,55 +340,131 @@ def _paper_to_blocks_interactive(
                 "value": action_value,
             },
         ]
-    })
+    }
 
-    blocks.append({"type": "divider"})
 
-    return blocks
+def _paper_to_blocks(paper: PaperSummary, index: int) -> list[dict[str, Any]]:
+    """Convert a single paper to Slack blocks (3 blocks, no voting).
+
+    Args:
+        paper: Paper summary.
+        index: Paper index (1-based).
+
+    Returns:
+        List of Slack blocks for this paper.
+    """
+    return [
+        _paper_title_block(paper, index),
+        {"type": "section", "text": {"type": "mrkdwn", "text": _paper_body_text(paper)}},
+        {"type": "divider"},
+    ]
+
+
+def _paper_to_blocks_interactive(
+    paper: PaperSummary,
+    index: int,
+    report_date: str,
+    applicable_count: int = 0,
+    idea_count: int = 0,
+    pass_count: int = 0,
+) -> list[dict[str, Any]]:
+    """Convert a single paper to Slack blocks with voting buttons (4 blocks).
+
+    Args:
+        paper: Paper summary.
+        index: Paper index (1-based).
+        report_date: Report date for action value.
+        applicable_count: Current applicable vote count.
+        idea_count: Current idea vote count.
+        pass_count: Current pass vote count.
+
+    Returns:
+        List of Slack blocks for this paper.
+    """
+    return [
+        _paper_title_block(paper, index),
+        {"type": "section", "text": {"type": "mrkdwn", "text": _paper_body_text(paper)}},
+        _vote_actions_block(paper, index, report_date, applicable_count, idea_count, pass_count),
+        {"type": "divider"},
+    ]
 
 
 def _skim_papers_to_blocks(skim_papers: list[SkimPaper]) -> list[dict[str, Any]]:
-    """스킴 요약 논문을 Slack 블록으로 렌더링."""
-    blocks: list[dict[str, Any]] = []
+    """스킴 요약 논문을 단일 Slack 블록으로 렌더링.
 
-    blocks.append({"type": "divider"})
-
-    blocks.append({
-        "type": "header",
-        "text": {
-            "type": "plain_text",
-            "text": f"📋 기타 주목할 논문 ({len(skim_papers)}편)",
-            "emoji": True,
-        }
-    })
-
+    한 편에 두 블록(section + context)을 쓰면 스킴 11편만으로 24블록이 나가
+    딥 논문이 들어갈 자리가 사라진다. 목록 전체를 한 section에 담는다.
+    """
+    lines = [f"*📋 기타 주목할 논문 ({len(skim_papers)}편)*"]
     for paper in skim_papers:
-        kw_text = " · ".join(f"`{kw}`" for kw in paper.matched_keywords) if paper.matched_keywords else ""
-
-        # 제목 + 요약을 section 블록으로
-        text = f"*<{paper.arxiv_url}|{paper.title}>*"
+        entry = f"• <{paper.arxiv_url}|{paper.title}>"
         if paper.one_liner:
-            text += f"\n{paper.one_liner}"
+            entry += f" — {_clip_one_liner(paper.one_liner)}"
+        if paper.matched_keywords:
+            entry += "  " + " ".join(f"`{kw}`" for kw in paper.matched_keywords[:MAX_SKIM_KEYWORDS])
+        lines.append(entry)
 
-        blocks.append({
-            "type": "section",
+    # 한도를 넘으면 뒤에서부터 접고 몇 편이 잘렸는지 남긴다 - 조용히 자르면
+    # 독자가 목록이 전부라고 오해한다.
+    shown = len(lines) - 1
+    text = "\n".join(lines)
+    while shown > 0 and len(text) > SECTION_TEXT_LIMIT - _SECTION_TEXT_MARGIN:
+        shown -= 1
+        text = "\n".join(lines[:shown + 1] + [f"… 외 {len(skim_papers) - shown}편"])
+
+    return [{"type": "section", "text": {"type": "mrkdwn", "text": text}}]
+
+
+def _clip_one_liner(text: str) -> str:
+    collapsed = " ".join(text.split())
+    if len(collapsed) <= SKIM_ONE_LINER_LIMIT:
+        return collapsed
+    return collapsed[:SKIM_ONE_LINER_LIMIT].rstrip() + "…"
+
+
+def _overview_blocks(papers: list[PaperSummary], date: str, note: str) -> list[dict[str, Any]]:
+    return [
+        {
+            "type": "header",
             "text": {
-                "type": "mrkdwn",
-                "text": text,
+                "type": "plain_text",
+                "text": f"📚 Paper Digest - {date}",
+                "emoji": True
             }
-        })
+        },
+        {
+            "type": "context",
+            "elements": [{
+                "type": "mrkdwn",
+                "text": f"오늘의 논문 *{len(papers)}*편{note}"
+            }]
+        },
+        {"type": "divider"},
+    ]
 
-        # 키워드 + 카테고리를 context로
-        context_parts = []
-        if paper.category:
-            context_parts.append(f"📂 {paper.category}")
-        if kw_text:
-            context_parts.append(f"🏷️ {kw_text}")
-        if context_parts:
-            blocks.append({
-                "type": "context",
-                "elements": [{"type": "mrkdwn", "text": " | ".join(context_parts)}],
-            })
+
+def to_slack_blocks(
+    papers: list[PaperSummary],
+    date: str,
+    skim_papers: list[SkimPaper] | None = None,
+) -> list[dict[str, Any]]:
+    """Convert paper summaries to Slack Block Kit format.
+
+    Args:
+        papers: List of parsed paper summaries.
+        date: Report date string.
+        skim_papers: Optional list of skim-only papers.
+
+    Returns:
+        Slack Block Kit blocks list.
+    """
+    blocks = _overview_blocks(papers, date, "")
+
+    for i, paper in enumerate(papers):
+        blocks.extend(_paper_to_blocks(paper, i + 1))
+
+    if skim_papers:
+        blocks.extend(_skim_papers_to_blocks(skim_papers))
 
     return blocks
 
@@ -669,30 +507,11 @@ def to_slack_blocks_interactive(
     Returns:
         Slack Block Kit blocks list with interactive voting.
     """
-    blocks: list[dict[str, Any]] = []
     vote_counts = vote_counts or {}
+    blocks = _overview_blocks(
+        papers, date, " | 🔧 실무 적용 · 💡 아이디어 · ⏭️ 패스 로 투표하세요!"
+    )
 
-    # Header
-    blocks.append({
-        "type": "header",
-        "text": {
-            "type": "plain_text",
-            "text": f"📚 Paper Digest - {date}",
-            "emoji": True
-        }
-    })
-
-    blocks.append({
-        "type": "context",
-        "elements": [{
-            "type": "mrkdwn",
-            "text": f"오늘의 논문 *{len(papers)}*편 | 🔧 실무 적용 · 💡 아이디어 · ⏭️ 패스 로 투표하세요!"
-        }]
-    })
-
-    blocks.append({"type": "divider"})
-
-    # Each paper with voting buttons
     for i, paper in enumerate(papers):
         counts = vote_counts.get(paper.arxiv_id, {"applicable_count": 0, "idea_count": 0, "pass_count": 0})
         blocks.extend(_paper_to_blocks_interactive(

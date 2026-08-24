@@ -52,7 +52,10 @@ export interface Extraction {
 	problem_definition: ProblemDefinition;
 	baselines: Baseline[];
 	method_components: MethodComponent[];
-	benchmark: Benchmark;
+	/** Normalised by the API: always present, legacy singular folded in. */
+	benchmarks: Benchmark[];
+	/** Legacy singular field, still emitted for pre-2026-02-17 papers. */
+	benchmark?: Benchmark;
 	claims: Claim[];
 	extraction_mode: string;
 }
