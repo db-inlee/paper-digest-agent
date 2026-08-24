@@ -2,6 +2,15 @@
 	import type { Extraction } from '$lib/types/paperDetail';
 
 	export let extraction: Extraction;
+
+	// The API folds the legacy singular `benchmark` into `benchmarks`; the
+	// fallback covers a response served before that normalisation existed.
+	$: benchmarks =
+		extraction.benchmarks?.length
+			? extraction.benchmarks
+			: extraction.benchmark
+				? [extraction.benchmark]
+				: [];
 </script>
 
 <section class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
@@ -59,40 +68,44 @@
 		</div>
 	{/if}
 
-	<!-- Benchmark -->
-	{#if extraction.benchmark}
+	<!-- Benchmarks -->
+	{#if benchmarks.length > 0}
 		<div class="mb-6">
 			<h3 class="text-sm font-semibold text-gray-800 mb-3">벤치마크</h3>
-			<div class="bg-gray-50 rounded-lg p-4">
-				<p class="text-sm text-gray-700 mb-2">
-					<strong>Dataset:</strong> {extraction.benchmark.dataset} &nbsp;|&nbsp;
-					<strong>Metrics:</strong> {extraction.benchmark.metrics.join(', ')}
-				</p>
+			<div class="space-y-4">
+				{#each benchmarks as b}
+					<div class="bg-gray-50 rounded-lg p-4">
+						<p class="text-sm text-gray-700 mb-2">
+							<strong>Dataset:</strong> {b.dataset} &nbsp;|&nbsp;
+							<strong>Metrics:</strong> {b.metrics.join(', ')}
+						</p>
 
-				<div class="overflow-x-auto">
-					<table class="w-full text-sm">
-						<thead>
-							<tr class="border-b border-gray-300">
-								<th class="text-left py-2 pr-4 text-gray-700">Method</th>
-								<th class="text-left py-2 text-gray-700">Result</th>
-							</tr>
-						</thead>
-						<tbody>
-							{#each Object.entries(extraction.benchmark.baseline_results) as [method, result]}
-								<tr class="border-b border-gray-200">
-									<td class="py-1.5 pr-4 text-gray-600">{method}</td>
-									<td class="py-1.5 text-gray-600">{result}</td>
-								</tr>
-							{/each}
-							{#each Object.entries(extraction.benchmark.proposed_results) as [method, result]}
-								<tr class="border-b border-gray-200 bg-green-50">
-									<td class="py-1.5 pr-4 text-green-800 font-medium">{method}</td>
-									<td class="py-1.5 text-green-800 font-medium">{result}</td>
-								</tr>
-							{/each}
-						</tbody>
-					</table>
-				</div>
+						<div class="overflow-x-auto">
+							<table class="w-full text-sm">
+								<thead>
+									<tr class="border-b border-gray-300">
+										<th class="text-left py-2 pr-4 text-gray-700">Method</th>
+										<th class="text-left py-2 text-gray-700">Result</th>
+									</tr>
+								</thead>
+								<tbody>
+									{#each Object.entries(b.baseline_results) as [method, result]}
+										<tr class="border-b border-gray-200">
+											<td class="py-1.5 pr-4 text-gray-600">{method}</td>
+											<td class="py-1.5 text-gray-600">{result}</td>
+										</tr>
+									{/each}
+									{#each Object.entries(b.proposed_results) as [method, result]}
+										<tr class="border-b border-gray-200 bg-green-50">
+											<td class="py-1.5 pr-4 text-green-800 font-medium">{method}</td>
+											<td class="py-1.5 text-green-800 font-medium">{result}</td>
+										</tr>
+									{/each}
+								</tbody>
+							</table>
+						</div>
+					</div>
+				{/each}
 			</div>
 		</div>
 	{/if}

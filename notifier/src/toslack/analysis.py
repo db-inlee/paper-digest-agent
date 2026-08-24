@@ -2,6 +2,10 @@
 
 Loads extraction, delta, scoring, and verification JSON files
 from paper-digest-agent report directories.
+
+This module is the only place in notifier that reads ``reports/<slug>/*.json``,
+so schema drift is normalised here once for every consumer (the Slack renderer,
+the markdown append path, and the web detail API).
 """
 
 import json
@@ -28,6 +32,23 @@ def find_paper_dir(arxiv_id: str) -> Path | None:
     return None
 
 
+def normalize_benchmarks(extraction: dict[str, Any]) -> None:
+    """Fold the legacy singular ``benchmark`` into the plural ``benchmarks`` list.
+
+    Papers written before 2026-02-17 carry a single ``benchmark`` object; newer
+    ones carry a ``benchmarks`` list. No paper carries both.
+
+    The singular key is deliberately left in place: the web detail view reads it
+    directly, so removing it would blank the benchmark table for every legacy
+    paper. This only ever adds.
+    """
+    merged = list(extraction.get("benchmarks") or [])
+    legacy = extraction.get("benchmark")
+    if legacy and legacy not in merged:
+        merged.append(legacy)
+    extraction["benchmarks"] = merged
+
+
 def load_paper_detail(arxiv_id: str) -> dict[str, Any] | None:
     """Load all analysis JSON files for a paper.
 
@@ -48,5 +69,9 @@ def load_paper_detail(arxiv_id: str) -> dict[str, Any] | None:
                 result[key] = json.load(f)
         else:
             result[key] = None
+
+    extraction = result.get("extraction")
+    if isinstance(extraction, dict):
+        normalize_benchmarks(extraction)
 
     return result
