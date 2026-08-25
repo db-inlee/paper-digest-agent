@@ -144,6 +144,7 @@ async def extraction_node(state: DeepState) -> dict:
 async def delta_node(state: DeepState) -> dict:
     """Delta 노드."""
     extraction = state.get("extraction")
+    parsed_pdf = state.get("parsed_pdf")
 
     if extraction is None:
         return {
@@ -151,10 +152,16 @@ async def delta_node(state: DeepState) -> dict:
             "errors": [{"node": "delta", "error": "No extraction result"}],
         }
 
+    # Full text 추출 - delta evidence 를 원문에서 인용하려면 원문이 있어야 한다.
+    # 없으면 agent 가 evidence 를 비운다 (자기 산출물 인용 금지).
+    full_text = None
+    if parsed_pdf and parsed_pdf.parse_success:
+        full_text = parsed_pdf.get_full_text()
+
     agent = DeltaAgent()
 
     try:
-        delta = await agent.run(extraction)
+        delta = await agent.run(extraction, full_text=full_text)
         return {"delta": delta}
 
     except Exception as e:

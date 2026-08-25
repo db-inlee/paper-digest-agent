@@ -6,6 +6,11 @@ from rtc.llm import get_llm_client
 from rtc.schemas.delta_v2 import CoreDelta, DeltaOutput, TradeoffWithEvidence
 from rtc.schemas.extraction_v2 import Evidence, ExtractionOutput
 
+# Matches the limit used by verification and correction. Delta only needs enough of the
+# paper to quote from; its output budget is half of extraction's, so extraction's 80k is
+# more than this step can use.
+FULL_TEXT_CHAR_LIMIT = 50000
+
 DELTA_SYSTEM_PROMPT = """You are a Research Agent explaining research DELTAS (not summaries).
 
 ## 목적 (중요!)
@@ -44,7 +49,17 @@ DELTA_SYSTEM_PROMPT = """You are a Research Agent explaining research DELTAS (no
 2. Focus on "what changed" and "why it's better"
 3. Every delta needs concrete evidence
 4. Be specific about axes of change
-5. **ACCURACY IS PARAMOUNT**: Only describe deltas that are explicitly supported by the extraction data
+5. **ACCURACY IS PARAMOUNT**: Only describe deltas that are explicitly supported by the
+   extraction summary **or the paper's full text** provided below
+
+## EVIDENCE RULES (반드시 지킬 것)
+- `evidence.quote` 는 **논문 원문에서 그대로 복사한 문장**이어야 합니다 (verbatim).
+  원문이 영어면 영어 그대로 붙여넣으세요 - 번역하지 마세요.
+- **Extraction Summary 의 한국어 문장을 evidence 로 재사용하지 마세요.** 그것은 우리가
+  생성한 요약이지 논문의 문장이 아닙니다.
+- 가능하면 `section` 과 `page` 도 원문 기준으로 채우세요.
+- **원문(Full Text)이 제공되지 않은 경우 evidence 의 quote 를 비워 두세요**
+  (`quote: null`). 인용할 원문이 없는데 지어내면 안 됩니다.
 
 ## PAPER TYPES - ADAPT YOUR APPROACH
 논문 유형에 따라 다른 접근이 필요합니다:
@@ -56,7 +71,9 @@ DELTA_SYSTEM_PROMPT = """You are a Research Agent explaining research DELTAS (no
 
 ### Type B: 새로운 문제/영역 개척형 (시스템/프레임워크 논문 포함)
 - 기존에 해당 문제를 다룬 방법이 없거나, 첫 번째 시도
-- old_approach를 "해당 영역의 일반적 접근" 또는 "기존에 특화된 해결책 없음"으로 기술
+- old_approach 에도 **논문이 실제로 대비하는 대상**을 구체적으로 씁니다.
+  직접 비교 실험이 없어도 논문은 거의 항상 무언가와 대비합니다 -
+  기존 관행, 인접 분야의 방법, 사람이 수작업으로 하던 절차 등.
 - 예: "이 논문은 [새로운 문제 X]에 대해 [접근법 A]를 제안한다"
 - 주의: "과학적 발견을 자동화한다" 같은 확대 해석 금지
 - 권장: "연구 아이디어 구체화와 서사 생성을 구조적으로 지원"
@@ -75,7 +92,9 @@ DELTA_SYSTEM_PROMPT = """You are a Research Agent explaining research DELTAS (no
 ## DELTA TEMPLATE (한국어로 작성)
 For each delta, explain:
 - axis: 어떤 차원이 변했는가? (예: "제어 패러다임", "메모리 구조", "추론 전략")
-- old_approach: 기존 접근법은 무엇이었는가? (baseline이 없으면 "일반적인 기존 접근" 또는 "해당 없음"으로 표시)
+- old_approach: 논문이 대비하는 기존 접근은 무엇인가? 가능한 한 **이름으로** 지목하세요
+  (예: "Fixed-env GRPO", "ReAct 스타일 단일 루프"). 근거는 baselines, baseline_methods,
+  벤치마크 표의 비교 대상 이름, 문제 정의의 구조적 한계, 원문 서술 순으로 찾습니다.
 - new_approach: 새로운 접근법은 무엇인가?
 - why_better: 왜 이 변화가 유익한가?
 
@@ -92,9 +111,10 @@ For each delta, explain:
 ## GOOD DELTA EXAMPLES (한국어)
 - axis: "제어 패러다임", old: "탐지기 중심의 단일 판단", new: "정책 규칙 기반 분리 판단", why: "유해성 기준을 명시적으로 분리하여 해석 가능성 향상을 목표로 함"
 - axis: "처리 방식", old: "토큰 단위 순차 처리", new: "청크 단위 병렬 처리", why: "지연 시간 감소 및 처리량 증가를 제안함"
-- axis: "사이버보안 추론", old: "해당 영역에 특화된 오픈소스 추론 모델 없음", new: "SFT와 RLVR을 통한 사이버보안 특화 추론 모델", why: "논문에서는 최초의 오픈소스 사이버보안 추론 모델이라고 주장함"
+- axis: "사이버보안 추론", old: "범용 추론 모델(GPT-4 계열)을 도메인 조정 없이 그대로 적용", new: "SFT와 RLVR을 통한 사이버보안 특화 추론 모델", why: "논문에서는 최초의 오픈소스 사이버보안 추론 모델이라고 주장함"
 
 ## BAD DELTA EXAMPLES (DO NOT DO THIS)
+- "해당 영역에 특화된 방법 없음" / "해당 없음" / "일반적인 기존 접근" (내용이 없는 상투구)
 - "기존 방법은 정밀도가 낮다" (문제점 반복)
 - "성능이 향상되었다" (결과 재진술)
 - "The existing approach..." (영어 사용)
@@ -108,8 +128,24 @@ DELTA_PROMPT_TEMPLATE = """Analyze the structural deltas of this paper compared 
 
 **Extraction Summary**:
 Problem: {problem_statement}
-Baselines: {baselines}
+Structural limitation of prior work: {structural_limitation}
+Baselines (직접 비교 실험 대상): {baselines}
+Baseline methods mentioned in the paper: {baseline_methods}
+Benchmark comparison targets (결과 표의 비교 대상 이름): {benchmark_baseline_keys}
 Method Components: {method_components}
+
+**Paper Full Text** (evidence 를 여기서 verbatim 인용하세요):
+{full_text}
+
+## STEP 0: 대비 대상 확인
+old_approach 에 쓸 대상을 아래 순서로 찾으세요:
+1. Baselines 의 이름
+2. Baseline methods 의 이름
+3. Benchmark comparison targets 의 키 이름
+4. Structural limitation 이 지목하는 기존 방식
+5. 원문에서 논문이 "unlike X", "prior work", "conventional" 로 대비하는 대상
+위 다섯에서 아무것도 못 찾은 경우에만, 대비 대상이 확인되지 않는다는 사실을
+이 논문에 맞는 표현으로 한 번 서술합니다. 정해진 문구를 붙여넣지 마세요.
 
 ## STEP 1: 논문 유형 판단
 먼저 이 논문이 어떤 유형인지 판단하세요:
@@ -133,7 +169,10 @@ Method Components: {method_components}
 Provide:
 1. **one_line_takeaway**: 위 유형에 맞는 한 줄 요약 (정확성이 가장 중요! 과장 금지!)
 2. **core_deltas**: 2-5개의 핵심 구조적 변화 (방법론 구성 요소가 많으면 더 많은 delta 추출)
-   - baselines가 없으면 old_approach를 "일반적인 기존 접근" 또는 "해당 영역에 특화된 방법 없음"으로 작성
+   - old_approach 는 위 STEP 0 에서 확인한 대비 대상을 근거로 구체적으로 작성합니다
+   - 정말로 대비 대상을 찾을 수 없으면 그 사실을 한 문장으로 짧게 쓰되,
+     정해진 문구를 반복하지 말고 이 논문에 맞게 서술하세요
+   - 각 delta 의 evidence.quote 는 원문에서 그대로 인용합니다 (원문이 없으면 비웁니다)
 3. **tradeoffs**: 이 접근법의 트레이드오프
 4. **when_to_use**: 언제 이 방법을 사용해야 하는지
 5. **when_not_to_use**: 언제 사용하지 말아야 하는지
@@ -155,11 +194,17 @@ class DeltaAgent(BaseAgent[ExtractionOutput, DeltaOutput]):
     def __init__(self):
         self.settings = get_settings()
 
-    async def run(self, extraction: ExtractionOutput) -> DeltaOutput:
+    async def run(
+        self,
+        extraction: ExtractionOutput,
+        full_text: str | None = None,
+    ) -> DeltaOutput:
         """Extraction 결과로부터 Delta 분석.
 
         Args:
             extraction: 추출된 정보
+            full_text: 논문 원문. evidence 를 원문에서 인용하기 위해 필요하며,
+                없으면 프롬프트가 evidence 를 비우도록 지시한다.
 
         Returns:
             Delta 분석 결과
@@ -172,6 +217,19 @@ class DeltaAgent(BaseAgent[ExtractionOutput, DeltaOutput]):
             f"- {b.name}: {b.description} (한계: {b.limitation})"
             for b in extraction.baselines
         ) or "명시된 베이스라인 없음"
+
+        baseline_methods_text = ", ".join(
+            extraction.problem_definition.baseline_methods
+        ) or "명시된 기존 방법명 없음"
+
+        # 결과 표의 비교 대상 이름. baselines[] 가 비어도 여기에 실명이 남아 있는
+        # 경우가 있어 old_approach 의 근거로 쓴다.
+        benchmark_keys: list[str] = []
+        for bench in extraction.all_benchmarks:
+            for key in bench.baseline_results:
+                if key not in benchmark_keys:
+                    benchmark_keys.append(key)
+        benchmark_keys_text = ", ".join(benchmark_keys) or "결과 표에 비교 대상 없음"
 
         method_parts = []
         for m in extraction.method_components:
@@ -187,12 +245,28 @@ class DeltaAgent(BaseAgent[ExtractionOutput, DeltaOutput]):
             method_parts.append(part)
         method_text = "\n".join(method_parts) or "명시된 방법론 구성 요소 없음"
 
+        if full_text:
+            paper_text = full_text[:FULL_TEXT_CHAR_LIMIT]
+            if len(full_text) > FULL_TEXT_CHAR_LIMIT:
+                paper_text += "\n... (truncated)"
+        else:
+            paper_text = (
+                "(원문이 제공되지 않았습니다. evidence 의 quote 를 비워 두세요 - "
+                "Extraction Summary 의 문장을 인용으로 쓰면 안 됩니다.)"
+            )
+
         prompt = DELTA_PROMPT_TEMPLATE.format(
             title=extraction.title,
             arxiv_id=extraction.arxiv_id,
             problem_statement=extraction.problem_definition.statement,
+            structural_limitation=(
+                extraction.problem_definition.structural_limitation or "명시되지 않음"
+            ),
             baselines=baselines_text,
+            baseline_methods=baseline_methods_text,
+            benchmark_baseline_keys=benchmark_keys_text,
             method_components=method_text,
+            full_text=paper_text,
         )
 
         try:
